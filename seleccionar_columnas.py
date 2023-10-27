@@ -2,16 +2,6 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import HistGradientBoostingRegressor
 
-# Función para cargar los datos desde un archivo CSV o Excel
-def cargar_datos(archivo):
-    if archivo.endswith('.csv'):
-        datos = pd.read_csv(archivo)
-    elif archivo.endswith('.xlsx'):
-        datos = pd.read_excel(archivo)
-    else:
-        raise ValueError("Formato de archivo no compatible")
-
-    return datos
 
 # Función para crear y entrenar un modelo de HistGradientBoostingRegressor
 def entrenar_modelo(datos, columnas_entradas, columna_salida):
