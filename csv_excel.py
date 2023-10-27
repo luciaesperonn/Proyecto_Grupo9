@@ -11,5 +11,5 @@ def mostrar_archivoexcel():
     ruta_xlsx = input('Añade la ruta de tu archivo XLSX: ')
     df = pd.read_excel(ruta_xlsx)
     print(df.head(10))
-mostrar_archivoexcel()
+mostrar_archivoexcel() 
 
