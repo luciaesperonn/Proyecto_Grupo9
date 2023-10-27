@@ -1,7 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import HistGradientBoostingRegressor
-
+from csv_excel import mostrar_archivos
 
 # Función para crear y entrenar un modelo de HistGradientBoostingRegressor
 def entrenar_modelo(datos, columnas_entradas, columna_salida):
@@ -29,7 +29,7 @@ elif tipo_archivo == 2:
     archivo_datos = 'housing.xlsx'
 
 # Cargar los datos
-datos = cargar_datos(archivo_datos)
+datos = mostrar_archivos(archivo_datos)
 
 # Columna que se utilizará como salida del modelo (elige la que corresponda)
 columna_salida = 'median_house_value'
