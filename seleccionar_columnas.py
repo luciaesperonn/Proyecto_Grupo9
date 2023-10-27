@@ -47,3 +47,4 @@ modelo, X_test, y_test = entrenar_modelo(datos, columnas_entradas, columna_salid
 predicciones = modelo.predict(X_test)
 
 print(predicciones)
+
