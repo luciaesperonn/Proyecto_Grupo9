@@ -1,28 +1,34 @@
 import pandas as pd
+import sqlite3
 
-
-def mostrar_archivocsv():
+def mostrar_archivos(archivo, base_datos=None, tabla=None):
     try:
-        ruta_csv = input('Añade la ruta de tu archivo CSV: ')
-        df = pd.read_csv(ruta_csv)
-        print(df.head(10))
-    except FileNotFoundError:
-        print('El archivo CSV no se encuentra en la ruta elegida')
-    except Exception as j:
-        print(f"Se produjo un error al cargar el archivo CSV: {str(j)}")
-mostrar_archivocsv()
-
-def mostrar_archivoexcel():
-    try:
-        ruta_xlsx = input('Añade la ruta de tu archivo XLSX: ')
-        df = pd.read_excel(ruta_xlsx)
-        print(df.head(10))
-    except FileNotFoundError:
-        print('El archivo XLSX no se encuentra en la ruta elegida')
-    except Exception as j:
-        print(f"Se produjo un error al cargar el archivo XLSX: {str(j)}")
-
-mostrar_archivoexcel() 
-
-
+        if archivo.endswith('.csv'):
+            df = pd.read_csv(archivo)
+            print(df)
+        elif archivo.endswith('.xlsx'):
+            df = pd.read_excel(archivo)
+            print(df)
+        elif archivo.endswith('.db'):
+            if not base_datos or not tabla:
+                raise ValueError("Debes proporcionar el nombre de la base de datos y la tabla para cargar los datos.")
+            
+            # Conectarse a la base de datos SQLite
+            conn = sqlite3.connect(base_datos)
+            
+            # Construir una consulta SQL para seleccionar todos los datos de la tabla
+            consulta = f"SELECT * FROM {tabla}"
+            
+            # Leer todos los datos de la tabla en un DataFrame de pandas
+            datos = pd.read_sql_query(consulta, conn)
+            
+            # Mostrar los datos en la consola
+            print(datos)
+            
+            # Cerrar la conexión a la base de datos
+            conn.close()
+        else:
+            raise ValueError("Formato de archivo no compatible")
+    except Exception as e:
+        print(f"Se produjo un error al cargar el archivo: {str(e)}")
 
