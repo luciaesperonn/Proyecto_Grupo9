@@ -1,11 +1,10 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 
-def mostrar_archivos(archivo):
+def cargar_datos(archivo):
     try:
         if archivo.endswith('.csv'):
             datos = pd.read_csv(archivo)
@@ -18,19 +17,21 @@ def mostrar_archivos(archivo):
         print(f"Se produjo un error al cargar el archivo: {str(e)}")
         return None
 
-
 def verificar_columnas_numericas(datos, columnas):
     for col in columnas:
         if not pd.api.types.is_numeric_dtype(datos[col]):
             raise ValueError(f"La columna '{col}' no es numérica.")
-        
+
 def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo):
-    datos = mostrar_archivos(archivo)
-    datos = datos.dropna(subset=columna_predictora + columna_objetivo)
+    datos = cargar_datos(archivo)
+    
+    if datos is None:
+        return None
+
     verificar_columnas_numericas(datos, [columna_predictora[0]] + [columna_objetivo[0]])
 
-    # Eliminar filas con valores NaN en las columnas relevantes
     
+    datos = datos.dropna(subset=columna_predictora + columna_objetivo)
     
     X = datos[columna_predictora]
     y = datos[columna_objetivo]
@@ -39,9 +40,9 @@ def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
     modelo.fit(X, y)
 
     y_pred = modelo.predict(X)
-    mse = mean_squared_error(y, y_pred)#error cuadratico medio
-    r2 = r2_score(y, y_pred)#para la bondad de ajuste
-    
+    mse = mean_squared_error(y, y_pred)  # error cuadrático medio
+    r2 = r2_score(y, y_pred)  # para la bondad de ajuste
+
     print("Coeficientes del modelo:")
     print("Pendiente (coeficiente):", modelo.coef_)
     print("Intercepto:", modelo.intercept_)
@@ -62,21 +63,16 @@ def visualizar_modelo(modelo, X, y):
     plt.title('Modelo de Regresión Lineal')
     plt.show()
 
-if __name__ == "__main__":
+if __name__ == "__main":
     archivo = input("Introduce el nombre del archivo de datos (csv o xlsx): ")
     columna_predictora = input("Introduce la columna predictora: ")
     columna_predictora = columna_predictora.split(',')  # Convierte la entrada en una lista
     columna_objetivo = input("Introduce la columna objetivo: ")
     columna_objetivo = columna_objetivo.split(',')  # Convierte la entrada en una lista
 
-    datos = mostrar_archivos(archivo)
     modelo = crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
 
-    X = datos[columna_predictora]
-    y = datos[columna_objetivo]
-
-    visualizar_modelo(modelo, X, y)
-
-
-
-
+    if modelo is not None:
+        X = modelo.X
+        y = modelo.y
+        visualizar_modelo(modelo, X, y)
