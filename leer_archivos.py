@@ -5,10 +5,8 @@ def mostrar_archivos(archivo, base_datos=None, tabla=None):
     try:
         if archivo.endswith('.csv'):
             df = pd.read_csv(archivo)
-            print(df)
         elif archivo.endswith('.xlsx'):
             df = pd.read_excel(archivo)
-            print(df)
         elif archivo.endswith('.db'):
             if not base_datos or not tabla:
                 raise ValueError("Debes proporcionar el nombre de la base de datos y la tabla para cargar los datos.")
@@ -26,8 +24,7 @@ def mostrar_archivos(archivo, base_datos=None, tabla=None):
             conn.close()
         else:
             raise ValueError("Formato de archivo no compatible")
-        return datos
+        return df
     except Exception as e:
         print(f"Se produjo un error al cargar el archivo: {str(e)}")
-        return df
     
