@@ -70,6 +70,7 @@ if __name__ == "__main__":
 
     datos = mostrar_archivos(archivo)
     modelo = crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
+    datos=datos.dropna(subset=columna_predictora + columna_objetivo)
     
     X = datos[columna_predictora]
     y = datos[columna_objetivo]
