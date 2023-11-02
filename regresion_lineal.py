@@ -24,6 +24,11 @@ def verificar_columnas_numericas(datos, columnas):
 def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo):
     datos = cargar_datos(archivo)
     verificar_columnas_numericas(datos, [columna_predictora[0]] + [columna_objetivo[0]])
+    
+    # Eliminar filas con valores NaN en columnas relevantes
+    datos = datos.dropna(subset=columna_predictora + columna_objetivo)
+    # Reemplazar los valores NaN con la media de la columna
+    datos[columna_predictora + columna_objetivo] = datos[columna_predictora + columna_objetivo].fillna(datos[columna_predictora + columna_objetivo].mean())
 
     X = datos[columna_predictora]
     y = datos[columna_objetivo]
