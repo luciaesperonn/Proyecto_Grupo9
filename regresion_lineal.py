@@ -23,13 +23,16 @@ def verificar_columnas_numericas(datos, columnas):
         
 def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo):
     datos = cargar_datos(archivo)
-    verificar_columnas_numericas(datos, columna_predictora + [columna_objetivo])
+    verificar_columnas_numericas(datos, [columna_predictora[0]] + [columna_objetivo[0]])
 
     X = datos[columna_predictora]
     y = datos[columna_objetivo]
 
     modelo = LinearRegression()
     modelo.fit(X, y)
+    print("Coeficientes del modelo:")
+    print("Pendiente (coeficiente):", modelo.coef_)
+    print("Intercepto:", modelo.intercept_)
 
     return modelo
 
@@ -37,8 +40,8 @@ def visualizar_modelo(modelo, X, y):
     y_pred = modelo.predict(X)
 
     plt.figure(figsize=(8, 6))
-    plt.scatter(X, y, color='blue', label='Datos reales')
-    plt.plot(X, y_pred, color='red', linewidth=2, label='Ajuste del modelo')
+    plt.scatter(X, y, color='lightblue', label='Datos reales')
+    plt.plot(X, y_pred, color='purple', linewidth=2, label='Ajuste del modelo')
     plt.xlabel('Variable Independiente')
     plt.ylabel('Variable Dependiente')
     plt.legend()
@@ -48,7 +51,10 @@ def visualizar_modelo(modelo, X, y):
 if __name__ == "__main__":
     archivo = input("Introduce el nombre del archivo de datos (csv o xlsx): ")
     columna_predictora = input("Introduce la columna predictora: ")
+    columna_predictora = columna_predictora.split(',')  # Convierte la entrada en una lista
     columna_objetivo = input("Introduce la columna objetivo: ")
+    columna_objetivo = columna_objetivo.split(',')  # Convierte la entrada en una lista
+
     datos = cargar_datos(archivo)
     modelo = crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
 
