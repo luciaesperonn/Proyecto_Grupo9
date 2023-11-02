@@ -26,11 +26,10 @@ def verificar_columnas_numericas(datos, columnas):
         
 def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo):
     datos = mostrar_archivos(archivo)
-    datos = datos.dropna(subset=columna_predictora + columna_objetivo)
     verificar_columnas_numericas(datos, [columna_predictora[0]] + [columna_objetivo[0]])
 
     # Eliminar filas con valores NaN en las columnas relevantes
-    
+    datos = datos.dropna(subset=columna_predictora + columna_objetivo)
     
     X = datos[columna_predictora]
     y = datos[columna_objetivo]
@@ -71,12 +70,10 @@ if __name__ == "__main__":
 
     datos = mostrar_archivos(archivo)
     modelo = crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
-
+    
     X = datos[columna_predictora]
     y = datos[columna_objetivo]
 
     visualizar_modelo(modelo, X, y)
-
-
 
 
