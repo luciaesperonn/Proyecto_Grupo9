@@ -21,11 +21,11 @@ def verificar_columnas_numericas(datos, columnas):
         if not pd.api.types.is_numeric_dtype(datos[col]):
             raise ValueError(f"La columna '{col}' no es numérica.")
         
-def crear_modelo_regresion_lineal(archivo, columnas_predictoras, columna_objetivo):
+def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo):
     datos = cargar_datos(archivo)
-    verificar_columnas_numericas(datos, columnas_predictoras + [columna_objetivo])
+    verificar_columnas_numericas(datos, columna_predictora + [columna_objetivo])
 
-    X = datos[columnas_predictoras]
+    X = datos[columna_predictora]
     y = datos[columna_objetivo]
 
     modelo = LinearRegression()
@@ -47,12 +47,12 @@ def visualizar_modelo(modelo, X, y):
 
 if __name__ == "__main__":
     archivo = input("Introduce el nombre del archivo de datos (csv o xlsx): ")
-    columnas_predictoras = input("Introduce las columnas predictoras separadas por comas: ").split(',')
+    columnas_predictora = input("Introduce la columna predictora: ")
     columna_objetivo = input("Introduce la columna objetivo: ")
     datos = cargar_datos(archivo)
-    modelo = crear_modelo_regresion_lineal(archivo, columnas_predictoras, columna_objetivo)
+    modelo = crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
 
-    X = datos[columnas_predictoras]
+    X = datos[columna_predictora]
     y = datos[columna_objetivo]
 
     visualizar_modelo(modelo, X, y)
