@@ -30,12 +30,13 @@ elif tipo_archivo == 2:
 
 # Cargar los datos
 datos = mostrar_archivos(archivo_datos)
+datos = mostrar_archivos(archivo_datos)
 
 # Columna que se utilizará como salida del modelo (elige la que corresponda)
-columna_salida = 'median_house_value'
+columna_salida = 'total_rooms'
 
 # Especificar manualmente las columnas de entrada
-columnas_entradas = ['total_rooms', 'total_bedrooms']
+columnas_entradas = ['total_bedrooms']
 
 # Verificar si las columnas de entrada son numéricas
 verificar_columnas_numericas(datos, columnas_entradas)
