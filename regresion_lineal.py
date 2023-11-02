@@ -1,7 +1,10 @@
-# Regresion Lineal Simple
+import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-import pandas as pd
+import seaborn as sns
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
+
 
 def cargar_datos(archivo):
     if archivo.endswith('.csv'):
@@ -18,32 +21,42 @@ def verificar_columnas_numericas(datos, columnas):
         if not pd.api.types.is_numeric_dtype(datos[col]):
             raise ValueError(f"La columna '{col}' no es numérica.")
         
-archivo = 'housing.csv'  
-dataset = cargar_datos(archivo)
+def crear_modelo_regresion_lineal(archivo, columnas_predictoras, columna_objetivo):
+    datos = cargar_datos(archivo)
+    verificar_columnas_numericas(datos, columnas_predictoras + [columna_objetivo])
 
-# Función para crear y entrenar un modelo de HistGradientBoostingRegressor
-def entrenar_modelo(columna_x, columna_y):
-    x = dataset[[columna_x]].values  # Usar las variables 'columna_x' y 'columna_y' en lugar de cadenas
-    y = dataset[[columna_y]].values  
+    X = datos[columnas_predictoras]
+    y = datos[columna_objetivo]
 
     modelo = LinearRegression()
-    modelo.fit(x, y)
+    modelo.fit(X, y)
 
     return modelo
 
-columna_x = 'NombreDeTuColumnaX','NombreOtraColumna'  
-columna_y = 'median_house_value' 
+def visualizar_modelo(modelo, X, y):
+    y_pred = modelo.predict(X)
+
+    plt.figure(figsize=(8, 6))
+    plt.scatter(X, y, color='blue', label='Datos reales')
+    plt.plot(X, y_pred, color='red', linewidth=2, label='Ajuste del modelo')
+    plt.xlabel('Variable Independiente')
+    plt.ylabel('Variable Dependiente')
+    plt.legend()
+    plt.title('Modelo de Regresión Lineal')
+    plt.show()
+    
+if __name__ == "__main__":
+    archivo = input("Introduce el nombre del archivo de datos (csv o xlsx): ")
+    columnas_predictoras = input("Introduce las columnas predictoras separadas por comas: ").split(',')
+    columna_objetivo = input("Introduce la columna objetivo: ")
+
+    modelo = crear_modelo_regresion_lineal(archivo, columnas_predictoras, columna_objetivo)
+
+    X = datos[columnas_predictoras]
+    y = datos[columna_objetivo]
+
+    visualizar_modelo(modelo, X, y)
 
 
-regressor = entrenar_modelo(columna_x, columna_y)
 
-y_pred = regressor.predict(x_test)
-
-
-plt.scatter(x_test[:, 0], y_test, color='red')
-plt.plot(x_test[:, 0], y_pred, color='blue')
-plt.title(f'{columna_y} vs. {columna_x} (Conjunto de prueba)')
-plt.xlabel(columna_x)
-plt.ylabel(columna_y)
-plt.show()
 
