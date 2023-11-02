@@ -20,11 +20,8 @@ def mostrar_archivos(archivo, base_datos=None, tabla=None):
             consulta = f"SELECT * FROM {tabla}"
             
             # Leer todos los datos de la tabla en un DataFrame de pandas
-            datos = pd.read_sql_query(consulta, conn)
-            
-            # Mostrar los datos en la consola
-            print(datos)
-            
+            df = pd.read_sql_query(consulta, conn)
+                        
             # Cerrar la conexión a la base de datos
             conn.close()
         else:
@@ -32,5 +29,5 @@ def mostrar_archivos(archivo, base_datos=None, tabla=None):
         return datos
     except Exception as e:
         print(f"Se produjo un error al cargar el archivo: {str(e)}")
-        return None
+        return df
     
