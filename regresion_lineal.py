@@ -47,7 +47,7 @@ def visualizar_modelo(modelo, X, y):
 
 if __name__ == "__main__":
     archivo = input("Introduce el nombre del archivo de datos (csv o xlsx): ")
-    columnas_predictora = input("Introduce la columna predictora: ")
+    columna_predictora = input("Introduce la columna predictora: ")
     columna_objetivo = input("Introduce la columna objetivo: ")
     datos = cargar_datos(archivo)
     modelo = crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
