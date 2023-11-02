@@ -44,12 +44,12 @@ def visualizar_modelo(modelo, X, y):
     plt.legend()
     plt.title('Modelo de Regresión Lineal')
     plt.show()
-    
+
 if __name__ == "__main__":
     archivo = input("Introduce el nombre del archivo de datos (csv o xlsx): ")
     columnas_predictoras = input("Introduce las columnas predictoras separadas por comas: ").split(',')
     columna_objetivo = input("Introduce la columna objetivo: ")
-
+    datos = cargar_datos(archivo)
     modelo = crear_modelo_regresion_lineal(archivo, columnas_predictoras, columna_objetivo)
 
     X = datos[columnas_predictoras]
