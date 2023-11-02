@@ -32,16 +32,14 @@ def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
     modelo.fit(X, y)
 
     y_pred = modelo.predict(X)
-    # Calcular el error cuadrático medio
-    mse = mean_squared_error(y, y_pred)
-    # Calcular el coeficiente de determinación (R²)
-    r2 = r2_score(y, y_pred)
+    mse = mean_squared_error(y, y_pred)#error cuadratico medio
+    r2 = r2_score(y, y_pred)#para la bondad de ajuste
     
     print("Coeficientes del modelo:")
     print("Pendiente (coeficiente):", modelo.coef_)
     print("Intercepto:", modelo.intercept_)
     print("Error cuadrático medio (MSE):", mse)
-    print("Coeficiente de determinación (R²):", r2)
+    print("Bondad de ajuste (R²):", r2)
 
     return modelo
 
