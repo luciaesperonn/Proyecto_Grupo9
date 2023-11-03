@@ -13,6 +13,7 @@ def mostrar_archivos(archivo):
             raise ValueError("Formato de archivo no compatible")
     except Exception as j:
         print(f"Se produjo un error al cargar el archivo CSV: {str(j)}")
+        return None
     
-print('hola') 
+
 
