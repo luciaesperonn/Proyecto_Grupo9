@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
+import sqlite3
 
 def mostrar_archivos(archivo, base_datos=None, tabla=None):
     try:
@@ -29,12 +30,11 @@ def mostrar_archivos(archivo, base_datos=None, tabla=None):
         else:
             raise ValueError("Formato de archivo no compatible")
         
-        print(df)
         return df
     except Exception as e:
         print(f"Se produjo un error al cargar el archivo: {str(e)}")
         return None
-
+print(mostrar_archivos('housing.db',base_datos='housing.db',tabla='california_housing_dataset'))
 
 def verificar_columnas_numericas(datos, columnas):
     for col in columnas:
