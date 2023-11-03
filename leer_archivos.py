@@ -27,4 +27,4 @@ def mostrar_archivos(archivo, base_datos=None, tabla=None):
         return df
     except Exception as e:
         print(f"Se produjo un error al cargar el archivo: {str(e)}")
-    
+        return None
