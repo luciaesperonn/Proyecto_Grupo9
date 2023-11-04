@@ -4,7 +4,7 @@ from tkinter import ttk
 import pandas as pd
 import sqlite3
 
-# Función para abrir la ventana del explorador de archivos
+# Función para abrir la ventana del explorador de archivoss
 def browse_files():
     filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"), ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
     label_file_explorer.configure(text="Archivo abierto: " + filename)
