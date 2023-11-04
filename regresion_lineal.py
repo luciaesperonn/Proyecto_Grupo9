@@ -4,19 +4,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
-
-def mostrar_archivos(archivo):
-    try:
-        if archivo.endswith('.csv'):
-            datos = pd.read_csv(archivo)
-        elif archivo.endswith('.xlsx'):
-            datos = pd.read_excel(archivo)
-        else:
-            raise ValueError("Formato de archivo no compatible")
-        return datos
-    except Exception as e:
-        print(f"Se produjo un error al cargar el archivo: {str(e)}")
-        return None
+from leer_archivos import mostrar_archivos
 
 
 def verificar_columnas_numericas(datos, columnas):
@@ -62,7 +50,7 @@ def visualizar_modelo(modelo, X, y):
     plt.show()
 
 if __name__ == "__main__":
-    archivo = input("Introduce el nombre del archivo de datos (csv o xlsx): ")
+    archivo = input("Introduce el nombre del archivo de datos (csv, xlsx o db): ")
     columna_predictora = input("Introduce la columna predictora: ")
     columna_predictora = columna_predictora.split(',')  # Convierte la entrada en una lista
     columna_objetivo = input("Introduce la columna objetivo: ")
