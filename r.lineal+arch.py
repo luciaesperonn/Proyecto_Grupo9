@@ -63,7 +63,6 @@ def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
     print("Intercepto:", modelo.intercept_)
     print("Error cuadrático medio (MSE):", mse)
     print("Bondad de ajuste (R²):", r2)
-
     return modelo
 
 def visualizar_modelo(modelo, X, y):
@@ -92,4 +91,4 @@ if __name__ == "__main__":
     X = datos[columna_predictora]
     y = datos[columna_objetivo]
 
-    visualizar_modelo(modelo, X, y)
+    visualizar_modelo(modelo, X, y) 

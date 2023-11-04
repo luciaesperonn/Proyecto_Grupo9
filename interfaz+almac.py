@@ -57,10 +57,10 @@ def show_error(message):
 window = tk.Tk()
 window.title('File Explorer')
 window.geometry("500x500")
-window.config(bg="#dfe9f5")
+window.config(bg="#d9ffdf")
 
 # Crear elementos de la interfaz gráfica
-label_file_explorer = tk.Label(window, text="Explorador de Archivos usando Tkinter", width=75, height=5, fg="black", bg="#c5d4eb")
+label_file_explorer = tk.Label(window, text="Explorador de Archivos usando Tkinter", width=75, height=5, fg="black", bg="#87a1ab")
 button_explore = tk.Button(window, text="Buscar Archivos", command=browse_files, height=1, width=16)
 button_exit = tk.Button(window, text="Salir", command=window.quit, height=1, width=6)
 
