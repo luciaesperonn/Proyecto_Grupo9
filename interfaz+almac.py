@@ -27,10 +27,14 @@ def show_data(filename):
         show_error(error_message)
 
 def show_data_sqlite(filename):
-    database = filename
-    table = input("Introduce el nombre de la tabla en la base de datos SQLite: ")
     try:
-        conn = sqlite3.connect(database)
+        conn = sqlite3.connect(filename)
+        cursor = conn.cursor()
+        
+        # Obtener el nombre de la primera tabla en la base de datos
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+        table = cursor.fetchone()[0]
+        
         query = f"SELECT * FROM {table}"
         df = pd.read_sql_query(query, conn)
         show_data_popup(df)
