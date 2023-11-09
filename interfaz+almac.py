@@ -13,17 +13,6 @@ def browse_files():
     
     df=mostrar_archivos(filename)
     show_data_popup(df)
-# Después de la función browse_files
-
-# Función para mostrar la ruta del archivo seleccionado
-#def show_file_path(filename):
-   # top = tk.Toplevel()
-    #top.title("Ruta del Archivo")
-    #label_path = tk.Label(top, text="Ruta del Archivo:")
-    #label_path.pack()
-    #text_path = tk.Text(top, height=1, width=50)
-    #text_path.insert(tk.INSERT, filename)
-    #text_path.pack()
 
 
 
