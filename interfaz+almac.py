@@ -3,46 +3,16 @@ from tkinter import filedialog
 from tkinter import ttk
 import pandas as pd
 import sqlite3
+from leer_archivos import mostrar_archivos
 
 # Función para abrir la ventana del explorador de archivoss
 def browse_files():
     filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"), ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
     label_file_explorer.configure(text="Archivo abierto: " + filename)
+
+    df=mostrar_archivos(filename)
+    show_data_popup(df)
     
-    if filename.endswith((".csv", ".xlsx")):
-        show_data(filename)
-    elif filename.endswith(".db"):
-        show_data_sqlite(filename)
-
-def show_data(filename):
-    try:
-        if filename.endswith('.csv'):
-            df = pd.read_csv(filename)
-        elif filename.endswith('.xlsx'):
-            df = pd.read_excel(filename)
-        
-        show_data_popup(df)
-    except Exception as e:
-        error_message = f"Error al cargar el archivo: {str(e)}"
-        show_error(error_message)
-
-def show_data_sqlite(filename):
-    try:
-        conn = sqlite3.connect(filename)
-        cursor = conn.cursor()
-        
-        # Obtener el nombre de la primera tabla en la base de datos
-        cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-        table = cursor.fetchone()[0]
-        
-        query = f"SELECT * FROM {table}"
-        df = pd.read_sql_query(query, conn)
-        show_data_popup(df)
-        conn.close()
-    except Exception as e:
-        error_message = f"Error al cargar los datos desde la base de datos SQLite: {str(e)}"
-        show_error(error_message)
-
 def show_data_popup(df):
     top = tk.Toplevel()
     top.title("Datos")
