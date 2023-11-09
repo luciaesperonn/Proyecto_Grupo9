@@ -46,6 +46,14 @@ def show_data_popup(df):
     text.insert(tk.INSERT, df.to_string())
     text.pack()
 
+    show_first_row(df)
+
+def show_first_row(df):
+    primera_fila = df.iloc[0]
+    listbox_resultado.delete(0, tk.END)  # Limpiar la lista antes de agregar elementos
+    row_text = ", ".join(f"{columna}" for columna in primera_fila.keys())
+    listbox_resultado.insert(tk.END, row_text)    
+
 def show_error(message):
     top = tk.Toplevel()
     top.title("Error")
@@ -68,6 +76,10 @@ button_exit = tk.Button(window, text="Salir", command=window.quit, height=1, wid
 label_file_explorer.place(x=40, y=50)
 button_explore.place(x=200, y=230)
 button_exit.place(x=230, y=260)
+
+#Mostrar la lista con las variables del archivo
+listbox_resultado = tk.Listbox(window, selectmode=tk.SINGLE, height=1, width=150, bg="#dfe9f5")
+listbox_resultado.place(x=0, y=300)
 
 # Iniciar la aplicación
 window.mainloop()
