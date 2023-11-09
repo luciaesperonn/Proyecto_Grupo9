@@ -6,24 +6,40 @@ import sqlite3
 from tkinter import *
 from leer_archivos import mostrar_archivos
 
-# Función para abrir la ventana del explorador de archivoss
+# Variable global para el botón "Atrás"
+button_back = None
+
 def browse_files():
     filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"), ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
-    label_file_explorer.configure(text="Archivo abierto: " + filename)
-    
-    df=mostrar_archivos(filename)
-    show_data_popup(df)
-# Después de la función browse_files
 
-# Función para mostrar la ruta del archivo seleccionado
-#def show_file_path(filename):
-   # top = tk.Toplevel()
-    #top.title("Ruta del Archivo")
-    #label_path = tk.Label(top, text="Ruta del Archivo:")
-    #label_path.pack()
-    #text_path = tk.Text(top, height=1, width=50)
-    #text_path.insert(tk.INSERT, filename)
-    #text_path.pack()
+    if filename:  # Verificar si se seleccionó un archivo
+        label_file_explorer.configure(text="Archivo abierto: ")
+        button_exit.config(state=tk.NORMAL)  # Habilitar el botón "Salir"
+
+        df = mostrar_archivos(filename)
+        show_data_popup(df)
+
+        # Crear el botón "Examinar" después de abrir un archivo
+        button_examine = tk.Button(window, text="Examinar", command=lambda: toggle_examine(filename), height=1, width=16)
+        button_examine.place(x=200, y=230)
+
+# Nueva función para alternar la visibilidad de la ruta del archivo
+def toggle_examine(filename):
+    label_file_explorer.configure(text=filename)
+    global button_back
+    button_back = tk.Button(window, text="Atrás", command=back_to_previous_state, height=1, width=6)
+    button_back.place(x=300, y=230)
+
+def back_to_previous_state():
+    label_file_explorer.configure(text="Explorador de Archivos usando Tkinter")
+    button_exit.config(state=tk.DISABLED)  # Deshabilitar el botón "Salir"
+    
+    # Eliminar el botón "Examinar" y el botón "Atrás"
+    button_examine.place_forget()
+    button_back.place_forget()
+
+# Resto de tu código...
+
 
 
 
@@ -56,8 +72,10 @@ window.geometry("500x500")
 window.config(bg="#d9ffdf")
 
 # Crear elementos de la interfaz gráfica
+
 label_file_explorer = tk.Label(window, text="Explorador de Archivos usando Tkinter", width=200, height=5, fg="black", bg="#87a1ab")
 button_explore = tk.Button(window, text="Buscar Archivos", command=browse_files, height=1, width=16)
+#button_examine = tk.Button(window, text="Examinar", command=browse_files, height=1, width=16)
 button_exit = tk.Button(window, text="Salir", command=window.quit, height=1, width=6)
 
 # Organizar elementos en la ventana
