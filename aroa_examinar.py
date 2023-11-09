@@ -47,10 +47,6 @@ def back_to_previous_state():
     button_explore = tk.Button(window, text="Buscar Archivos", command=browse_files, height=1, width=16)
     button_explore.place(x=200, y=230)
 
-# Resto de tu código...
-
-
-
 
 
 def show_data_popup(df):
