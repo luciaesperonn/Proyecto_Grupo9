@@ -47,11 +47,6 @@ def back_to_previous_state():
     button_explore = tk.Button(window, text="Buscar Archivos", command=browse_files, height=1, width=16)
     button_explore.place(x=200, y=230)
 
-# Resto de tu código...
-
-
-
-
 
 def show_data_popup(df):
     top = tk.Toplevel()
@@ -79,11 +74,11 @@ def show_error(message):
 window = tk.Tk()
 window.title('EXPLORADOR DE ARCHIVOS')
 window.geometry("500x500")
-window.config(bg="#d9ffdf")
+window.config(bg="#bcdbf3")
 
 # Crear elementos de la interfaz gráfica
 
-label_file_explorer = tk.Label(window, text="Explorador de Archivos usando Tkinter", width=200, height=5, fg="black", bg="#87a1ab")
+label_file_explorer = tk.Label(window, text="Explorador de Archivos usando Tkinter", width=250, height=5, fg="black", bg="#d9ffdf")
 button_explore = tk.Button(window, text="Buscar Archivos", command=browse_files, height=1, width=16)
 button_exit = tk.Button(window, text="Salir", command=window.quit, height=1, width=6)
 
