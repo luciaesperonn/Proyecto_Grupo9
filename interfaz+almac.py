@@ -114,7 +114,7 @@ etiqueta_variable_y.config(bg="#d9ffdf")
 var1 = StringVar()
 var2 = StringVar()
 
-values = ["longitude", "latitude", "housing_median_age", "total_rooms", "total_bedrooms", "population", "households", "median_income", "median_house_value"]
+values = ["longitude", "latitude", "housing_median_age", "total_rooms", "total_bedrooms", "population", "households", "median_income", "median_house_value", "ocean_proximity"]
     
 for i, value in enumerate(values):
     
