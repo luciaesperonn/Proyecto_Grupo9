@@ -70,6 +70,35 @@ def show_error(message):
     text.insert(tk.INSERT, message)
     text.pack()
 
+#Función para seleccionar las columnas de los datos que se usarán como entradas y salida del modelo
+def Seleccionar():
+   print(var1.get())
+   print(var2.get())
+   print()
+    
+def create_radiobuttons(window,variable, filename, y_position, command_callback):
+    radiobuttons = []
+    #Obtener la primera fila del DataFrame
+    primera_fila = get_first_row(filename)
+    if primera_fila is not None:
+        for i, (columna,value) in enumerate(primera_fila.items()):
+            rad = Radiobutton(window, variable=variable, value=columna, text=i, command=command_callback)
+            rad.pack(side=LEFT)
+            rad.place(x=80+120*i, y=y_position)
+            rad.config(bg="#d9ffdf")
+            radiobuttons.append(rad)
+    else:
+        print("Error al obtener la primera fila del archivo.")
+    return radiobuttons
+
+def get_first_row(filename):
+    df = mostrar_archivos(filename)
+    if df is not None:
+        primera_fila = df.iloc[0]
+        return primera_fila
+    else:
+        return None
+
 # Crear la ventana raíz
 window = tk.Tk()
 window.title('EXPLORADOR DE ARCHIVOS')
@@ -91,12 +120,6 @@ button_exit.place(x=230, y=260)
 listbox_resultado = tk.Listbox(window, selectmode=tk.SINGLE, height=1, width=250, bg="#dfe9f5")
 listbox_resultado.place(y=300)
 
-#Función para seleccionar las columnas de los datos que se usarán como entradas y salida del modelo
-def Seleccionar():
-   print(var1.get())
-   print(var2.get())
-   print()
-
 #Etiquetas
 etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
 etiqueta_seleccionar.place(y = 330)
@@ -114,22 +137,11 @@ etiqueta_variable_y.config(bg="#d9ffdf")
 var1 = StringVar()
 var2 = StringVar()
 
-values = ["longitude", "latitude", "housing_median_age", "total_rooms", "total_bedrooms", "population", "households", "median_income", "median_house_value", "ocean_proximity"]
-    
-for i, value in enumerate(values):
-    
-        rad1 = Radiobutton(window, variable=var1, value=value, text=i, command=Seleccionar)
-        rad2 = Radiobutton(window, variable=var2, value=value, text=i, command=Seleccionar)
-        
-        rad1.pack(side=LEFT)
-        rad2.pack(side=LEFT)
-        
-        rad1.place(x=80 + 120 * i, y=380)
-        rad2.place(x=80 + 120 * i, y=440)
-        
-        rad1.config(bg="#d9ffdf")
-        rad2.config(bg="#d9ffdf")
+#Llamar a la función para crear los Radiobuttons
+radiobuttons_var1 = create_radiobuttons(window, var1, "housing.csv", 380, Seleccionar)
+radiobuttons_var2 = create_radiobuttons(window, var2, "housing.csv", 440, Seleccionar)
 
+#Establecer valores predeterminados
 var1.set(' ')
 var2.set(' ')
 
