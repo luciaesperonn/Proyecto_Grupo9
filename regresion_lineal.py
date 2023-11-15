@@ -26,8 +26,8 @@ def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
     modelo.fit(X, y)
 
     y_pred = modelo.predict(X)
-    mse = mean_squared_error(y, y_pred)#error cuadratico medio
-    r2 = r2_score(y, y_pred)#para la bondad de ajuste
+    mse = mean_squared_error(y, y_pred)
+    r2 = r2_score(y, y_pred)
     
     print("Coeficientes del modelo:")
     print("Pendiente (coeficiente):", modelo.coef_)
@@ -35,14 +35,27 @@ def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
     print("Error cuadrático medio (MSE):", mse)
     print("Bondad de ajuste (R²):", r2)
 
+   # Mostrar la ecuación de la recta
+    print("\nEcuación de la recta:")
+    print(f"y = {modelo.intercept_} + {modelo.coef_[0]} * {columna_predictora[0]}")
+    
     return modelo
 
-def visualizar_modelo(modelo, X, y):
+def visualizar_modelo(modelo, X, y, columna_predictora):
     y_pred = modelo.predict(X)
 
     plt.figure(figsize=(8, 6))
     plt.scatter(X, y, color='lightblue', label='Datos reales')
     plt.plot(X, y_pred, color='purple', linewidth=2, label='Ajuste del modelo')
+    
+    # Convertir los coeficientes y el intercepto a tipos de datos numéricos
+    intercepto = float(modelo.intercept_)
+    coeficiente = float(modelo.coef_[0][0])
+
+    # Agregar texto con la ecuación de la recta
+    equation_text = f"Ecuación de la recta:\n y = {intercepto:.2f} + {coeficiente:.2f} * X"
+    plt.text(X.min(), y.max(), equation_text, fontsize=10, verticalalignment='top')
+    
     plt.xlabel('Variable Independiente')
     plt.ylabel('Variable Dependiente')
     plt.legend()
@@ -58,11 +71,14 @@ if __name__ == "__main__":
 
     datos = mostrar_archivos(archivo)
     modelo = crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
-    datos=datos.dropna(subset=columna_predictora + columna_objetivo)
+    datos = datos.dropna(subset=columna_predictora + columna_objetivo)
     
     X = datos[columna_predictora]
     y = datos[columna_objetivo]
 
-    visualizar_modelo(modelo, X, y)
+    visualizar_modelo(modelo, X, y, columna_predictora)
+
+
+
 
 
