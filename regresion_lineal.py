@@ -62,21 +62,6 @@ def visualizar_modelo(modelo, X, y, columna_predictora):
     plt.title('Modelo de Regresión Lineal')
     plt.show()
 
-if __name__ == "__main__":
-    archivo = input("Introduce el nombre del archivo de datos (csv, xlsx o db): ")
-    columna_predictora = input("Introduce la columna predictora: ")
-    columna_predictora = columna_predictora.split(',')  # Convierte la entrada en una lista
-    columna_objetivo = input("Introduce la columna objetivo: ")
-    columna_objetivo = columna_objetivo.split(',')  # Convierte la entrada en una lista
-
-    datos = mostrar_archivos(archivo)
-    modelo = crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
-    datos = datos.dropna(subset=columna_predictora + columna_objetivo)
-    
-    X = datos[columna_predictora]
-    y = datos[columna_objetivo]
-
-    visualizar_modelo(modelo, X, y, columna_predictora)
 
 
 

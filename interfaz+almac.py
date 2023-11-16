@@ -6,6 +6,11 @@ import sqlite3
 from tkinter import *
 from leer_archivos import mostrar_archivos
 from regresion_lineal import crear_modelo_regresion_lineal, visualizar_modelo
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
+from sklearn.impute import SimpleImputer
+
+
 
 # Variables globales
 button_explore = None
@@ -13,6 +18,10 @@ button_back = None
 button_examine = None
 selected_variable_x = None
 selected_variable_y = None
+label_coeficientes = None
+label_intercepto = None
+label_mse = None
+label_r2 = None
 
 def browse_files():
     global selected_variable_x, selected_variable_y
@@ -86,8 +95,6 @@ def show_error(message):
     text.pack()
 
 
-
-
 #Función para seleccionar las columnas de los datos que se usarán como entradas y salida del modelo
 def Seleccionar():
     global selected_variable_x, selected_variable_y
@@ -98,15 +105,54 @@ def Seleccionar():
     print()
  
 # Nueva función para realizar la regresión lineal
+
 def realizar_regresion_lineal(filename, variable_x, variable_y):
+    global label_coeficientes, label_intercepto, label_mse, label_r2
+
     try:
         modelo = crear_modelo_regresion_lineal(filename, [variable_x], [variable_y])
         datos = mostrar_archivos(filename)
+
+        # Imputar valores NaN
+        imputer = SimpleImputer(strategy='mean')
+        datos[[variable_x, variable_y]] = imputer.fit_transform(datos[[variable_x, variable_y]])
+
         X = datos[[variable_x]]
         y = datos[[variable_y]]
         visualizar_modelo(modelo, X, y, [variable_x])
+
+        # Crear o actualizar las etiquetas con los resultados
+        if label_coeficientes is None:
+            label_coeficientes = tk.Label(window, text="")
+            label_coeficientes.place(x=10, y=500)
+        label_coeficientes.config(text=f"Pendiente (coeficiente): {modelo.coef_}")
+        window.update()
+
+        if label_intercepto is None:
+            label_intercepto = tk.Label(window, text="")
+            label_intercepto.place(x=10, y=520)
+        label_intercepto.config(text=f"Intercepto: {modelo.intercept_}")
+        window.update()
+
+        if label_mse is None:
+            label_mse = tk.Label(window, text="")
+            label_mse.place(x=10, y=540)
+        label_mse.config(text=f"Error cuadrático medio (MSE): {mean_squared_error(y, modelo.predict(X))}")
+        window.update()
+
+        if label_r2 is None:
+            label_r2 = tk.Label(window, text="")
+            label_r2.place(x=10, y=560)
+        label_r2.config(text=f"Bondad de ajuste (R²): {r2_score(y, modelo.predict(X))}")
+        window.update()
+
     except Exception as e:
         show_error(f"Error al realizar la regresión lineal: {str(e)}")
+
+
+
+  
+
 
 def create_radiobuttons(window,variable, filename, y_position, command_callback):
     radiobuttons = []
