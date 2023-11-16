@@ -5,6 +5,7 @@ import pandas as pd
 import sqlite3
 from tkinter import *
 from leer_archivos import mostrar_archivos
+from regresion_lineal import crear_modelo_regresion_lineal, visualizar_modelo
 
 # Variables globales
 button_explore = None
@@ -61,7 +62,7 @@ def show_first_row(df):
     primera_fila = df.iloc[0]
     listbox_resultado.delete(0, tk.END)  # Limpiar la lista antes de agregar elementos
     row_text = "                      ".join(f"{columna}" for columna, valor in primera_fila.items())
-    listbox_resultado.insert(tk.END, row_text)    
+    listbox_resultado.insert(tk.END, row_text)  
 
 def show_error(message):
     top = tk.Toplevel()
@@ -69,6 +70,26 @@ def show_error(message):
     text = tk.Text(top)
     text.insert(tk.INSERT, message)
     text.pack()
+
+def realizar_regresion_lineal(archivo, columna_x, columna_y):
+    datos = mostrar_archivos(archivo)
+    modelo = crear_modelo_regresion_lineal(archivo, [columna_x], [columna_y])
+    datos = datos.dropna(subset=[columna_x, columna_y])
+
+    X = datos[[columna_x]]
+    y = datos[columna_y]
+
+    visualizar_modelo(modelo, X, y, [columna_x])
+
+def realizar_regresion_button():
+    variable_x = var1.get()
+    variable_y = var2.get()
+
+    # Verifica que se hayan seleccionado ambas variables
+    if variable_x != ' ' and variable_y != ' ':
+        realizar_regresion_lineal("housing.csv", variable_x, variable_y)
+
+
 
 # Crear la ventana raíz
 window = tk.Tk()
@@ -132,6 +153,9 @@ for i, value in enumerate(values):
 
 var1.set(' ')
 var2.set(' ')
+
+button_regresion = tk.Button(window, text="Realizar Regresión Lineal", command=realizar_regresion_button, height=1, width=20)
+button_regresion.place(x=180, y=470)
 
 # Iniciar la aplicación
 window.mainloop()
