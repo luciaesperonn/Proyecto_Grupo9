@@ -11,14 +11,15 @@ from regresion_lineal import crear_modelo_regresion_lineal, visualizar_modelo
 button_explore = None
 button_back = None
 button_examine = None
+selected_variable_x = None
+selected_variable_y = None
 
 def browse_files():
-    global archivo_seleccionado
+    global selected_variable_x, selected_variable_y
 
     filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"), ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
 
     if filename:  # Verificar si se seleccionó un archivo
-        archivo_seleccionado=filename
         label_file_explorer.configure(text="Archivo abierto:  ")
         
         # Habilitar el botón "Salir"
@@ -32,9 +33,14 @@ def browse_files():
         button_examine = tk.Button(window, text="Examinar", command=lambda: toggle_examine(filename), height=1, width=16)
         button_examine.place(x=200, y=230)
 
-        #Llamar a la función para crear los Radiobuttons
         radiobuttons_var1 = create_radiobuttons(window, var1, filename, 380, Seleccionar)
-        radiobuttons_var2 = create_radiobuttons(window, var2, filename, 440, Seleccionar)
+    radiobuttons_var2 = create_radiobuttons(window, var2, filename, 440, Seleccionar)
+ 
+    # Crear el botón "Realizar Regresión Lineal"
+    button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
+    button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y)
+    button_regresion.place(x=180, y=470)
+
 
 
 # Nueva función para alternar la visibilidad de la ruta del archivo
@@ -84,23 +90,23 @@ def show_error(message):
 
 #Función para seleccionar las columnas de los datos que se usarán como entradas y salida del modelo
 def Seleccionar():
-   global archivo_seleccionado
-   variable_x = var1.get()
-   variable_y = var2.get()
-
-   if variable_x != ' ' and variable_y != ' ' and archivo_seleccionado:
-       try:
-           modelo = crear_modelo_regresion_lineal(archivo_seleccionado, [variable_x], [variable_y])
-
-           # Obtener los datos correspondientes a las variables seleccionadas
-           datos_seleccionados = mostrar_archivos(archivo_seleccionado)
-           datos_seleccionados = datos_seleccionados.dropna(subset=[variable_x, variable_y])
-           X_seleccionado = datos_seleccionados[[variable_x]]
-           y_seleccionado = datos_seleccionados[variable_y]
-
-           visualizar_modelo(modelo, X_seleccionado, y_seleccionado, [variable_x])
-       except Exception as e:
-           show_error(f"Error al crear o visualizar el modelo: {str(e)}")
+    global selected_variable_x, selected_variable_y
+    selected_variable_x = var1.get()
+    selected_variable_y = var2.get()
+    print(selected_variable_x)
+    print(selected_variable_y)
+    print()
+ 
+# Nueva función para realizar la regresión lineal
+def realizar_regresion_lineal(filename, variable_x, variable_y):
+    try:
+        modelo = crear_modelo_regresion_lineal(filename, [variable_x], [variable_y])
+        datos = mostrar_archivos(filename)
+        X = datos[[variable_x]]
+        y = datos[[variable_y]]
+        visualizar_modelo(modelo, X, y, [variable_x])
+    except Exception as e:
+        show_error(f"Error al realizar la regresión lineal: {str(e)}")
 
 def create_radiobuttons(window,variable, filename, y_position, command_callback):
     radiobuttons = []
@@ -124,7 +130,6 @@ def get_first_row(filename):
         return primera_fila
     else:
         return None
-
 
 
 # Crear la ventana raíz
@@ -154,8 +159,11 @@ button_exit.place(x=230, y=260)
 listbox_resultado = tk.Listbox(window, selectmode=tk.SINGLE, height=1, width=250, bg="#dfe9f5")
 listbox_resultado.place(y=300)
 
-button_regression = tk.Button(window, text="Realizar Regresión Lineal", command=Seleccionar, height=1, width=20)
-button_regression.place(x=180, y=470)
+#Crear botones regresion_lineal
+button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
+button_regresion["command"] = realizar_regresion_lineal
+button_regresion.place(x=180, y=470)
+
 
 #Etiquetas
 etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
