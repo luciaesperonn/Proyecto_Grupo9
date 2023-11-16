@@ -158,4 +158,5 @@ button_regresion = tk.Button(window, text="Realizar Regresión Lineal", command=
 button_regresion.place(x=180, y=470)
 
 # Iniciar la aplicación
-window.mainloop()
+window.mainloop() 
+print('lucia')
