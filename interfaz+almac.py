@@ -15,8 +15,6 @@ from regresion_lineal import crear_modelo_regresion_lineal, visualizar_modelo
 
 # VARIABLES GLOBALES
 button_explore = None
-button_back = None
-button_examine = None
 selected_variable_x = None
 selected_variable_y = None
 label_coeficientes = None
@@ -30,45 +28,15 @@ def browse_files():
     filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"), ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
 
     if filename:  # Verificar si se seleccionó un archivo
-        label_file_explorer.configure(text="Archivo abierto:  ")
-       
-        # Habilitar el botón "Salir"
-        button_exit.config(state=tk.NORMAL)
-       
         df = mostrar_archivos(filename)
         show_data_popup(df)
 
-        # Crear el botón "Examinar" después de abrir un archivo
-        global button_examine
-        button_examine = tk.Button(window, text="Examinar", command=lambda: toggle_examine(filename), height=1, width=16)
-        button_examine.place(x=640, y=130)
-
         radiobuttons_var1 = create_radiobuttons(window, var1, filename, 240, Seleccionar)
-    radiobuttons_var2 = create_radiobuttons(window, var2, filename, 260, Seleccionar)
+        radiobuttons_var2 = create_radiobuttons(window, var2, filename, 260, Seleccionar)
  
-    # Crear el botón "Realizar Regresión Lineal"
-    button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
-    button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y)
-    button_regresion.place(x=630, y=290)
+    
 
-# Nueva función para alternar la visibilidad de la ruta del archivo
-def toggle_examine(filename):
-    label_file_explorer.configure(text=filename)
-    global button_back
-    button_back = tk.Button(window, text="Atrás", command=back_to_previous_state, height=1, width=6)
-    button_back.place(x=740, y=130)
 
-def back_to_previous_state():
-    label_file_explorer.configure(text="Explorador de Archivos usando Tkinter")
-   
-    # Eliminar el botón "Examinar" y el botón "Atrás"
-    button_examine.place_forget()
-    button_back.place_forget()
-
-    # Crear el botón "Buscar Archivos"
-    global button_explore
-    button_explore = tk.Button(window, text="Buscar Archivos", command=browse_files, height=1, width=16)
-    button_explore.place(x=200, y=230)
 
 def show_data_popup(df):
     top = tk.Toplevel()
@@ -187,20 +155,27 @@ var1.set(' ')
 var2.set(' ')
 
 # Crear elementos de la interfaz gráfica
-label_file_explorer = tk.Label(window, text="Explorador de Archivos usando Tkinter", width=200, height=5, fg="black", bg="#d9ffdf")
+label_file_explorer = tk.Label(window, text="", width=180, height=2, fg="black", bg="#d9ffdf")
 button_explore = tk.Button(window, text="Buscar Archivos", command=browse_files, height=1, width=16)
-button_exit = tk.Button(window, text="Salir", command=window.quit, height=1, width=6)
 
 # Organizar elementos en la ventana
-label_file_explorer.place(y=50)
-button_explore.place(x=640, y=130)
-button_exit.place(x=675, y=160)
+label_file_explorer.place(x=100, y=50)
+button_explore.place(x=1375, y=55)
 
 #Mostrar la lista con las variables del archivo
 listbox_resultado = tk.Listbox(window, selectmode=tk.SINGLE, height=1, width=250, bg="#dfe9f5")
 listbox_resultado.place(y=200)
 
+# Crear el botón "Realizar Regresión Lineal"
+button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
+button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y)
+button_regresion.place(x=630, y=290)
+
 #Etiquetas
+etiqueta_seleccionar = tk.Label(window, text="RUTA")
+etiqueta_seleccionar.place(x= 30, y = 60)
+etiqueta_seleccionar.config(bg="#bcdbf3")
+
 etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
 etiqueta_seleccionar.place(y = 220)
 etiqueta_seleccionar.config(bg="#bcdbf3")
