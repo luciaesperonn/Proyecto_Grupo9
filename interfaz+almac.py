@@ -35,13 +35,13 @@ def browse_files():
         df = mostrar_archivos(filename)
         show_data_popup(df)
 
-        radiobuttons_var1 = create_radiobuttons(window, var1, filename, 270, Seleccionar)
-        radiobuttons_var2 = create_radiobuttons(window, var2, filename, 290, Seleccionar)
+        radiobuttons_var1 = create_radiobuttons(window, var1, filename, 300, Seleccionar)
+        radiobuttons_var2 = create_radiobuttons(window, var2, filename, 320, Seleccionar)
     
     # Crear el botón "Realizar Regresión Lineal"
     button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
     button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y)
-    button_regresion.place(x=630, y=320)
+    button_regresion.place(x=1375, y=310)
     
     
 def show_data_popup(df):
@@ -108,32 +108,32 @@ def realizar_regresion_lineal(filename, variable_x, variable_y):
         # Crear o actualizar las etiquetas con los resultados
         if label_coeficientes is None:
             label_coeficientes = tk.Label(window, text="")
-            label_coeficientes.place(x=10, y=310)
+            label_coeficientes.place(x=10, y=370)
         label_coeficientes.config(text=f"Pendiente (coeficiente): {modelo.coef_}")
         window.update()
 
         if label_intercepto is None:
             label_intercepto = tk.Label(window, text="")
-            label_intercepto.place(x=10, y=330)
+            label_intercepto.place(x=10, y=390)
         label_intercepto.config(text=f"Intercepto: {modelo.intercept_}")
         window.update()
 
         if label_mse is None:
             label_mse = tk.Label(window, text="")
-            label_mse.place(x=10, y=350)
+            label_mse.place(x=10, y=310)
         label_mse.config(text=f"Error cuadrático medio (MSE): {mean_squared_error(y, modelo.predict(X))}")
         window.update()
 
         if label_r2 is None:
             label_r2 = tk.Label(window, text="")
-            label_r2.place(x=10, y=370)
+            label_r2.place(x=10, y=330)
         label_r2.config(text=f"Bondad de ajuste (R²): {r2_score(y, modelo.predict(X))}")
         window.update()
        
         # Integrar la figura en un Canvas de Tkinter
         graph_canvas = FigureCanvasTkAgg(fig, master=window)
         graph_canvas_widget = graph_canvas.get_tk_widget()
-        graph_canvas_widget.place(x=500, y=350)
+        graph_canvas_widget.place(x=500, y=370)
 
     except Exception as e:
         show_error(f"Error al realizar la regresión lineal: {str(e)}")
@@ -146,7 +146,7 @@ def create_radiobuttons(window,variable, filename, y_position, command_callback)
         for i, (columna,value) in enumerate(primera_fila.items()):
             rad = Radiobutton(window, variable=variable, value=columna, text=i, command=command_callback)
             rad.pack(side=LEFT)
-            rad.place(x=80+120*i, y=y_position)
+            rad.place(x=120+125*i, y=y_position)
             rad.config(bg="#bcdbf3")
             radiobuttons.append(rad)
     else:
@@ -193,15 +193,15 @@ etiqueta_seleccionar.place(x= 30, y = 60)
 etiqueta_seleccionar.config(bg="#bcdbf3")
 
 etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
-etiqueta_seleccionar.place(y = 400)
+etiqueta_seleccionar.place(y = 280)
 etiqueta_seleccionar.config(bg="#bcdbf3")
 
 etiqueta_variable_x = tk.Label(window, text="VARIABLE X:")
-etiqueta_variable_x.place(y = 420)
+etiqueta_variable_x.place(y = 300)
 etiqueta_variable_x.config(bg="#bcdbf3")
 
 etiqueta_variable_y = tk.Label(window, text="VARIABLE Y:")
-etiqueta_variable_y.place(y = 440)
+etiqueta_variable_y.place(y = 320)
 etiqueta_variable_y.config(bg="#bcdbf3")
 
 # Iniciar la aplicación
