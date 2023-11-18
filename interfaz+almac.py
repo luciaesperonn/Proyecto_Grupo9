@@ -28,6 +28,8 @@ def browse_files():
     filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"), ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
 
     if filename:  # Verificar si se seleccionó un archivo
+        label_file_explorer.config(text=f"Archivo seleccionado: {filename}")
+        
         df = mostrar_archivos(filename)
         show_data_popup(df)
 
@@ -35,9 +37,6 @@ def browse_files():
         radiobuttons_var2 = create_radiobuttons(window, var2, filename, 260, Seleccionar)
  
     
-
-
-
 def show_data_popup(df):
     top = tk.Toplevel()
     top.title("Datos")
