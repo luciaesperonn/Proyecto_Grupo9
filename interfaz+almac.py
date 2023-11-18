@@ -69,9 +69,7 @@ def show_data_popup(df):
 
 def show_first_row(df):
     primera_fila = df.iloc[0]
-    listbox_resultado.delete(0, tk.END)  # Limpiar la lista antes de agregar elementos
-    row_text = "                      ".join(f"{columna}" for columna, valor in primera_fila.items())
-    listbox_resultado.insert(tk.END, row_text)  
+    row_text = "     ".join(f"{columna}" for columna, valor in primera_fila.items())
 
 def show_error(message):
     top = tk.Toplevel()
