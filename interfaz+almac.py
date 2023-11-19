@@ -1,5 +1,6 @@
  #Importación de librerías
 import sqlite3
+import joblib
 import pandas as pd
 import tkinter as tk
 from tkinter import *
@@ -10,9 +11,10 @@ from sklearn.metrics import r2_score
 from matplotlib.figure import Figure
 from sklearn.impute import SimpleImputer
 from leer_archivos import mostrar_archivos
+from clase_modelo import ModeloRegresionLineal
 from sklearn.metrics import mean_squared_error
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from regresion_lineal import crear_modelo_regresion_lineal, visualizar_modelo, crear_instancia_modelo_regresion
+from regresion_lineal import crear_modelo_regresion_lineal, visualizar_modelo
 
 # Variables globales
 button_explore = None
@@ -25,7 +27,7 @@ label_r2 = None
 text_data_display = None
 
 def browse_files():
-    global selected_variable_x, selected_variable_y
+    global selected_variable_x, selected_variable_y, filename
 
     filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"), 
                                                                                        ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
@@ -98,7 +100,7 @@ modelo_regresion = None
 
 
 def realizar_regresion_lineal(filename, variable_x, variable_y):
-    global label_mse, button_guardar_modelo, modelo_regresion
+    global label_mse, modelo_regresion, datos
 
     try:
         modelo = crear_modelo_regresion_lineal(filename, [variable_x], [variable_y])
@@ -124,19 +126,36 @@ def realizar_regresion_lineal(filename, variable_x, variable_y):
         graph_canvas_widget = graph_canvas.get_tk_widget()
         graph_canvas_widget.place(x=380, y=420)
 
-        # Crear una instancia de ModeloRegresionLineal
-        modelo_regresion = crear_instancia_modelo_regresion(modelo, [variable_x], [variable_y])
-
-
     except Exception as e:
         show_error(f"Error al realizar la regresión lineal: {str(e)}")
 
 def guardar_modelo():
+    global selected_variable_x, selected_variable_y, modelo_regresion, filename
+
+    # Capturar el valor retornado por realizar_regresion_lineal
+    datos = realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y)
+
+    if selected_variable_x is None or selected_variable_y is None:
+        show_error("Selecciona las variables X e Y antes de intentar guardar el modelo.")
+        return
+
     try:
-        if modelo_regresion:
-            modelo_regresion.guardar_modelo(mean_squared_error(y, modelo_regresion.modelo.predict(X)), filename)
+        modelo = crear_modelo_regresion_lineal(filename, [selected_variable_x], [selected_variable_y])
+
+        # Obtener la ruta y nombre de archivo seleccionados por el usuario
+        file_path = filedialog.asksaveasfilename(defaultextension=".joblib", filetypes=[("Archivos de texto", "*.joblib")])
+
+        if file_path:
+            with open(file_path, 'w') as file:
+                # Guardar ecuación de la recta y error cuadrático medio en el archivo
+                file.write(f"Ecuación de la recta: y = {modelo.intercept_:.2f} + {modelo.coef_[0][0]:.2f} * {selected_variable_x}\n")
+                file.write(f"Error cuadrático medio: {mean_squared_error(datos[selected_variable_y], modelo.predict(datos[selected_variable_x].values.reshape(-1, 1))):.2f}")
+
+            show_error(f"Modelo guardado en: {file_path}")
+
     except Exception as e:
         show_error(f"Error al guardar el modelo: {str(e)}")
+
        
 def create_radiobuttons(window, variable, filename, y_position, command_callback):
     radiobuttons = []
@@ -204,6 +223,7 @@ etiqueta_variable_x.config(bg="#bcdbf3")
 etiqueta_variable_y = tk.Label(window, text="VARIABLE Y:")
 etiqueta_variable_y.place(x=20, y = 320)
 etiqueta_variable_y.config(bg="#bcdbf3")
+
 
 # Iniciar la aplicación
 window.mainloop() 

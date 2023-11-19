@@ -40,11 +40,6 @@ def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
 
     return modelo
 
-def crear_instancia_modelo_regresion(modelo, columna_predictora, columna_objetivo):
-    # Crear una instancia de la clase ModeloRegresionLineal
-    modelo_regresion = ModeloRegresionLineal(modelo, columna_predictora[0], columna_objetivo[0])
-    return modelo_regresion
-
 def visualizar_modelo(modelo, X, y, columna_predictora):
     y_pred = modelo.predict(X)
 
