@@ -1,25 +1,23 @@
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from leer_archivos import mostrar_archivos
+from clase_modelo import ModeloRegresionLineal
 from matplotlib.figure import Figure
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
 
 def verificar_columnas_numericas(datos, columnas):
     for col in columnas:
         if not pd.api.types.is_numeric_dtype(datos[col]):
             raise ValueError(f"La columna '{col}' no es numérica.")
-       
+
 def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo):
     datos = mostrar_archivos(archivo)
     verificar_columnas_numericas(datos, [columna_predictora[0]] + [columna_objetivo[0]])
 
     # Eliminar filas con valores NaN en las columnas relevantes
     datos = datos.dropna(subset=columna_predictora + columna_objetivo)
-   
+
     X = datos[columna_predictora]
     y = datos[columna_objetivo]
 
@@ -29,18 +27,23 @@ def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
     y_pred = modelo.predict(X)
     mse = mean_squared_error(y, y_pred)
     r2 = r2_score(y, y_pred)
-   
+
     print("Coeficientes del modelo:")
     print("Pendiente (coeficiente):", modelo.coef_)
     print("Intercepto:", modelo.intercept_)
     print("Error cuadrático medio (MSE):", mse)
     print("Bondad de ajuste (R²):", r2)
 
-   # Mostrar la ecuación de la recta
+    # Mostrar la ecuación de la recta
     print("\nEcuación de la recta:")
     print(f"y = {modelo.intercept_} + {modelo.coef_[0]} * {columna_predictora[0]}")
-   
+
     return modelo
+
+def crear_instancia_modelo_regresion(modelo, columna_predictora, columna_objetivo):
+    # Crear una instancia de la clase ModeloRegresionLineal
+    modelo_regresion = ModeloRegresionLineal(modelo, columna_predictora[0], columna_objetivo[0])
+    return modelo_regresion
 
 def visualizar_modelo(modelo, X, y, columna_predictora):
     y_pred = modelo.predict(X)

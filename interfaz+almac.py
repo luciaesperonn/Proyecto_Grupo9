@@ -12,7 +12,7 @@ from sklearn.impute import SimpleImputer
 from leer_archivos import mostrar_archivos
 from sklearn.metrics import mean_squared_error
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from regresion_lineal import crear_modelo_regresion_lineal, visualizar_modelo
+from regresion_lineal import crear_modelo_regresion_lineal, visualizar_modelo, crear_instancia_modelo_regresion
 
 # Variables globales
 button_explore = None
@@ -43,6 +43,7 @@ def browse_files():
     button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
     button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y)
     button_regresion.place(x=600, y=360)
+
     
 def show_data_popup(df):
     global text_data_display  # Para acceder al widget Text desde otras funciones
@@ -84,10 +85,20 @@ def Seleccionar():
     print(selected_variable_x)
     print(selected_variable_y)
     print()
+
+    button_guardar_modelo = tk.Button(window, text="Guardar Modelo", height=1, width=20, state=tk.DISABLED, command=guardar_modelo)
+    button_guardar_modelo["command"] = lambda: guardar_modelo()
+    button_guardar_modelo.place(x=900, y=360)
+    button_guardar_modelo["state"] = tk.NORMAL
+
  
 # Nueva función para realizar la regresión lineal
+modelo_regresion = None
+# Crear el botón "Guardar Modelo" fuera de la función
+
+
 def realizar_regresion_lineal(filename, variable_x, variable_y):
-    global label_coeficientes, label_intercepto, label_mse, label_r2
+    global label_mse, button_guardar_modelo, modelo_regresion
 
     try:
         modelo = crear_modelo_regresion_lineal(filename, [variable_x], [variable_y])
@@ -107,14 +118,25 @@ def realizar_regresion_lineal(filename, variable_x, variable_y):
             label_mse.place(x=400, y=395)
         label_mse.config(text=f"El error cuadrático medio (MSE) es: {mean_squared_error(y, modelo.predict(X))} y la bondad de ajuste (R²) es: {r2_score(y, modelo.predict(X))}")
         window.update()
-       
+
         # Integrar la figura en un Canvas de Tkinter
         graph_canvas = FigureCanvasTkAgg(fig, master=window)
         graph_canvas_widget = graph_canvas.get_tk_widget()
         graph_canvas_widget.place(x=380, y=420)
 
+        # Crear una instancia de ModeloRegresionLineal
+        modelo_regresion = crear_instancia_modelo_regresion(modelo, [variable_x], [variable_y])
+
+
     except Exception as e:
         show_error(f"Error al realizar la regresión lineal: {str(e)}")
+
+def guardar_modelo():
+    try:
+        if modelo_regresion:
+            modelo_regresion.guardar_modelo(mean_squared_error(y, modelo_regresion.modelo.predict(X)), filename)
+    except Exception as e:
+        show_error(f"Error al guardar el modelo: {str(e)}")
        
 def create_radiobuttons(window, variable, filename, y_position, command_callback):
     radiobuttons = []
