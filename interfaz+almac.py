@@ -89,10 +89,7 @@ def Seleccionar():
     print(selected_variable_y)
     print()
 
-    # Crear el botón "Realizar Regresión Lineal"
-    button_guardar_modelo = tk.Button(window, text="Guardar Modelo", height=1, width=20, command=guardar_modelo)
-    button_guardar_modelo.place(x=900, y=360)
-
+    
  
 # Nueva función para realizar la regresión lineal
 modelo_regresion = None
@@ -128,6 +125,11 @@ def realizar_regresion_lineal(filename, variable_x, variable_y):
         ecuacion_recta = f"y = {float(modelo.intercept_)} + {float(modelo.coef_[0][0])} * {variable_x}"
         mse = mean_squared_error(y, modelo.predict(X))
         modelo_info = ModeloInfo(ecuacion_recta, mse)
+
+        # Crear el botón "Realizar Regresión Lineal"
+        button_guardar_modelo = tk.Button(window, text="Guardar Modelo", height=1, width=20, command=guardar_modelo)
+        button_guardar_modelo.place(x=750, y=360)
+
 
     except Exception as e:
         show_error(f"Error al realizar la regresión lineal: {str(e)}")
