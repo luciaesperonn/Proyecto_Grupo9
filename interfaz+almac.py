@@ -11,7 +11,7 @@ from sklearn.metrics import r2_score
 from matplotlib.figure import Figure
 from sklearn.impute import SimpleImputer
 from leer_archivos import mostrar_archivos
-from clase_modelo import ModeloRegresionLineal
+from clase_modelo import ModeloInfo
 from sklearn.metrics import mean_squared_error
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from regresion_lineal import crear_modelo_regresion_lineal, visualizar_modelo
@@ -25,6 +25,7 @@ label_intercepto = None
 label_mse = None
 label_r2 = None
 text_data_display = None
+modelo_info = None
 
 def browse_files():
     global selected_variable_x, selected_variable_y, filename
@@ -40,8 +41,8 @@ def browse_files():
 
         radiobuttons_var1 = create_radiobuttons(window, var1, filename, 300, Seleccionar)
         radiobuttons_var2 = create_radiobuttons(window, var2, filename, 320, Seleccionar)
-    
-    # Crear el botón "Realizar Regresión Lineal"
+
+     # Crear el botón "Realizar Regresión Lineal"
     button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
     button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y)
     button_regresion.place(x=600, y=360)
@@ -88,19 +89,16 @@ def Seleccionar():
     print(selected_variable_y)
     print()
 
-    button_guardar_modelo = tk.Button(window, text="Guardar Modelo", height=1, width=20, state=tk.DISABLED, command=guardar_modelo)
-    button_guardar_modelo["command"] = lambda: guardar_modelo()
+    # Crear el botón "Realizar Regresión Lineal"
+    button_guardar_modelo = tk.Button(window, text="Guardar Modelo", height=1, width=20, command=guardar_modelo)
     button_guardar_modelo.place(x=900, y=360)
-    button_guardar_modelo["state"] = tk.NORMAL
 
  
 # Nueva función para realizar la regresión lineal
 modelo_regresion = None
-# Crear el botón "Guardar Modelo" fuera de la función
-
 
 def realizar_regresion_lineal(filename, variable_x, variable_y):
-    global label_mse, modelo_regresion, datos
+    global label_mse, button_guardar_modelo, modelo_info
 
     try:
         modelo = crear_modelo_regresion_lineal(filename, [variable_x], [variable_y])
@@ -126,35 +124,35 @@ def realizar_regresion_lineal(filename, variable_x, variable_y):
         graph_canvas_widget = graph_canvas.get_tk_widget()
         graph_canvas_widget.place(x=380, y=420)
 
+        # Crear una instancia de ModeloInfo
+        ecuacion_recta = f"y = {float(modelo.intercept_)} + {float(modelo.coef_[0][0])} * {variable_x}"
+        mse = mean_squared_error(y, modelo.predict(X))
+        modelo_info = ModeloInfo(ecuacion_recta, mse)
+
     except Exception as e:
         show_error(f"Error al realizar la regresión lineal: {str(e)}")
 
+
 def guardar_modelo():
-    global selected_variable_x, selected_variable_y, modelo_regresion, filename
+    global modelo_info
 
-    # Capturar el valor retornado por realizar_regresion_lineal
-    datos = realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y)
-
-    if selected_variable_x is None or selected_variable_y is None:
-        show_error("Selecciona las variables X e Y antes de intentar guardar el modelo.")
+    if modelo_info is None:
+        show_error("Realiza la regresión lineal antes de intentar guardar el modelo.")
         return
 
     try:
-        modelo = crear_modelo_regresion_lineal(filename, [selected_variable_x], [selected_variable_y])
-
         # Obtener la ruta y nombre de archivo seleccionados por el usuario
-        file_path = filedialog.asksaveasfilename(defaultextension=".joblib", filetypes=[("Archivos de texto", "*.joblib")])
+        file_path = filedialog.asksaveasfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
 
         if file_path:
-            with open(file_path, 'w') as file:
-                # Guardar ecuación de la recta y error cuadrático medio en el archivo
-                file.write(f"Ecuación de la recta: y = {modelo.intercept_:.2f} + {modelo.coef_[0][0]:.2f} * {selected_variable_x}\n")
-                file.write(f"Error cuadrático medio: {mean_squared_error(datos[selected_variable_y], modelo.predict(datos[selected_variable_x].values.reshape(-1, 1))):.2f}")
+            # Guardar la información del modelo en el archivo
+            modelo_info.guardar_modelo(file_path)
 
             show_error(f"Modelo guardado en: {file_path}")
 
     except Exception as e:
         show_error(f"Error al guardar el modelo: {str(e)}")
+
 
        
 def create_radiobuttons(window, variable, filename, y_position, command_callback):

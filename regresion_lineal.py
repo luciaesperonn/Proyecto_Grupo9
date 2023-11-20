@@ -2,7 +2,7 @@ import pandas as pd
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 from leer_archivos import mostrar_archivos
-from clase_modelo import ModeloRegresionLineal
+from clase_modelo import ModeloInfo
 from matplotlib.figure import Figure
 
 
@@ -17,7 +17,7 @@ def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
 
     # Eliminar filas con valores NaN en las columnas relevantes
     datos = datos.dropna(subset=columna_predictora + columna_objetivo)
-
+   
     X = datos[columna_predictora]
     y = datos[columna_objetivo]
 
@@ -27,18 +27,19 @@ def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
     y_pred = modelo.predict(X)
     mse = mean_squared_error(y, y_pred)
     r2 = r2_score(y, y_pred)
-
+   
     print("Coeficientes del modelo:")
-    print("Pendiente (coeficiente):", modelo.coef_)
-    print("Intercepto:", modelo.intercept_)
-    print("Error cuadrático medio (MSE):", mse)
-    print("Bondad de ajuste (R²):", r2)
+    print(f"Pendiente (coeficiente): {modelo.coef_[0][0]}")
+    print(f"Intercepto: {modelo.intercept_}")
+    print(f"Error cuadrático medio (MSE): {mse}")
+    print(f"Bondad de ajuste (R²): {r2}")
 
-    # Mostrar la ecuación de la recta
+   # Mostrar la ecuación de la recta
     print("\nEcuación de la recta:")
-    print(f"y = {modelo.intercept_} + {modelo.coef_[0]} * {columna_predictora[0]}")
-
+    print(f"y = {modelo.intercept_} + {modelo.coef_[0][0]} * {columna_predictora[0]}")
+   
     return modelo
+
 
 def visualizar_modelo(modelo, X, y, columna_predictora):
     y_pred = modelo.predict(X)
