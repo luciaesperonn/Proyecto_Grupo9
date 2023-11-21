@@ -26,7 +26,24 @@ label_mse = None
 label_r2 = None
 text_data_display = None
 modelo_info = None
+loaded_model_info = None
+def cargar_modelo():
+    global loaded_model_info
 
+    try:
+        # Prompt the user to select a file
+        file_path = filedialog.askopenfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
+
+        if file_path:
+            # Load the model information from the file
+            loaded_model_info = joblib.load(file_path)
+
+            # Display a message indicating successful loading
+            show_error(f"Modelo cargado con éxito desde: {file_path}")
+
+    except Exception as e:
+        show_error(f"Error al cargar el modelo: {str(e)}")
+   
 def browse_files():
     global selected_variable_x, selected_variable_y, filename
 
@@ -156,7 +173,6 @@ def guardar_modelo():
         show_error(f"Error al guardar el modelo: {str(e)}")
 
 
-       
 def create_radiobuttons(window, variable, filename, y_position, command_callback):
     radiobuttons = []
     # Obtener la primera fila del DataFrame
@@ -187,7 +203,9 @@ window = tk.Tk()
 window.title('EXPLORADOR DE ARCHIVOS')
 window.geometry("500x500")
 window.config(bg="#bcdbf3")
-
+#boton cargar modelo
+button_cargar_modelo = tk.Button(window, text="Cargar Modelo", command=cargar_modelo, height=1, width=16)
+button_cargar_modelo.place(x=1310, y=56)  
 # Creación de los Radiobutton
 var1 = StringVar()
 var2 = StringVar()
