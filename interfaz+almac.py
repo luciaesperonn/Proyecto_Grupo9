@@ -31,15 +31,14 @@ def cargar_modelo():
     global loaded_model_info
 
     try:
-        # Prompt the user to select a file
         file_path = filedialog.askopenfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
 
         if file_path:
-            # Load the model information from the file
+            
             loaded_model_info = joblib.load(file_path)
 
-            # Display a message indicating successful loading
-            show_error(f"Modelo cargado con éxito desde: {file_path}")
+            
+            #show_error(f"Modelo cargado con éxito desde: {file_path}")
 
     except Exception as e:
         show_error(f"Error al cargar el modelo: {str(e)}")
