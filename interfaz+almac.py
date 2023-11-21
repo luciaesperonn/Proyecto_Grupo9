@@ -42,6 +42,17 @@ def browse_files():
         radiobuttons_var1 = create_radiobuttons(window, var1, filename, 300, Seleccionar)
         radiobuttons_var2 = create_radiobuttons(window, var2, filename, 320, Seleccionar)
 
+    etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
+    etiqueta_seleccionar.place(x=20, y = 280)
+    etiqueta_seleccionar.config(bg="#bcdbf3")
+
+    etiqueta_variable_x = tk.Label(window, text="VARIABLE X:")
+    etiqueta_variable_x.place(x=20, y = 300)
+    etiqueta_variable_x.config(bg="#bcdbf3")
+
+    etiqueta_variable_y = tk.Label(window, text="VARIABLE Y:")
+    etiqueta_variable_y.place(x=20, y = 320)
+    etiqueta_variable_y.config(bg="#bcdbf3")
      # Crear el botón "Realizar Regresión Lineal"
     button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
     button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y)
@@ -211,19 +222,6 @@ text_data_display.place(x=50, y=120)
 etiqueta_seleccionar = tk.Label(window, text="RUTA")
 etiqueta_seleccionar.place(x= 30, y = 60)
 etiqueta_seleccionar.config(bg="#bcdbf3")
-
-etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
-etiqueta_seleccionar.place(x=20, y = 280)
-etiqueta_seleccionar.config(bg="#bcdbf3")
-
-etiqueta_variable_x = tk.Label(window, text="VARIABLE X:")
-etiqueta_variable_x.place(x=20, y = 300)
-etiqueta_variable_x.config(bg="#bcdbf3")
-
-etiqueta_variable_y = tk.Label(window, text="VARIABLE Y:")
-etiqueta_variable_y.place(x=20, y = 320)
-etiqueta_variable_y.config(bg="#bcdbf3")
-
 
 # Iniciar la aplicación
 window.mainloop() 
