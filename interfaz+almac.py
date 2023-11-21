@@ -28,17 +28,25 @@ text_data_display = None
 modelo_info = None
 loaded_model_info = None
 def cargar_modelo():
-    global loaded_model_info
+    global loaded_model_info, text_data_display
 
     try:
         file_path = filedialog.askopenfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
 
         if file_path:
-            
             loaded_model_info = joblib.load(file_path)
 
-            
-            #show_error(f"Modelo cargado con éxito desde: {file_path}")
+            # Mostrar información del modelo en el widget Text
+            if text_data_display is not None:
+                text_data_display.delete(1.0, tk.END)  # Limpiar el contenido actual
+
+                # Mostrar información del modelo
+                text_data_display.insert(tk.END, f"Modelo cargado con éxito desde: {file_path}\n")
+
+                # Añadir información específica según la estructura del modelo
+                if isinstance(loaded_model_info, ModeloInfo):  
+                    text_data_display.insert(tk.END, f"Ecuación del modelo: {loaded_model_info.ecuacion_recta}\n")
+                    text_data_display.insert(tk.END, f"Error cuadrático medio (MSE): {loaded_model_info.mse}\n")
 
     except Exception as e:
         show_error(f"Error al cargar el modelo: {str(e)}")
