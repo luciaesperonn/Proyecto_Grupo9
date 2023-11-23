@@ -27,15 +27,25 @@ label_r2 = None
 text_data_display = None
 modelo_info = None
 loaded_model_info = None
-def cargar_modelo():
-    global loaded_model_info, text_data_display
+etiqueta_seleccionar = None
+etiqueta_variable_x = None
+etiqueta_variable_y = None
+radiobuttons_var1 = None
+radiobuttons_var2 = None
+button_regresion = None
+button_guardar_modelo = None
+label_mse = None
+graph_canvas = None
 
+
+def cargar_modelo():
+    global loaded_model_info, text_data_display, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, radiobuttons_var1, radiobuttons_var2, button_regresion
     try:
         file_path = filedialog.askopenfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
 
         if file_path:
             loaded_model_info = joblib.load(file_path)
-
+        
             # Mostrar información del modelo en el widget Text
             if text_data_display is not None:
                 text_data_display.delete(1.0, tk.END)  # Limpiar el contenido actual
@@ -48,12 +58,15 @@ def cargar_modelo():
                     text_data_display.insert(tk.END, f"Ecuación del modelo: {loaded_model_info.ecuacion_recta}\n")
                     text_data_display.insert(tk.END, f"Error cuadrático medio (MSE): {loaded_model_info.mse}\n")
 
+                # Llamar a limpiar_interfaz para eliminar elementos
+                limpiar_interfaz()
+
     except Exception as e:
         show_error(f"Error al cargar el modelo: {str(e)}")
    
 def browse_files():
-    global selected_variable_x, selected_variable_y, filename
-
+    global selected_variable_x, selected_variable_y, filename, button_regresion
+    global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion
     filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"), 
                                                                                        ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
 
@@ -82,7 +95,30 @@ def browse_files():
     button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y)
     button_regresion.place(x=600, y=360)
 
-    
+def limpiar_interfaz():
+    global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion, button_guardar_modelo, label_mse, graph_canvas
+
+    if etiqueta_seleccionar:
+        etiqueta_seleccionar.destroy()
+    if etiqueta_variable_x:
+        etiqueta_variable_x.destroy()
+    if etiqueta_variable_y:
+        etiqueta_variable_y.destroy()
+    if radiobuttons_var1:
+        for rad in radiobuttons_var1:
+            rad.destroy()
+    if radiobuttons_var2:
+        for rad in radiobuttons_var2:
+            rad.destroy()
+    if button_regresion:
+        button_regresion.destroy()
+    if button_guardar_modelo:
+        button_guardar_modelo.destroy()
+    if label_mse:
+        label_mse.destroy()
+    if graph_canvas:
+        graph_canvas.get_tk_widget().destroy()
+        
 def show_data_popup(df):
     global text_data_display  # Para acceder al widget Text desde otras funciones
     text_data_display.delete(1.0, tk.END)  # Limpiar el contenido actual
@@ -124,13 +160,11 @@ def Seleccionar():
     print(selected_variable_y)
     print()
 
-    
- 
 # Nueva función para realizar la regresión lineal
 modelo_regresion = None
 
 def realizar_regresion_lineal(filename, variable_x, variable_y):
-    global label_mse, button_guardar_modelo, modelo_info
+    global label_mse, button_guardar_modelo, modelo_info, graph_canvas
 
     try:
         modelo = crear_modelo_regresion_lineal(filename, [variable_x], [variable_y])
@@ -189,7 +223,6 @@ def guardar_modelo():
 
     except Exception as e:
         show_error(f"Error al guardar el modelo: {str(e)}")
-
 
 def create_radiobuttons(window, variable, filename, y_position, command_callback):
     radiobuttons = []
