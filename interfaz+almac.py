@@ -6,6 +6,7 @@ import tkinter as tk
 from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
+from tkinter import scrolledtext
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score
 from matplotlib.figure import Figure
@@ -71,7 +72,7 @@ def browse_files():
                                                                                        ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
 
     if filename:  # Verificar si se seleccionó un archivo
-        label_file_explorer.config(text=f"Archivo seleccionado: {filename}")
+        label_file_explorer.config(text=f"{filename}")
         
         df = mostrar_archivos(filename)
         show_data_popup(df)
@@ -123,6 +124,7 @@ def show_data_popup(df):
     global text_data_display  # Para acceder al widget Text desde otras funciones
     text_data_display.delete(1.0, tk.END)  # Limpiar el contenido actual
 
+    
     # Obtener información sobre los datos
     headers = df.columns
     max_column_widths = [max(len(str(header)), df[header].astype(str).apply(len).max()) for header in headers]
@@ -252,11 +254,9 @@ def get_first_row(filename):
 # Crear la ventana raíz
 window = tk.Tk()
 window.title('EXPLORADOR DE ARCHIVOS')
-window.geometry("500x500")
+window.geometry("1920x1080")
 window.config(bg="#bcdbf3")
-#boton cargar modelo
-button_cargar_modelo = tk.Button(window, text="Cargar Modelo", command=cargar_modelo, height=1, width=16)
-button_cargar_modelo.place(x=1310, y=56)  
+
 # Creación de los Radiobutton
 var1 = StringVar()
 var2 = StringVar()
@@ -265,21 +265,26 @@ var1.set(' ')
 var2.set(' ')
 
 # Crear elementos de la interfaz gráfica
-label_file_explorer = tk.Label(window, text="", width=150, height=2, fg="black", bg="#d9ffdf")
+label_file_explorer = tk.Label(window, text="", width=75, height=2, fg="black", bg="#d9ffdf")
 button_explore = tk.Button(window, text="Buscar Archivos", command=browse_files, height=1, width=16)
 
 # Organizar elementos en la ventana
-label_file_explorer.place(x=100, y=50)
-button_explore.place(x=1175, y=55)
+label_file_explorer.place(x=130, y=50)
+button_explore.place(x=1030, y=55)
+
+#Botón cargar modelo
+button_cargar_modelo = tk.Button(window, text="Cargar Modelo", command=cargar_modelo, height=1, width=16)
+button_cargar_modelo.place(x=1175, y=55)  
 
 # Crear un widget Text para mostrar los datos
-text_data_display = tk.Text(window, wrap=tk.NONE, height=9, width=158)
+text_data_display = scrolledtext.ScrolledText(window, wrap=tk.NONE, height=9, width=158, undo=True)
+#text_data_display.config(font=("Helvetica", 10))
 text_data_display.place(x=50, y=120)  
 
 #Etiquetas
 etiqueta_seleccionar = tk.Label(window, text="RUTA")
-etiqueta_seleccionar.place(x= 30, y = 60)
+etiqueta_seleccionar.place(x= 60, y = 60)
 etiqueta_seleccionar.config(bg="#bcdbf3")
 
 # Iniciar la aplicación
-window.mainloop() 
+window.mainloop()  
