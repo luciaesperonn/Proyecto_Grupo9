@@ -37,6 +37,7 @@ button_regresion = None
 button_guardar_modelo = None
 label_mse = None
 graph_canvas = None
+label_ecuacion_recta = None
 
 
 def cargar_modelo():
@@ -119,6 +120,8 @@ def limpiar_interfaz():
         label_mse.destroy()
     if graph_canvas:
         graph_canvas.get_tk_widget().destroy()
+    if label_ecuacion_recta:
+        label_ecuacion_recta.destroy()  
         
 def show_data_popup(df):
     global text_data_display  # Para acceder al widget Text desde otras funciones
@@ -166,7 +169,7 @@ def Seleccionar():
 modelo_regresion = None
 
 def realizar_regresion_lineal(filename, variable_x, variable_y):
-    global label_mse, button_guardar_modelo, modelo_info, graph_canvas
+    global label_mse, button_guardar_modelo, modelo_info, graph_canvas, label_ecuacion_recta 
 
     try:
         modelo = crear_modelo_regresion_lineal(filename, [variable_x], [variable_y])
@@ -184,13 +187,22 @@ def realizar_regresion_lineal(filename, variable_x, variable_y):
         if label_mse is None:
             label_mse = tk.Label(window, text="")
             label_mse.place(x=400, y=395)
+        
+        if label_ecuacion_recta is None:
+            label_ecuacion_recta = tk.Label(window, text="")
+            label_ecuacion_recta.place(x=400, y=410)
+
+        ecuacion_recta =f"Ecuación de la recta: y = {float(modelo.intercept_):.2f} + {float(modelo.coef_[0][0]):.2f} * X"
+        label_ecuacion_recta.config(text=ecuacion_recta)
+        window.update()
+
         label_mse.config(text=f"El error cuadrático medio (MSE) es: {mean_squared_error(y, modelo.predict(X))} y la bondad de ajuste (R²) es: {r2_score(y, modelo.predict(X))}")
         window.update()
 
         # Integrar la figura en un Canvas de Tkinter
         graph_canvas = FigureCanvasTkAgg(fig, master=window)
         graph_canvas_widget = graph_canvas.get_tk_widget()
-        graph_canvas_widget.place(x=380, y=420)
+        graph_canvas_widget.place(x=380, y=430)
 
         # Crear una instancia de ModeloInfo
         ecuacion_recta = f"y = {float(modelo.intercept_)} + {float(modelo.coef_[0][0])} * {variable_x}"

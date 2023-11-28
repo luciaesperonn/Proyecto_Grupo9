@@ -34,9 +34,6 @@ def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
     print(f"Error cuadrático medio (MSE): {mse}")
     print(f"Bondad de ajuste (R²): {r2}")
 
-   # Mostrar la ecuación de la recta
-    print("\nEcuación de la recta:")
-    print(f"y = {modelo.intercept_} + {modelo.coef_[0][0]} * {columna_predictora[0]}")
    
     return modelo
 
@@ -53,10 +50,6 @@ def visualizar_modelo(modelo, X, y, columna_predictora):
     intercepto = float(modelo.intercept_)
     coeficiente = float(modelo.coef_[0][0])
 
-    # Agregar texto con la ecuación de la recta
-    equation_text = f"Ecuación de la recta:\n y = {intercepto:.2f} + {coeficiente:.2f} * X"
-    ax.text(X.min(), y.max(), equation_text, fontsize=10, verticalalignment='top')
-   
     ax.set_xlabel('Variable Independiente')
     ax.set_ylabel('Variable Dependiente')
     ax.legend()
