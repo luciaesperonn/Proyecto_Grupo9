@@ -7,6 +7,7 @@ from tkinter import *
 from tkinter import ttk
 from tkinter import filedialog
 from tkinter import scrolledtext
+from tkinter import scrolledtext
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score
 from matplotlib.figure import Figure
@@ -38,16 +39,18 @@ button_guardar_modelo = None
 label_mse = None
 graph_canvas = None
 label_ecuacion_recta = None
+label_ecuacion_recta = None
 
 
 def cargar_modelo():
     global loaded_model_info, text_data_display, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, radiobuttons_var1, radiobuttons_var2, button_regresion
+    global selected_variable_x, selected_variable_y, button_guardar_modelo
     try:
         file_path = filedialog.askopenfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
 
         if file_path:
             loaded_model_info = joblib.load(file_path)
-        
+
             # Mostrar información del modelo en el widget Text
             if text_data_display is not None:
                 text_data_display.delete(1.0, tk.END)  # Limpiar el contenido actual
@@ -56,15 +59,19 @@ def cargar_modelo():
                 text_data_display.insert(tk.END, f"Modelo cargado con éxito desde: {file_path}\n")
 
                 # Añadir información específica según la estructura del modelo
-                if isinstance(loaded_model_info, ModeloInfo):  
+                if isinstance(loaded_model_info, ModeloInfo):
                     text_data_display.insert(tk.END, f"Ecuación del modelo: {loaded_model_info.ecuacion_recta}\n")
                     text_data_display.insert(tk.END, f"Error cuadrático medio (MSE): {loaded_model_info.mse}\n")
 
                 # Llamar a limpiar_interfaz para eliminar elementos
                 limpiar_interfaz()
 
+                # Restablecer button_guardar_modelo a None
+                button_guardar_modelo = None
+
     except Exception as e:
         show_error(f"Error al cargar el modelo: {str(e)}")
+
    
 def browse_files():
     global selected_variable_x, selected_variable_y, filename, button_regresion
@@ -73,6 +80,7 @@ def browse_files():
                                                                                        ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
 
     if filename:  # Verificar si se seleccionó un archivo
+        label_file_explorer.config(text=f"{filename}")
         label_file_explorer.config(text=f"{filename}")
         
         df = mostrar_archivos(filename)
@@ -122,10 +130,14 @@ def limpiar_interfaz():
         graph_canvas.get_tk_widget().destroy()
     if label_ecuacion_recta:
         label_ecuacion_recta.destroy()  
+    if label_ecuacion_recta:
+        label_ecuacion_recta.destroy()  
         
 def show_data_popup(df):
     global text_data_display  # Para acceder al widget Text desde otras funciones
     text_data_display.delete(1.0, tk.END)  # Limpiar el contenido actual
+
+    
 
     
     # Obtener información sobre los datos
@@ -168,10 +180,14 @@ def Seleccionar():
 # Nueva función para realizar la regresión lineal
 modelo_regresion = None
 
-def realizar_regresion_lineal(filename, variable_x, variable_y):
-    global label_mse, button_guardar_modelo, modelo_info, graph_canvas, label_ecuacion_recta 
 
+def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
+    global label_mse, button_guardar_modelo, modelo_info, graph_canvas, label_ecuacion_recta 
     try:
+        # Restablecer loaded_model_info a None si se está creando un nuevo modelo
+        if not auto:
+            loaded_model_info = None
+
         modelo = crear_modelo_regresion_lineal(filename, [variable_x], [variable_y])
         datos = mostrar_archivos(filename)
 
@@ -212,10 +228,10 @@ def realizar_regresion_lineal(filename, variable_x, variable_y):
         # Crear el botón "Realizar Regresión Lineal"
         button_guardar_modelo = tk.Button(window, text="Guardar Modelo", height=1, width=20, command=guardar_modelo)
         button_guardar_modelo.place(x=750, y=360)
-
-
     except Exception as e:
         show_error(f"Error al realizar la regresión lineal: {str(e)}")
+
+
 
 
 def guardar_modelo():
