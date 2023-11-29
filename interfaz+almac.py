@@ -39,12 +39,56 @@ button_guardar_modelo = None
 label_mse = None
 graph_canvas = None
 label_ecuacion_recta = None
-label_ecuacion_recta = None
+
+# ... (código anterior)
+
+def browse_files():
+    global selected_variable_x, selected_variable_y, filename, button_regresion, radiobuttons_var1, radiobuttons_var2
+    global etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y  # Agregando la declaración global
+
+    filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"), 
+                                                                                       ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
+
+    if filename:  # Verificar si se seleccionó un archivo
+        label_file_explorer.config(text=f"{filename}")
+        label_file_explorer.config(text=f"{filename}")
+        
+        df = mostrar_archivos(filename)
+        show_data_popup(df)
+
+        # Limpiar Radiobuttons antes de crear nuevos
+        limpiar_interfaz()
+
+        radiobuttons_var1 = create_radiobuttons(window, var1, filename, 300, Seleccionar)
+        radiobuttons_var2 = create_radiobuttons(window, var2, filename, 320, Seleccionar)
+
+        # Restablecer las variables seleccionadas
+        selected_variable_x = None
+        selected_variable_y = None
+
+    etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
+    etiqueta_seleccionar.place(x=20, y=280)
+    etiqueta_seleccionar.config(bg="#bcdbf3")
+
+    etiqueta_variable_x = tk.Label(window, text="VARIABLE X:")
+    etiqueta_variable_x.place(x=20, y=300)
+    etiqueta_variable_x.config(bg="#bcdbf3")
+
+    etiqueta_variable_y = tk.Label(window, text="VARIABLE Y:")
+    etiqueta_variable_y.place(x=20, y=320)
+    etiqueta_variable_y.config(bg="#bcdbf3")
+
+    # Crear el botón "Realizar Regresión Lineal"
+    button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
+    button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y, auto=True)
+    button_regresion.place(x=600, y=360)
+
 
 
 def cargar_modelo():
-    global loaded_model_info, text_data_display, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, radiobuttons_var1, radiobuttons_var2, button_regresion
-    global selected_variable_x, selected_variable_y, button_guardar_modelo
+    global loaded_model_info, text_data_display, button_guardar_modelo
+    global selected_variable_x, selected_variable_y
+
     try:
         file_path = filedialog.askopenfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
 
@@ -63,50 +107,26 @@ def cargar_modelo():
                     text_data_display.insert(tk.END, f"Ecuación del modelo: {loaded_model_info.ecuacion_recta}\n")
                     text_data_display.insert(tk.END, f"Error cuadrático medio (MSE): {loaded_model_info.mse}\n")
 
-                # Llamar a limpiar_interfaz para eliminar elementos
+                # Limpiar la interfaz antes de cargar el modelo
                 limpiar_interfaz()
 
                 # Restablecer button_guardar_modelo a None
                 button_guardar_modelo = None
 
+                # Restablecer las variables seleccionadas
+                selected_variable_x = None
+                selected_variable_y = None
+
     except Exception as e:
         show_error(f"Error al cargar el modelo: {str(e)}")
 
-   
-def browse_files():
-    global selected_variable_x, selected_variable_y, filename, button_regresion
-    global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion
-    filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"), 
-                                                                                       ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
 
-    if filename:  # Verificar si se seleccionó un archivo
-        label_file_explorer.config(text=f"{filename}")
-        label_file_explorer.config(text=f"{filename}")
-        
-        df = mostrar_archivos(filename)
-        show_data_popup(df)
-
-        radiobuttons_var1 = create_radiobuttons(window, var1, filename, 300, Seleccionar)
-        radiobuttons_var2 = create_radiobuttons(window, var2, filename, 320, Seleccionar)
-
-    etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
-    etiqueta_seleccionar.place(x=20, y = 280)
-    etiqueta_seleccionar.config(bg="#bcdbf3")
-
-    etiqueta_variable_x = tk.Label(window, text="VARIABLE X:")
-    etiqueta_variable_x.place(x=20, y = 300)
-    etiqueta_variable_x.config(bg="#bcdbf3")
-
-    etiqueta_variable_y = tk.Label(window, text="VARIABLE Y:")
-    etiqueta_variable_y.place(x=20, y = 320)
-    etiqueta_variable_y.config(bg="#bcdbf3")
-     # Crear el botón "Realizar Regresión Lineal"
-    button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
-    button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y)
-    button_regresion.place(x=600, y=360)
 
 def limpiar_interfaz():
-    global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion, button_guardar_modelo, label_mse, graph_canvas
+    global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion, button_guardar_modelo, label_mse, graph_canvas, selected_variable_x, selected_variable_y
+
+    selected_variable_x = None
+    selected_variable_y = None
 
     if etiqueta_seleccionar:
         etiqueta_seleccionar.destroy()
@@ -130,16 +150,14 @@ def limpiar_interfaz():
         graph_canvas.get_tk_widget().destroy()
     if label_ecuacion_recta:
         label_ecuacion_recta.destroy()  
-    if label_ecuacion_recta:
-        label_ecuacion_recta.destroy()  
-        
+
+    # Limpiar las variables globales relacionadas con Radiobuttons
+    radiobuttons_var1 = None
+    radiobuttons_var2 = None
+
 def show_data_popup(df):
     global text_data_display  # Para acceder al widget Text desde otras funciones
     text_data_display.delete(1.0, tk.END)  # Limpiar el contenido actual
-
-    
-
-    
     # Obtener información sobre los datos
     headers = df.columns
     max_column_widths = [max(len(str(header)), df[header].astype(str).apply(len).max()) for header in headers]
