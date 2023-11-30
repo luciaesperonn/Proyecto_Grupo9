@@ -36,11 +36,11 @@ radiobuttons_var1 = None
 radiobuttons_var2 = None
 button_regresion = None
 button_guardar_modelo = None
+modelo_regresion = None
 label_mse = None
 graph_canvas = None
 label_ecuacion_recta = None
 label_ecuacion_recta = None
-
 
 def cargar_modelo():
     global loaded_model_info, text_data_display, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, radiobuttons_var1, radiobuttons_var2, button_regresion
@@ -90,16 +90,17 @@ def browse_files():
         radiobuttons_var2 = create_radiobuttons(window, var2, filename, 320, Seleccionar)
 
     etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
-    etiqueta_seleccionar.place(x=20, y = 280)
+    etiqueta_seleccionar.place(relx=0.01, rely=0.32)
     etiqueta_seleccionar.config(bg="#bcdbf3")
 
     etiqueta_variable_x = tk.Label(window, text="VARIABLE X:")
-    etiqueta_variable_x.place(x=20, y = 300)
+    etiqueta_variable_x.place(relx=0.01, rely=0.35)
     etiqueta_variable_x.config(bg="#bcdbf3")
 
     etiqueta_variable_y = tk.Label(window, text="VARIABLE Y:")
-    etiqueta_variable_y.place(x=20, y = 320)
+    etiqueta_variable_y.place(relx=0.01, rely=0.38)
     etiqueta_variable_y.config(bg="#bcdbf3")
+    
      # Crear el botón "Realizar Regresión Lineal"
     button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
     button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y)
@@ -177,10 +178,6 @@ def Seleccionar():
     print(selected_variable_y)
     print()
 
-# Nueva función para realizar la regresión lineal
-modelo_regresion = None
-
-
 def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
     global label_mse, button_guardar_modelo, modelo_info, graph_canvas, label_ecuacion_recta 
     try:
@@ -228,11 +225,9 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
         # Crear el botón "Realizar Regresión Lineal"
         button_guardar_modelo = tk.Button(window, text="Guardar Modelo", height=1, width=20, command=guardar_modelo)
         button_guardar_modelo.place(x=750, y=360)
+
     except Exception as e:
         show_error(f"Error al realizar la regresión lineal: {str(e)}")
-
-
-
 
 def guardar_modelo():
     global modelo_info
@@ -282,7 +277,22 @@ def get_first_row(filename):
 # Crear la ventana raíz
 window = tk.Tk()
 window.title('EXPLORADOR DE ARCHIVOS')
-window.geometry("1920x1080")
+
+# Obtener el ancho y alto de la pantalla
+screen_width = window.winfo_screenwidth()
+screen_height = window.winfo_screenheight()
+
+# Establecer porcentajes para la geometría de la ventana
+width_percentage = 100
+height_percentage = 100
+
+# Calcular el tamaño de la ventana en función de los porcentajes
+window_width = int((screen_width * width_percentage) / 100)
+window_height = int((screen_height * height_percentage) / 100)
+
+# Crear la geometría de la ventana con porcentajes
+window.geometry(f"{window_width}x{window_height}")
+
 window.config(bg="#bcdbf3")
 
 # Creación de los Radiobutton
@@ -292,26 +302,26 @@ var2 = StringVar()
 var1.set(' ')
 var2.set(' ')
 
-# Crear elementos de la interfaz gráfica
-label_file_explorer = tk.Label(window, text="", width=75, height=2, fg="black", bg="#d9ffdf")
-button_explore = tk.Button(window, text="Buscar Archivos", command=browse_files, height=1, width=16)
+# Crear elementos de la interfaz gráfica con porcentajes
+label_file_explorer = tk.Label(window, text="", width=int(window_width * 0.08), height=int(window_height * 0.0025), fg="black", bg="#d9ffdf")
+button_explore = tk.Button(window, text="Buscar Archivos", command=browse_files, height=int(window_height * 0.0018), width=int(window_width * 0.009))
 
-# Organizar elementos en la ventana
-label_file_explorer.place(x=130, y=50)
-button_explore.place(x=1030, y=55)
+# Organizar elementos en la ventana con porcentajes
+label_file_explorer.place(relx=0.065, rely=0.025)
+button_explore.place(relx=0.65, rely=0.03)
 
 #Botón cargar modelo
-button_cargar_modelo = tk.Button(window, text="Cargar Modelo", command=cargar_modelo, height=1, width=16)
-button_cargar_modelo.place(x=1175, y=55)  
+button_cargar_modelo = tk.Button(window, text="Cargar Modelo", command=cargar_modelo, height=int(window_height * 0.0018), width=int(window_width * 0.009))
+button_cargar_modelo.place(relx=0.72, rely=0.03)  
 
 # Crear un widget Text para mostrar los datos
-text_data_display = scrolledtext.ScrolledText(window, wrap=tk.NONE, height=9, width=158, undo=True)
+text_data_display = scrolledtext.ScrolledText(window, wrap=tk.NONE, height=int(window_height * 0.015), width=int(window_width * 0.1), undo=True)
 #text_data_display.config(font=("Helvetica", 10))
-text_data_display.place(x=50, y=120)  
+text_data_display.place(relx=0.065, rely=0.08)
 
 #Etiquetas
-etiqueta_seleccionar = tk.Label(window, text="RUTA")
-etiqueta_seleccionar.place(x= 60, y = 60)
+etiqueta_seleccionar = tk.Label(window, text="RUTA", width=int(window_width * 0.005), height=int(window_height * 0.005))
+etiqueta_seleccionar.place(relx=0.03, rely=0.01)  # Posición en porcentaje
 etiqueta_seleccionar.config(bg="#bcdbf3")
 
 # Iniciar la aplicación
