@@ -331,9 +331,9 @@ text_data_display = scrolledtext.ScrolledText(window, wrap=tk.NONE, height=int(w
 text_data_display.place(relx=0.035, rely=0.09)
 
 #Etiquetas
-etiqueta_seleccionar = tk.Label(window, text="RUTA", width=int(window_width * 0.005), height=int(window_height * 0.005))
-etiqueta_seleccionar.place(relx=0.03, rely=0.01)  # Posición en porcentaje
-etiqueta_seleccionar.config(bg="#bcdbf3")
+etiqueta_ruta = tk.Label(window, text="RUTA", width=int(window_width * 0.005), height=int(window_height * 0.005))
+etiqueta_ruta.place(relx=0.03, rely=0.01)  # Posición en porcentaje
+etiqueta_ruta.config(bg="#bcdbf3")
 
 # Iniciar la aplicación
 window.mainloop()     
