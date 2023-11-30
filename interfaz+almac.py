@@ -58,15 +58,15 @@ def browse_files():
         # Limpiar Radiobuttons antes de crear nuevos
         limpiar_interfaz()
 
-        radiobuttons_var1 = create_radiobuttons(window, var1, filename, 300, Seleccionar)
-        radiobuttons_var2 = create_radiobuttons(window, var2, filename, 320, Seleccionar)
+        radiobuttons_var1 = create_radiobuttons(window, var1, filename, 0.355, Seleccionar)
+        radiobuttons_var2 = create_radiobuttons(window, var2, filename, 0.38, Seleccionar)
 
         # Restablecer las variables seleccionadas
         selected_variable_x = None
         selected_variable_y = None
 
     etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
-    etiqueta_seleccionar.place(relx=0.01, rely=0.325)
+    etiqueta_seleccionar.place(relx=0.01, rely=0.328)
     etiqueta_seleccionar.config(bg="#bcdbf3")
 
     etiqueta_variable_x = tk.Label(window, text="VARIABLE X:")
@@ -80,7 +80,7 @@ def browse_files():
     # Crear el botón "Realizar Regresión Lineal"
     button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
     button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y, auto=True)
-    button_regresion.place(x=600, y=360)
+    button_regresion.place(relx=0.4, rely=0.402)
 
 def cargar_modelo():
     global loaded_model_info, text_data_display, button_guardar_modelo
@@ -211,11 +211,11 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
         # Crear o actualizar las etiquetas con los resultados
         if label_mse is None:
             label_mse = tk.Label(window, text="")
-            label_mse.place(x=400, y=395)
+            label_mse.place(relx=0.315, rely=0.435)
         
         if label_ecuacion_recta is None:
             label_ecuacion_recta = tk.Label(window, text="")
-            label_ecuacion_recta.place(x=400, y=410)
+            label_ecuacion_recta.place(relx=0.315, rely=0.46)
 
         ecuacion_recta =f"Ecuación de la recta: y = {float(modelo.intercept_):.2f} + {float(modelo.coef_[0][0]):.2f} * X"
         label_ecuacion_recta.config(text=ecuacion_recta)
@@ -227,7 +227,7 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
         # Integrar la figura en un Canvas de Tkinter
         graph_canvas = FigureCanvasTkAgg(fig, master=window)
         graph_canvas_widget = graph_canvas.get_tk_widget()
-        graph_canvas_widget.place(x=380, y=430)
+        graph_canvas_widget.place(relx=0.3, rely=0.48)
 
         # Crear una instancia de ModeloInfo
         ecuacion_recta = f"y = {float(modelo.intercept_)} + {float(modelo.coef_[0][0])} * {variable_x}"
@@ -236,7 +236,7 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
 
         # Crear el botón "Realizar Regresión Lineal"
         button_guardar_modelo = tk.Button(window, text="Guardar Modelo", height=1, width=20, command=guardar_modelo)
-        button_guardar_modelo.place(x=750, y=360)
+        button_guardar_modelo.place(relx=0.51, rely=0.402)
     except Exception as e:
         show_error(f"Error al realizar la regresión lineal: {str(e)}")
 
@@ -270,7 +270,7 @@ def create_radiobuttons(window, variable, filename, y_position, command_callback
             if i < len(texto):  # Asegurarse de que hay elementos en la lista 'texto'
                 rad = Radiobutton(window, variable=variable, value=columna, text=texto[i], command=command_callback, font=("Helvetica", 8))
                 rad.pack(side=LEFT)
-                rad.place(x=120 + 125 * i, y=y_position)
+                rad.place(relx=0.06+0.091*i, rely=y_position)
                 rad.config(bg="#bcdbf3")
                 radiobuttons.append(rad)
     else:
