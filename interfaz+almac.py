@@ -67,15 +67,15 @@ def browse_files():
         selected_variable_y = None
 
     etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
-    etiqueta_seleccionar.place(x=20, y=280)
+    etiqueta_seleccionar.place(relx=0.01, rely=0.325)
     etiqueta_seleccionar.config(bg="#bcdbf3")
 
     etiqueta_variable_x = tk.Label(window, text="VARIABLE X:")
-    etiqueta_variable_x.place(x=20, y=300)
+    etiqueta_variable_x.place(relx=0.01, rely=0.355)
     etiqueta_variable_x.config(bg="#bcdbf3")
 
     etiqueta_variable_y = tk.Label(window, text="VARIABLE Y:")
-    etiqueta_variable_y.place(x=20, y=320)
+    etiqueta_variable_y.place(relx=0.01, rely=0.38)
     etiqueta_variable_y.config(bg="#bcdbf3")
 
     # Crear el botón "Realizar Regresión Lineal"
