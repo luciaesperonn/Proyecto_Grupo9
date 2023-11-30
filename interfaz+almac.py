@@ -300,7 +300,22 @@ def get_first_row(filename):
 # Crear la ventana raíz
 window = tk.Tk()
 window.title('EXPLORADOR DE ARCHIVOS')
-window.geometry("1920x1080")
+
+# Obtener el ancho y alto de la pantalla
+screen_width = window.winfo_screenwidth()
+screen_height = window.winfo_screenheight()
+
+# Establecer porcentajes para la geometría de la ventana
+width_percentage = 100
+height_percentage = 100
+
+# Calcular el tamaño de la ventana en función de los porcentajes
+window_width = int((screen_width * width_percentage) / 100)
+window_height = int((screen_height * height_percentage) / 100)
+
+# Crear la geometría de la ventana con porcentajes
+window.geometry(f"{window_width}x{window_height}")
+
 window.config(bg="#bcdbf3")
 
 # Creación de los Radiobutton
@@ -310,27 +325,27 @@ var2 = StringVar()
 var1.set(' ')
 var2.set(' ')
 
-# Crear elementos de la interfaz gráfica
-label_file_explorer = tk.Label(window, text="", width=75, height=2, fg="black", bg="#d9ffdf")
-button_explore = tk.Button(window, text="Buscar Archivos", command=browse_files, height=1, width=16)
+# Crear elementos de la interfaz gráfica con porcentajes
+label_file_explorer = tk.Label(window, text="", width=int(window_width * 0.08), height=int(window_height * 0.0025), fg="black", bg="#d9ffdf")
+button_explore = tk.Button(window, text="Buscar Archivos", command=browse_files, height=int(window_height * 0.0018), width=int(window_width * 0.009))
 
-# Organizar elementos en la ventana
-label_file_explorer.place(x=130, y=50)
-button_explore.place(x=1030, y=55)
+# Organizar elementos en la ventana con porcentajes
+label_file_explorer.place(relx=0.065, rely=0.025)
+button_explore.place(relx=0.65, rely=0.03)
 
 #Botón cargar modelo
-button_cargar_modelo = tk.Button(window, text="Cargar Modelo", command=cargar_modelo, height=1, width=16)
-button_cargar_modelo.place(x=1175, y=55)  
+button_cargar_modelo = tk.Button(window, text="Cargar Modelo", command=cargar_modelo, height=int(window_height * 0.0018), width=int(window_width * 0.009))
+button_cargar_modelo.place(relx=0.72, rely=0.03)  
 
 # Crear un widget Text para mostrar los datos
-text_data_display = scrolledtext.ScrolledText(window, wrap=tk.NONE, height=9, width=158, undo=True)
+text_data_display = scrolledtext.ScrolledText(window, wrap=tk.NONE, height=int(window_height * 0.015), width=int(window_width * 0.1), undo=True)
 #text_data_display.config(font=("Helvetica", 10))
-text_data_display.place(x=50, y=120)  
+text_data_display.place(relx=0.035, rely=0.09)
 
 #Etiquetas
-etiqueta_seleccionar = tk.Label(window, text="RUTA")
-etiqueta_seleccionar.place(x= 60, y = 60)
+etiqueta_seleccionar = tk.Label(window, text="RUTA", width=int(window_width * 0.005), height=int(window_height * 0.005))
+etiqueta_seleccionar.place(relx=0.03, rely=0.01)  # Posición en porcentaje
 etiqueta_seleccionar.config(bg="#bcdbf3")
 
 # Iniciar la aplicación
-window.mainloop()    
+window.mainloop()     
