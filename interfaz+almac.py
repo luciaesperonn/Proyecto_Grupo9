@@ -43,8 +43,8 @@ label_ecuacion_recta = None
 label_ecuacion_recta = None
 
 def cargar_modelo():
-    global loaded_model_info, text_data_display, button_guardar_modelo
-    global selected_variable_x, selected_variable_y
+    global loaded_model_info, text_data_display, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, radiobuttons_var1, radiobuttons_var2, button_regresion
+    global selected_variable_x, selected_variable_y, button_guardar_modelo
 
     try:
         file_path = filedialog.askopenfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
