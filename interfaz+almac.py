@@ -36,11 +36,10 @@ radiobuttons_var1 = None
 radiobuttons_var2 = None
 button_regresion = None
 button_guardar_modelo = None
+modelo_regresion = None
 label_mse = None
 graph_canvas = None
 label_ecuacion_recta = None
-
-# ... (código anterior)
 
 def browse_files():
     global selected_variable_x, selected_variable_y, filename, button_regresion, radiobuttons_var1, radiobuttons_var2
@@ -83,8 +82,6 @@ def browse_files():
     button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y, auto=True)
     button_regresion.place(x=600, y=360)
 
-
-
 def cargar_modelo():
     global loaded_model_info, text_data_display, button_guardar_modelo
     global selected_variable_x, selected_variable_y
@@ -119,8 +116,6 @@ def cargar_modelo():
 
     except Exception as e:
         show_error(f"Error al cargar el modelo: {str(e)}")
-
-
 
 def limpiar_interfaz():
     global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion, button_guardar_modelo, label_mse, graph_canvas, selected_variable_x, selected_variable_y
@@ -195,10 +190,6 @@ def Seleccionar():
     print(selected_variable_y)
     print()
 
-# Nueva función para realizar la regresión lineal
-modelo_regresion = None
-
-
 def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
     global label_mse, button_guardar_modelo, modelo_info, graph_canvas, label_ecuacion_recta 
     try:
@@ -248,9 +239,6 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
         button_guardar_modelo.place(x=750, y=360)
     except Exception as e:
         show_error(f"Error al realizar la regresión lineal: {str(e)}")
-
-
-
 
 def guardar_modelo():
     global modelo_info
