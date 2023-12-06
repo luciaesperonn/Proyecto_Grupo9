@@ -87,7 +87,7 @@ def browse_files():
 
 def cargar_modelo():
     global loaded_model_info, text_data_display, button_guardar_modelo
-    global selected_variable_x, selected_variable_y, valor_x_entry
+    global selected_variable_x, selected_variable_y
 
     try:
         file_path = filedialog.askopenfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
@@ -117,18 +117,22 @@ def cargar_modelo():
                 selected_variable_x = None
                 selected_variable_y = None
 
-                # Crear la etiqueta "Seleccione el valor de x"
-                etiqueta_seleccion_valor_x = tk.Label(window, text=f"Seleccione el valor de {loaded_model_info.x}:")
-                etiqueta_seleccion_valor_x.place(relx=0.01, rely=0.42)
-                etiqueta_seleccion_valor_x.config(bg="#bcdbf3")
-
-                # Crear el cuadro de entrada para el valor de x
-                valor_x_entry = tk.Entry(window, width=int(window_width * 0.01))
-                valor_x_entry.place(relx=0.18, rely=0.42)
-                valor_x_entry.bind("<Return>", obtener_valor_x)                
+                introducir_valor_x()               
 
     except Exception as e:
         show_error(f"Error al cargar el modelo: {str(e)}")
+
+def introducir_valor_x():
+    global valor_x_entry
+    # Crear la etiqueta "Seleccione el valor de x"
+    etiqueta_seleccion_valor_x = tk.Label(window, text=f"Seleccione el valor de {loaded_model_info.x}:")
+    etiqueta_seleccion_valor_x.place(relx=0.01, rely=0.42)
+    etiqueta_seleccion_valor_x.config(bg="#bcdbf3")
+
+    # Crear el cuadro de entrada para el valor de x
+    valor_x_entry = tk.Entry(window, width=int(window_width * 0.01))
+    valor_x_entry.place(relx=0.18, rely=0.42)
+    valor_x_entry.bind("<Return>", obtener_valor_x)
 
 def limpiar_interfaz():
     global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion, button_guardar_modelo, label_mse, graph_canvas, selected_variable_x, selected_variable_y, etiqueta_seleccion_valor_x, valor_x_entry, boton_confirmar_valor_x
@@ -165,7 +169,6 @@ def limpiar_interfaz():
     if boton_confirmar_valor_x:
         boton_confirmar_valor_x.destroy()
 
-
     # Limpiar las variables globales relacionadas con Radiobuttons
     radiobuttons_var1 = None
     radiobuttons_var2 = None
@@ -201,23 +204,13 @@ def show_error(message):
     text.insert(tk.INSERT, message)
     text.pack()# Función para obtener el valor ingresado en el cuadro de texto
 
-
-
 #Función para seleccionar las columnas de los datos que se usarán como entradas y salida del modelo
 def Seleccionar():
-    global selected_variable_x, selected_variable_y, valor_x_entry
+    global selected_variable_x, selected_variable_y
     selected_variable_x = var1.get()
     selected_variable_y = var2.get()
 
-    # Crear la etiqueta "Seleccione el valor de x"
-    etiqueta_seleccion_valor_x = tk.Label(window, text=f"Seleccione el valor de {selected_variable_x}:")
-    etiqueta_seleccion_valor_x.place(relx=0.01, rely=0.42)
-    etiqueta_seleccion_valor_x.config(bg="#bcdbf3")
-
-    # Crear el cuadro de entrada para el valor de x
-    valor_x_entry = tk.Entry(window, width=int(window_width * 0.01))
-    valor_x_entry.place(relx=0.18, rely=0.42)
-    valor_x_entry.bind("<Return>", obtener_valor_x)
+    introducir_valor_x()
 
     print(selected_variable_x)
     print(selected_variable_y)
