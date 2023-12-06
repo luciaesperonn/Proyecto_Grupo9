@@ -40,6 +40,9 @@ modelo_regresion = None
 label_mse = None
 graph_canvas = None
 label_ecuacion_recta = None
+etiqueta_seleccion_valor_x = None
+valor_x_entry = None
+boton_confirmar_valor_x = None
 
 def browse_files():
     global selected_variable_x, selected_variable_y, filename, button_regresion, radiobuttons_var1, radiobuttons_var2
@@ -84,7 +87,7 @@ def browse_files():
 
 def cargar_modelo():
     global loaded_model_info, text_data_display, button_guardar_modelo
-    global selected_variable_x, selected_variable_y
+    global selected_variable_x, selected_variable_y, valor_x_entry
 
     try:
         file_path = filedialog.askopenfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
@@ -114,11 +117,21 @@ def cargar_modelo():
                 selected_variable_x = None
                 selected_variable_y = None
 
+                # Crear la etiqueta "Seleccione el valor de x"
+                etiqueta_seleccion_valor_x = tk.Label(window, text=f"Seleccione el valor de {loaded_model_info.x}:")
+                etiqueta_seleccion_valor_x.place(relx=0.01, rely=0.42)
+                etiqueta_seleccion_valor_x.config(bg="#bcdbf3")
+
+                # Crear el cuadro de entrada para el valor de x
+                valor_x_entry = tk.Entry(window, width=int(window_width * 0.01))
+                valor_x_entry.place(relx=0.18, rely=0.42)
+                valor_x_entry.bind("<Return>", obtener_valor_x)                
+
     except Exception as e:
         show_error(f"Error al cargar el modelo: {str(e)}")
 
 def limpiar_interfaz():
-    global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion, button_guardar_modelo, label_mse, graph_canvas, selected_variable_x, selected_variable_y
+    global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion, button_guardar_modelo, label_mse, graph_canvas, selected_variable_x, selected_variable_y, etiqueta_seleccion_valor_x, valor_x_entry, boton_confirmar_valor_x
 
     selected_variable_x = None
     selected_variable_y = None
@@ -144,7 +157,14 @@ def limpiar_interfaz():
     if graph_canvas:
         graph_canvas.get_tk_widget().destroy()
     if label_ecuacion_recta:
-        label_ecuacion_recta.destroy()  
+        label_ecuacion_recta.destroy()
+    if etiqueta_seleccion_valor_x:
+        etiqueta_seleccion_valor_x.destroy()
+    if valor_x_entry:
+        valor_x_entry.destroy()
+    if boton_confirmar_valor_x:
+        boton_confirmar_valor_x.destroy()
+
 
     # Limpiar las variables globales relacionadas con Radiobuttons
     radiobuttons_var1 = None
@@ -179,16 +199,34 @@ def show_error(message):
     top.title("Error")
     text = tk.Text(top)
     text.insert(tk.INSERT, message)
-    text.pack()
+    text.pack()# Función para obtener el valor ingresado en el cuadro de texto
+
+
 
 #Función para seleccionar las columnas de los datos que se usarán como entradas y salida del modelo
 def Seleccionar():
-    global selected_variable_x, selected_variable_y
+    global selected_variable_x, selected_variable_y, valor_x_entry
     selected_variable_x = var1.get()
     selected_variable_y = var2.get()
+
+    # Crear la etiqueta "Seleccione el valor de x"
+    etiqueta_seleccion_valor_x = tk.Label(window, text=f"Seleccione el valor de {selected_variable_x}:")
+    etiqueta_seleccion_valor_x.place(relx=0.01, rely=0.42)
+    etiqueta_seleccion_valor_x.config(bg="#bcdbf3")
+
+    # Crear el cuadro de entrada para el valor de x
+    valor_x_entry = tk.Entry(window, width=int(window_width * 0.01))
+    valor_x_entry.place(relx=0.18, rely=0.42)
+    valor_x_entry.bind("<Return>", obtener_valor_x)
+
     print(selected_variable_x)
     print(selected_variable_y)
     print()
+
+def obtener_valor_x(event=None):
+    global valor_x_entry
+    valor_x = valor_x_entry.get()
+    print(f"Valor de la variable x seleccionado: {valor_x}")
 
 def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
     global label_mse, button_guardar_modelo, modelo_info, graph_canvas, label_ecuacion_recta 
@@ -232,11 +270,12 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
         # Crear una instancia de ModeloInfo
         ecuacion_recta = f"y = {float(modelo.intercept_)} + {float(modelo.coef_[0][0])} * {variable_x}"
         mse = mean_squared_error(y, modelo.predict(X))
-        modelo_info = ModeloInfo(ecuacion_recta, mse)
+        modelo_info = ModeloInfo(variable_x, variable_y, ecuacion_recta, mse)
 
         # Crear el botón "Realizar Regresión Lineal"
         button_guardar_modelo = tk.Button(window, text="Guardar Modelo", height=1, width=20, command=guardar_modelo)
         button_guardar_modelo.place(relx=0.51, rely=0.402)
+    
     except Exception as e:
         show_error(f"Error al realizar la regresión lineal: {str(e)}")
 
@@ -334,6 +373,7 @@ text_data_display.place(relx=0.035, rely=0.09)
 etiqueta_ruta = tk.Label(window, text="RUTA", width=int(window_width * 0.005), height=int(window_height * 0.005))
 etiqueta_ruta.place(relx=0.03, rely=0.01)  # Posición en porcentaje
 etiqueta_ruta.config(bg="#bcdbf3")
+
 
 # Iniciar la aplicación
 window.mainloop()     
