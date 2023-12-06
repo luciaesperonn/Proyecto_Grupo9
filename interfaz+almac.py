@@ -40,16 +40,15 @@ modelo_regresion = None
 label_mse = None
 graph_canvas = None
 label_ecuacion_recta = None
-etiqueta_seleccion_valor_x = None
+etiqueta_valor_x = None
 valor_x_entry = None
 button_prediccion = None
 resultado_prediccion = None
 
 def browse_files():
     global selected_variable_x, selected_variable_y, filename, button_regresion, radiobuttons_var1, radiobuttons_var2
-    global etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, valor_x_entry, resultado_prediccion, etiqueta_seleccion_valor_x, button_prediccion
- # Agregando la declaración global
-
+    global etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion
+ 
     filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"), 
                                                                                        ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
 
@@ -61,8 +60,7 @@ def browse_files():
         show_data_popup(df)
 
         # Limpiar Radiobuttons antes de crear nuevos
-        if modelo_info is not None:
-            limpiar_interfaz()
+        limpiar_interfaz()
 
         radiobuttons_var1 = create_radiobuttons(window, var1, filename, 0.355, Seleccionar)
         radiobuttons_var2 = create_radiobuttons(window, var2, filename, 0.38, Seleccionar)
@@ -90,7 +88,7 @@ def browse_files():
 
 def cargar_modelo():
     global loaded_model_info, text_data_display, button_guardar_modelo
-    global selected_variable_x, selected_variable_y, valor_x_entry, resultado_prediccion, etiqueta_seleccion_valor_x, button_prediccion
+    global selected_variable_x, selected_variable_y, valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion
 
     try:
         file_path = filedialog.askopenfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
@@ -126,20 +124,20 @@ def cargar_modelo():
         show_error(f"Error al cargar el modelo: {str(e)}")
 
 def introducir_valor_x():
-    global valor_x_entry, resultado_prediccion, etiqueta_seleccion_valor_x, button_prediccion
+    global valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion
 
     # Eliminar instancias anteriores si existen
-    limpiar_interfaz()
+    #limpiar_interfaz()
 
     # Crear la etiqueta "Seleccione el valor de x"
-    etiqueta_seleccion_valor_x = tk.Label(window, text="")
-    etiqueta_seleccion_valor_x.place(relx=0.01, rely=0.42)
-    etiqueta_seleccion_valor_x.config(bg="#bcdbf3")
+    etiqueta_valor_x = tk.Label(window, text="")
+    etiqueta_valor_x.place(relx=0.01, rely=0.42)
+    etiqueta_valor_x.config(bg="#bcdbf3")
    
     if modelo_info is not None:
-        etiqueta_seleccion_valor_x.config(text=f"Seleccione el valor de {modelo_info.x}:")
+        etiqueta_valor_x.config(text=f"Seleccione el valor de {modelo_info.x}:")
     elif loaded_model_info is not None:
-        etiqueta_seleccion_valor_x.config(text=f"Seleccione el valor de {loaded_model_info.x}:")
+        etiqueta_valor_x.config(text=f"Seleccione el valor de {loaded_model_info.x}:")
 
     # Crear el cuadro de entrada para el valor de x
     valor_x_entry = tk.Entry(window, width=int(window_width * 0.01))
@@ -155,7 +153,7 @@ def introducir_valor_x():
     resultado_prediccion.place(relx=0.6, rely=0.46)
 
 def limpiar_interfaz():
-    global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion, button_guardar_modelo, label_mse, graph_canvas, selected_variable_x, selected_variable_y, etiqueta_seleccion_valor_x, valor_x_entry, button_prediccion, resultado_prediccion
+    global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion, button_guardar_modelo, label_mse, graph_canvas, selected_variable_x, selected_variable_y, etiqueta_valor_x, valor_x_entry, button_prediccion, resultado_prediccion
 
     selected_variable_x = None
     selected_variable_y = None
@@ -182,10 +180,11 @@ def limpiar_interfaz():
         graph_canvas.get_tk_widget().destroy()
     if label_ecuacion_recta:
         label_ecuacion_recta.destroy()
-    if etiqueta_seleccion_valor_x:
-        etiqueta_seleccion_valor_x.destroy()
+    if etiqueta_valor_x:
+        etiqueta_valor_x.destroy()
     if valor_x_entry:
         valor_x_entry.destroy()
+    print('ola')
     if button_prediccion:
         button_prediccion.destroy()
     if resultado_prediccion:
