@@ -158,6 +158,10 @@ def limpiar_interfaz():
     selected_variable_x = None
     selected_variable_y = None
 
+    # Limpiar las variables de control de los Radiobuttons
+    var1.set(' ')
+    var2.set(' ')
+
     if etiqueta_seleccionar:
         etiqueta_seleccionar.destroy()
     if etiqueta_variable_x:
@@ -184,7 +188,6 @@ def limpiar_interfaz():
         etiqueta_valor_x.destroy()
     if valor_x_entry:
         valor_x_entry.destroy()
-    print('ola')
     if button_prediccion:
         button_prediccion.destroy()
     if resultado_prediccion:
@@ -257,7 +260,7 @@ def realizar_prediccion():
         show_error(f"Error al realizar la predicción: {str(e)}")
 
 def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
-    global label_mse, button_guardar_modelo, modelo_info, graph_canvas, label_ecuacion_recta 
+    global label_mse, button_guardar_modelo, modelo_info, graph_canvas, label_ecuacion_recta, loaded_model_info
     try:
         # Restablecer loaded_model_info a None si se está creando un nuevo modelo
         if not auto:
@@ -332,6 +335,7 @@ def guardar_modelo():
 
 def create_radiobuttons(window, variable, filename, y_position, command_callback):
     radiobuttons = []
+
     # Obtener la primera fila del DataFrame
     primera_fila = get_first_row(filename)
     texto = ["longitude", 'latitude', 'housing_median_age', 'total_rooms', 'total_bedrooms', 'population', 'households', 'median_income', 'median_house_value', 'ocean_proximity']
