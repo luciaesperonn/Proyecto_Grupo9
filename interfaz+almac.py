@@ -42,7 +42,8 @@ graph_canvas = None
 label_ecuacion_recta = None
 etiqueta_seleccion_valor_x = None
 valor_x_entry = None
-boton_confirmar_valor_x = None
+button_prediccion = None
+resultado_prediccion = None
 
 def browse_files():
     global selected_variable_x, selected_variable_y, filename, button_regresion, radiobuttons_var1, radiobuttons_var2
@@ -123,16 +124,30 @@ def cargar_modelo():
         show_error(f"Error al cargar el modelo: {str(e)}")
 
 def introducir_valor_x():
-    global valor_x_entry
+    global valor_x_entry, resultado_prediccion
+
     # Crear la etiqueta "Seleccione el valor de x"
-    etiqueta_seleccion_valor_x = tk.Label(window, text=f"Seleccione el valor de {loaded_model_info.x}:")
-    etiqueta_seleccion_valor_x.place(relx=0.01, rely=0.42)
-    etiqueta_seleccion_valor_x.config(bg="#bcdbf3")
+    if loaded_model_info is not None:
+        etiqueta_seleccion_valor_x = tk.Label(window, text=f"Seleccione el valor de {loaded_model_info.x}:")
+        etiqueta_seleccion_valor_x.place(relx=0.01, rely=0.42)
+        etiqueta_seleccion_valor_x.config(bg="#bcdbf3")
+    elif modelo_info is not None:
+        etiqueta_seleccion_valor_x = tk.Label(window, text=f"Seleccione el valor de {modelo_info.x}:")
+        etiqueta_seleccion_valor_x.place(relx=0.01, rely=0.42)
+        etiqueta_seleccion_valor_x.config(bg="#bcdbf3")
 
     # Crear el cuadro de entrada para el valor de x
     valor_x_entry = tk.Entry(window, width=int(window_width * 0.01))
     valor_x_entry.place(relx=0.18, rely=0.42)
     valor_x_entry.bind("<Return>", obtener_valor_x)
+
+    # Botón "Realizar Predicción"
+    button_prediccion = tk.Button(window, text="Realizar Predicción", height=1, width=20, command=realizar_prediccion)
+    button_prediccion.place(relx=0.6, rely=0.42)
+
+    # Etiqueta para mostrar el resultado de la predicción
+    resultado_prediccion = tk.Label(window, text="", width=int(window_width * 0.02), height=int(window_height * 0.002))
+    resultado_prediccion.place(relx=0.6, rely=0.46)
 
 def limpiar_interfaz():
     global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion, button_guardar_modelo, label_mse, graph_canvas, selected_variable_x, selected_variable_y, etiqueta_seleccion_valor_x, valor_x_entry, boton_confirmar_valor_x
@@ -166,8 +181,7 @@ def limpiar_interfaz():
         etiqueta_seleccion_valor_x.destroy()
     if valor_x_entry:
         valor_x_entry.destroy()
-    if boton_confirmar_valor_x:
-        boton_confirmar_valor_x.destroy()
+
 
     # Limpiar las variables globales relacionadas con Radiobuttons
     radiobuttons_var1 = None
@@ -220,6 +234,22 @@ def obtener_valor_x(event=None):
     global valor_x_entry
     valor_x = valor_x_entry.get()
     print(f"Valor de la variable x seleccionado: {valor_x}")
+    return valor_x
+
+def realizar_prediccion():
+    global resultado_prediccion
+    try:
+        valor_x = obtener_valor_x(event=None)
+        if loaded_model_info is not None:  # Si hay un modelo cargado
+            valor_y = loaded_model_info.intercept + loaded_model_info.slope * float(valor_x)
+            resultado_prediccion.config(text=f"{valor_y} = {loaded_model_info.intercept} + {loaded_model_info.slope} * {valor_x}")
+        elif modelo_info is not None:  # Si se acaba de realizar una regresión lineal
+            valor_y = modelo_info.intercept + modelo_info.slope * float(valor_x)
+            resultado_prediccion.config(text=f"{valor_y} = {modelo_info.intercept} + {modelo_info.slope} * {valor_x}")
+        else:
+            show_error("Primero realiza una regresión lineal o carga un modelo antes de realizar predicciones.")
+    except Exception as e:
+        show_error(f"Error al realizar la predicción: {str(e)}")
 
 def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
     global label_mse, button_guardar_modelo, modelo_info, graph_canvas, label_ecuacion_recta 
@@ -263,7 +293,7 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
         # Crear una instancia de ModeloInfo
         ecuacion_recta = f"y = {float(modelo.intercept_)} + {float(modelo.coef_[0][0])} * {variable_x}"
         mse = mean_squared_error(y, modelo.predict(X))
-        modelo_info = ModeloInfo(variable_x, variable_y, ecuacion_recta, mse)
+        modelo_info = ModeloInfo(variable_x, variable_y, modelo.intercept_, modelo.coef_, ecuacion_recta, mse)
 
         # Crear el botón "Realizar Regresión Lineal"
         button_guardar_modelo = tk.Button(window, text="Guardar Modelo", height=1, width=20, command=guardar_modelo)

@@ -1,9 +1,11 @@
 import joblib
 
 class ModeloInfo:
-    def __init__(self, x, y, ecuacion_recta, mse):
+    def __init__(self, x, y, intercept, slope, ecuacion_recta, mse):
         self.x = x
         self.y = y
+        self.intercept = intercept
+        self.slope = slope
         self.ecuacion_recta = ecuacion_recta
         self.mse = mse
 
