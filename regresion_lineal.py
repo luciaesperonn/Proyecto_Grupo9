@@ -38,7 +38,7 @@ def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
     return modelo
 
 
-def visualizar_modelo(modelo, X, y, columna_predictora):
+def visualizar_modelo(modelo, X, y, etiqueta_x, etiqueta_y):
     y_pred = modelo.predict(X)
 
     figure = Figure(figsize=(6, 4))
@@ -50,8 +50,8 @@ def visualizar_modelo(modelo, X, y, columna_predictora):
     intercepto = float(modelo.intercept_)
     coeficiente = float(modelo.coef_[0][0])
 
-    ax.set_xlabel('Variable Independiente')
-    ax.set_ylabel('Variable Dependiente')
+    ax.set_xlabel(etiqueta_x)  # Utiliza la etiqueta de la variable X
+    ax.set_ylabel(etiqueta_y)  # Utiliza la etiqueta de la variable Y
     ax.legend()
     ax.set_title('Modelo de Regresión Lineal')
     return figure

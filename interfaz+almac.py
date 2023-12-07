@@ -45,6 +45,8 @@ valor_x_entry = None
 button_prediccion = None
 resultado_prediccion = None
 
+
+
 def browse_files():
     global selected_variable_x, selected_variable_y, filename, button_regresion, radiobuttons_var1, radiobuttons_var2
     global etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion
@@ -271,7 +273,7 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
 
         X = datos[[variable_x]]
         y = datos[[variable_y]]
-        fig = visualizar_modelo(modelo, X, y, [variable_x])
+        fig = visualizar_modelo(modelo, X, y, etiqueta_x=variable_x, etiqueta_y=variable_y)
 
         # Crear o actualizar las etiquetas con los resultados
         if label_mse is None:
@@ -358,6 +360,7 @@ def get_first_row(filename):
 window = tk.Tk()
 window.title('EXPLORADOR DE ARCHIVOS')
 
+
 # Obtener el ancho y alto de la pantalla
 screen_width = window.winfo_screenwidth()
 screen_height = window.winfo_screenheight()
@@ -401,6 +404,7 @@ text_data_display.place(relx=0.035, rely=0.09)
 #Etiquetas
 etiqueta_ruta = tk.Label(window, text="RUTA", width=int(window_width * 0.005), height=int(window_height * 0.005))
 etiqueta_ruta.place(relx=0.03, rely=0.01)  # Posición en porcentaje
+
 
 
 
