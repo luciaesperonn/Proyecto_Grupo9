@@ -71,15 +71,12 @@ def browse_files():
 
     etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
     etiqueta_seleccionar.place(relx=0.01, rely=0.328)
-    etiqueta_seleccionar.config(bg="#bcdbf3")
 
     etiqueta_variable_x = tk.Label(window, text="VARIABLE X:")
     etiqueta_variable_x.place(relx=0.01, rely=0.355)
-    etiqueta_variable_x.config(bg="#bcdbf3")
 
     etiqueta_variable_y = tk.Label(window, text="VARIABLE Y:")
     etiqueta_variable_y.place(relx=0.01, rely=0.38)
-    etiqueta_variable_y.config(bg="#bcdbf3")
 
     # Crear el botón "Realizar Regresión Lineal"
     button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
@@ -132,7 +129,6 @@ def introducir_valor_x():
     # Crear la etiqueta "Seleccione el valor de x"
     etiqueta_valor_x = tk.Label(window, text="")
     etiqueta_valor_x.place(relx=0.01, rely=0.42)
-    etiqueta_valor_x.config(bg="#bcdbf3")
    
     if modelo_info is not None:
         etiqueta_valor_x.config(text=f"Seleccione el valor de {modelo_info.x}:")
@@ -345,7 +341,6 @@ def create_radiobuttons(window, variable, filename, y_position, command_callback
                 rad = Radiobutton(window, variable=variable, value=columna, text=texto[i], command=command_callback, font=("Helvetica", 8))
                 rad.pack(side=LEFT)
                 rad.place(relx=0.06+0.091*i, rely=y_position)
-                rad.config(bg="#bcdbf3")
                 radiobuttons.append(rad)
     else:
         print("Error al obtener la primera fila del archivo.")
@@ -378,7 +373,6 @@ window_height = int((screen_height * height_percentage) / 100)
 # Crear la geometría de la ventana con porcentajes
 window.geometry(f"{window_width}x{window_height}")
 
-window.config(bg="#bcdbf3")
 
 # Creación de los Radiobutton
 var1 = StringVar()
@@ -388,7 +382,7 @@ var1.set(' ')
 var2.set(' ')
 
 # Crear elementos de la interfaz gráfica con porcentajes
-label_file_explorer = tk.Label(window, text="", width=int(window_width * 0.08), height=int(window_height * 0.0025), fg="black", bg="#d9ffdf")
+label_file_explorer = tk.Label(window, text="", width=int(window_width * 0.08), height=int(window_height * 0.0025), fg="black")
 button_explore = tk.Button(window, text="Buscar Archivos", command=browse_files, height=int(window_height * 0.0018), width=int(window_width * 0.009))
 
 # Organizar elementos en la ventana con porcentajes
@@ -407,7 +401,7 @@ text_data_display.place(relx=0.035, rely=0.09)
 #Etiquetas
 etiqueta_ruta = tk.Label(window, text="RUTA", width=int(window_width * 0.005), height=int(window_height * 0.005))
 etiqueta_ruta.place(relx=0.03, rely=0.01)  # Posición en porcentaje
-etiqueta_ruta.config(bg="#bcdbf3")
+
 
 
 # Iniciar la aplicación
