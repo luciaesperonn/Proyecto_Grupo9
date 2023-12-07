@@ -273,7 +273,11 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
 
         X = datos[[variable_x]]
         y = datos[[variable_y]]
-        fig = visualizar_modelo(modelo, X, y, etiqueta_x=variable_x, etiqueta_y=variable_y)
+
+        etiqueta_x = variable_x 
+        etiqueta_y = variable_y 
+
+        fig = visualizar_modelo(modelo, X, y, etiqueta_x, etiqueta_y)
 
         # Crear o actualizar las etiquetas con los resultados
         if label_mse is None:
@@ -284,7 +288,7 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
             label_ecuacion_recta = tk.Label(window, text="")
             label_ecuacion_recta.place(relx=0.315, rely=0.46)
 
-        ecuacion_recta =f"Ecuación de la recta: y = {float(modelo.intercept_):.2f} + {float(modelo.coef_[0][0]):.2f} * X"
+        ecuacion_recta =f"Ecuación de la recta:   {etiqueta_y} = {float(modelo.intercept_):.2f} + {float(modelo.coef_[0][0]):.2f} * {etiqueta_x}"
         label_ecuacion_recta.config(text=ecuacion_recta)
         window.update()
 
@@ -356,6 +360,12 @@ def get_first_row(filename):
     else:
         return None
 
+
+
+
+
+
+
 # Crear la ventana raíz
 window = tk.Tk()
 window.title('EXPLORADOR DE ARCHIVOS')
@@ -404,8 +414,6 @@ text_data_display.place(relx=0.035, rely=0.09)
 #Etiquetas
 etiqueta_ruta = tk.Label(window, text="RUTA", width=int(window_width * 0.005), height=int(window_height * 0.005))
 etiqueta_ruta.place(relx=0.03, rely=0.01)  # Posición en porcentaje
-
-
 
 
 # Iniciar la aplicación
