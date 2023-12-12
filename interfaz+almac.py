@@ -83,7 +83,7 @@ def browse_files():
     # Crear el botón "Realizar Regresión Lineal"
     button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
     button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y, auto=True)
-    button_regresion.place(relx=0.4, rely=0.402)
+    button_regresion.place(relx=0.01, rely=0.42)
     
     
 
@@ -132,7 +132,7 @@ def introducir_valor_x():
 
     # Crear la etiqueta "Seleccione el valor de x"
     etiqueta_valor_x = tk.Label(window, text="")
-    etiqueta_valor_x.place(relx=0.01, rely=0.42)
+    etiqueta_valor_x.place(relx=0.55, rely=0.8)
    
     if modelo_info is not None:
         etiqueta_valor_x.config(text=f"Seleccione el valor de {modelo_info.x}:")
@@ -141,16 +141,16 @@ def introducir_valor_x():
 
     # Crear el cuadro de entrada para el valor de x
     valor_x_entry = tk.Entry(window, width=int(window_width * 0.01))
-    valor_x_entry.place(relx=0.18, rely=0.42)
+    valor_x_entry.place(relx=0.68, rely=0.8)
     valor_x_entry.bind("<Return>", obtener_valor_x)
 
     # Botón "Realizar Predicción"
     button_prediccion = tk.Button(window, text="Realizar Predicción", height=1, width=20, command=realizar_prediccion)
-    button_prediccion.place(relx=0.6, rely=0.42)
+    button_prediccion.place(relx=0.55, rely=0.86)
 
     # Etiqueta para mostrar el resultado de la predicción
     resultado_prediccion = tk.Label(window, text="", width=int(window_width * 0.03), height=int(window_height * 0.002))
-    resultado_prediccion.place(relx=0.6, rely=0.46)
+    resultado_prediccion.place(relx=0.68, rely=0.86)
 
 def limpiar_interfaz():
     global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion, button_guardar_modelo, label_mse, graph_canvas, selected_variable_x, selected_variable_y, etiqueta_valor_x, valor_x_entry, button_prediccion, resultado_prediccion
@@ -284,11 +284,11 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
         # Crear o actualizar las etiquetas con los resultados
         if label_mse is None:
             label_mse = tk.Label(window, text="")
-            label_mse.place(relx=0.315, rely=0.435)
+            label_mse.place(relx=0.55, rely=0.42)
         
         if label_ecuacion_recta is None:
             label_ecuacion_recta = tk.Label(window, text="")
-            label_ecuacion_recta.place(relx=0.315, rely=0.46)
+            label_ecuacion_recta.place(relx=0.55, rely=0.45)
 
         ecuacion_recta =f"Ecuación de la recta:   {etiqueta_y} = {float(modelo.intercept_):.2f} + {float(modelo.coef_[0][0]):.2f} * {etiqueta_x}"
         label_ecuacion_recta.config(text=ecuacion_recta)
@@ -300,7 +300,7 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
         # Integrar la figura en un Canvas de Tkinter
         graph_canvas = FigureCanvasTkAgg(fig, master=window)
         graph_canvas_widget = graph_canvas.get_tk_widget()
-        graph_canvas_widget.place(relx=0.3, rely=0.48)
+        graph_canvas_widget.place(relx=0.15, rely=0.42)
 
         # Crear una instancia de ModeloInfo
         ecuacion_recta = f"y = {float(modelo.intercept_)} + {float(modelo.coef_[0][0])} * {variable_x}"
@@ -309,7 +309,7 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
 
         # Crear el botón "Realizar Regresión Lineal"
         button_guardar_modelo = tk.Button(window, text="Guardar Modelo", height=1, width=20, command=guardar_modelo)
-        button_guardar_modelo.place(relx=0.51, rely=0.402)
+        button_guardar_modelo.place(relx=0.01, rely=0.46)
 
         introducir_valor_x()               
 
