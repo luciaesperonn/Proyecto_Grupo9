@@ -84,6 +84,8 @@ def browse_files():
     button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20)
     button_regresion["command"] = lambda: realizar_regresion_lineal(filename, selected_variable_x, selected_variable_y, auto=True)
     button_regresion.place(relx=0.4, rely=0.402)
+    
+    
 
 def cargar_modelo():
     global loaded_model_info, text_data_display, button_guardar_modelo
@@ -361,11 +363,6 @@ def get_first_row(filename):
         return None
 
 
-
-
-
-
-
 # Crear la ventana raíz
 window = tk.Tk()
 window.title('EXPLORADOR DE ARCHIVOS')
@@ -385,6 +382,8 @@ window_height = int((screen_height * height_percentage) / 100)
 
 # Crear la geometría de la ventana con porcentajes
 window.geometry(f"{window_width}x{window_height}")
+
+
 
 
 # Creación de los Radiobutton
