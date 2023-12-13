@@ -1,4 +1,4 @@
-#Importación de librerías
+# Importación de librerías
 import sqlite3
 import joblib
 import pandas as pd
@@ -110,7 +110,12 @@ def mostrar_info_modelo(file_path, loaded_model_info):
 def introducir_valor_x():
     global valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion
 
-    # Crear la etiqueta "Seleccione el valor de x"
+    # Crear la etiqueta
+
+
+def introducir_valor_x():
+    global valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion
+
     etiqueta_valor_x = tk.Label(window, text="")
     etiqueta_valor_x.place(relx=0.55, rely=0.8)
    
@@ -131,6 +136,7 @@ def introducir_valor_x():
     # Etiqueta para mostrar el resultado de la predicción
     resultado_prediccion = tk.Label(window, text="", width=int(window_width * 0.03), height=int(window_height * 0.002))
     resultado_prediccion.place(relx=0.68, rely=0.86)
+
 
 def limpiar_interfaz():
     global radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_regresion, button_guardar_modelo, label_mse, graph_canvas, selected_variable_x, selected_variable_y, etiqueta_valor_x, valor_x_entry, button_prediccion, resultado_prediccion
@@ -303,7 +309,7 @@ def crear_etiquetas_resultados(modelo, X, y, variable_x, variable_y):
 def integrar_figura_en_canvas(fig):
     graph_canvas = FigureCanvasTkAgg(fig, master=window)
     graph_canvas_widget = graph_canvas.get_tk_widget()
-    graph_canvas_widget.place(relx=0.15, rely=0.42)
+    graph_canvas_widget.place(relx=0.12, rely=0.42)
     
     return graph_canvas
 
