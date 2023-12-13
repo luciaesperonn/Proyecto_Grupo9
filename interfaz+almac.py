@@ -107,10 +107,6 @@ def mostrar_info_modelo(file_path, loaded_model_info):
             text_data_display.insert(tk.END, f"Ecuación del modelo: {loaded_model_info.ecuacion_recta}\n")
             text_data_display.insert(tk.END, f"Error cuadrático medio (MSE): {loaded_model_info.mse}\n")
 
-def introducir_valor_x():
-    global valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion
-
-    # Crear la etiqueta
 
 
 def introducir_valor_x():
