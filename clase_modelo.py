@@ -12,4 +12,3 @@ class ModeloInfo:
     def guardar_modelo(self, file_path):
         # Utilizar joblib.dump para guardar la instancia de la clase
         joblib.dump(self, file_path)
-

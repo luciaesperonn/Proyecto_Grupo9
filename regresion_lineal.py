@@ -1,10 +1,9 @@
 import pandas as pd
-from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_squared_error, r2_score
-from leer_archivos import mostrar_archivos
 from clase_modelo import ModeloInfo
 from matplotlib.figure import Figure
-
+from leer_archivos import mostrar_archivos
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error, r2_score
 
 def verificar_columnas_numericas(datos, columnas):
     for col in columnas:
@@ -34,9 +33,7 @@ def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
     print(f"Error cuadrático medio (MSE): {mse}")
     print(f"Bondad de ajuste (R²): {r2}")
 
-   
     return modelo
-
 
 def visualizar_modelo(modelo, X, y, etiqueta_x, etiqueta_y):
     y_pred = modelo.predict(X)
@@ -54,4 +51,5 @@ def visualizar_modelo(modelo, X, y, etiqueta_x, etiqueta_y):
     ax.set_ylabel(etiqueta_y)  # Utiliza la etiqueta de la variable Y
     ax.legend()
     ax.set_title('Modelo de Regresión Lineal')
+    
     return figure
