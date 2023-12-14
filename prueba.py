@@ -19,11 +19,10 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from regresion_lineal import crear_modelo_regresion_lineal, visualizar_modelo
 
 
-def browse_files(selected_variable_x, selected_variable_y, filename, button_regresion, 
+def browse_files(filename, button_regresion, 
                  radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, 
-                 etiqueta_variable_y, valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion,
-                 label_ecuacion_recta,button_guardar_modelo,label_mse, graph_canvas):
-    
+                 etiqueta_variable_y, valor_x_entry, etiqueta_valor_x, button_prediccion,
+                 label_ecuacion_recta, button_guardar_modelo, label_mse, graph_canvas, modelo_info, loaded_model_infofilename):
     
     filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"), 
                                                                                        ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
@@ -37,8 +36,8 @@ def browse_files(selected_variable_x, selected_variable_y, filename, button_regr
         # Limpiar Radiobuttons antes de crear nuevos
         limpiar_interfaz(radiobuttons_var1, radiobuttons_var2, label_ecuacion_recta, etiqueta_seleccionar, 
                          etiqueta_variable_x, etiqueta_variable_y, button_regresion, button_guardar_modelo, 
-                         label_mse, graph_canvas, selected_variable_x, selected_variable_y, etiqueta_valor_x, 
-                         valor_x_entry, button_prediccion, resultado_prediccion)
+                         label_mse, graph_canvas, etiqueta_valor_x, 
+                         valor_x_entry, button_prediccion)
         
         radiobuttons_var1 = create_radiobuttons(window, var1, filename, 0.355, Seleccionar)
         radiobuttons_var2 = create_radiobuttons(window, var2, filename, 0.38, Seleccionar)
@@ -53,17 +52,20 @@ def browse_files(selected_variable_x, selected_variable_y, filename, button_regr
     etiqueta_variable_y.place(relx=0.01, rely=0.38)
 
     # Crear el botón "Realizar Regresión Lineal"
-    button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20, command=lambda: realizar_regresion_lineal(filename, var1.get(), var2.get(), auto=True))
+    button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20, command=lambda: realizar_regresion_lineal(filename, var1.get(), var2.get(),label_mse, button_guardar_modelo, modelo_info, 
+                                                                                                                                            graph_canvas, label_ecuacion_recta, loaded_model_infofilename, 
+                                                                                                                                             auto=True auto=True))
     button_regresion.place(relx=0.01, rely=0.42)
     
-def cargar_modelo():
+def cargar_modelo(selected_variable_x, selected_variable_y,
+                   valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion, button_guardar_modelo):
     
     try:
         file_path = filedialog.askopenfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
 
         if file_path:
             loaded_model_info = joblib.load(file_path)
-            mostrar_info_modelo(file_path, loaded_model_info)
+            mostrar_info_modelo(file_path, loaded_model_info,text_data_display, button_guardar_modelo)
 
             # Limpiar la interfaz antes de cargar el modelo
             limpiar_interfaz()
@@ -102,10 +104,10 @@ def introducir_valor_x(valor_x_entry, resultado_prediccion, etiqueta_valor_x, bu
     # Crear el cuadro de entrada para el valor de x
     valor_x_entry = tk.Entry(window, width=int(window_width * 0.01))
     valor_x_entry.place(relx=0.68, rely=0.8)
-    valor_x_entry.bind("<Return>", obtener_valor_x)
+    valor_x_entry.bind("<Return>",lambda: obtener_valor_x(valor_x_entry,event=None))
 
     # Botón "Realizar Predicción"
-    button_prediccion = tk.Button(window, text="Realizar Predicción", height=1, width=20, command=realizar_prediccion)
+    button_prediccion = tk.Button(window, text="Realizar Predicción", height=1, width=20, command=lambda:realizar_prediccion(resultado_prediccion,loaded_model_info,modelo_info))
     button_prediccion.place(relx=0.55, rely=0.86)
 
     # Etiqueta para mostrar el resultado de la predicción
@@ -113,14 +115,12 @@ def introducir_valor_x(valor_x_entry, resultado_prediccion, etiqueta_valor_x, bu
     resultado_prediccion.place(relx=0.68, rely=0.86)
 
 
-def limpiar_interfaz(radiobuttons_var1, radiobuttons_var2,label_ecuacion_recta, 
-                     etiqueta_seleccionar, etiqueta_variable_x, 
-                     etiqueta_variable_y, button_regresion, button_guardar_modelo,
-                     label_mse, graph_canvas, selected_variable_x, selected_variable_y, 
-                     etiqueta_valor_x, valor_x_entry, button_prediccion, resultado_prediccion):
+def limpiar_interfaz(var1,var2,etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y,
+                          button_regresion, button_guardar_modelo, label_mse,
+                          label_ecuacion_recta, etiqueta_valor_x, valor_x_entry,
+                          button_prediccion, resultado_prediccion,graph_canvas,radiobuttons_var1,radiobuttons_var2):
 
-    selected_variable_x = None
-    selected_variable_y = None
+    
 
     # Limpiar las variables de control de los Radiobuttons
     var1.set(' ')
@@ -142,9 +142,7 @@ def limpiar_interfaz(radiobuttons_var1, radiobuttons_var2,label_ecuacion_recta,
     if graph_canvas:
         graph_canvas.get_tk_widget().destroy()
 
-    # Limpiar las variables globales relacionadas con Radiobuttons
-    radiobuttons_var1 = None
-    radiobuttons_var2 = None
+    
 
 def destruir_radiobuttons(radiobutton_list):
     if radiobutton_list:
@@ -193,23 +191,23 @@ def show_info(message):
     text.pack()# Función para obtener el valor ingresado en el cuadro de texto
 
 #Función para seleccionar las columnas de los datos que se usarán como entradas y salida del modelo
-def Seleccionar(selected_variable_x, selected_variable_y):
+def Seleccionar():
     selected_variable_x = var1.get()
     selected_variable_y = var2.get()
-
-    print(selected_variable_x)
+    return selected_variable_x, selected_variable_y
+    '''print(selected_variable_x)
     print(selected_variable_y)
-    print()
+    print()'''
 
 def obtener_valor_x(valor_x_entry,event=None):
     valor_x = valor_x_entry.get()
     print(f"Valor de la variable x seleccionado: {valor_x}")
     return valor_x
 
-def realizar_prediccion(resultado_prediccion,loaded_model_info,modelo_info):
+def realizar_prediccion(valor_x_entry,resultado_prediccion,loaded_model_info,modelo_info):
 
     try:
-        valor_x = obtener_valor_x(event=None)
+        valor_x = obtener_valor_x(valor_x_entry,event=None)
 
         if loaded_model_info or modelo_info:
             # Seleccionar la información del modelo adecuada
@@ -226,14 +224,11 @@ def realizar_prediccion(resultado_prediccion,loaded_model_info,modelo_info):
     except Exception as e:
         show_error(f"Error al realizar la predicción: {str(e)}")
 
-def realizar_regresion_lineal(filename,label_mse, button_guardar_modelo, modelo_info, 
-                              graph_canvas, label_ecuacion_recta, loaded_model_infofilename, 
-                              variable_x, variable_y, auto=True):
+def realizar_regresion_lineal(filename,variable_x,variable_y,
+                              loaded_model_infofilename, 
+                             auto=True):
     try:
-        # Restablecer loaded_model_info a None si se está creando un nuevo modelo
-        if not auto:
-            loaded_model_info = None
-
+            
         modelo = crear_modelo_regresion_lineal(filename, [variable_x], [variable_y])
         datos = mostrar_archivos(filename)
 
