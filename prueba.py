@@ -26,6 +26,15 @@ modelo_info = None
 loaded_model_info = None
 
 def browse_files():
+    """
+    Abre una ventana de explorador de archivos y permite al usuario seleccionar un archivo de datos.
+
+    Parámetros:
+    - Ninguno
+
+    Devuelve:
+    - str: Ruta del archivo seleccionado.
+    """
     filename = get_selected_filename()
 
     # Definir las variables antes de la llamada a destroy_existing_radiobuttons
@@ -47,25 +56,75 @@ def browse_files():
         create_regression_button(window, filename, var1, var2)
 
 def get_selected_filename():
+    """
+    Devuelve la ruta del archivo seleccionado por el usuario en el explorador de archivos.
+
+    Parámetros:
+    - Ninguno
+
+    Devuelve:
+    - str: Ruta del archivo seleccionado.
+    """
     return filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"),
                                                                                    ("CSV files", "*.csv"),
                                                                                    ("Excel files", "*.xlsx"),
                                                                                    ("SQLite databases", "*.db"),
                                                                                    ("all files", "*.*")))
 
-def update_file_explorer_label(filename):
+def update_file_explorer_label(filename): 
+    """
+    Actualiza la etiqueta que muestra la ruta del archivo seleccionado en la interfaz.
+
+    Parámetros:
+    - filename (str): Ruta del archivo seleccionado.
+
+    Devuelve:
+    - Ninguno
+    """
     label_file_explorer.config(text=f"{filename}")
 
 def create_and_display_radiobuttons(window, var, filename, rel_position, command):
+    """
+    Crea y muestra los botones de opción (Radiobuttons) para las variables X y Y en la interfaz.
+
+    Parámetros:
+    - window (tk.Tk): Ventana principal de la aplicación.
+    - var (tk.StringVar): Variable de Tkinter asociada a los Radiobuttons.
+    - filename (str): Ruta del archivo de datos seleccionado.
+    - rel_position (float): Posición relativa en la interfaz.
+    - command (function): Función de retorno de llamada para los Radiobuttons.
+
+    Devuelve:
+    - list: Lista de Radiobuttons creados y mostrados.
+    """
     radiobuttons = create_radiobuttons(window, var, filename, rel_position, command)
     return radiobuttons
 
 def destroy_existing_radiobuttons(radiobuttons_var1, radiobuttons_var2):
+    """
+    Destruye los botones de opción (Radiobuttons) existentes en la interfaz.
+
+    Parámetros:
+    - radiobuttons_var1 (list): Lista de Radiobuttons asociados a la variable X.
+    - radiobuttons_var2 (list): Lista de Radiobuttons asociados a la variable Y.
+
+    Devuelve:
+    - tuple: Dos listas vacías (None, None).
+    """
     destruir_radiobuttons(radiobuttons_var1)
     destruir_radiobuttons(radiobuttons_var2)
     return None, None
 
 def display_labels():
+    """
+    Muestra etiquetas informativas en la interfaz.
+
+    Parámetros:
+    - Ninguno
+
+    Devuelve:
+    - Ninguno
+    """
     etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
     etiqueta_seleccionar.place(relx=0.01, rely=0.328)
 
@@ -76,11 +135,32 @@ def display_labels():
     etiqueta_variable_y.place(relx=0.01, rely=0.38)
 
 def create_regression_button(window, filename, var1, var2):
+    """
+    Crea y muestra el botón para realizar la regresión lineal en la interfaz.
+
+    Parámetros:
+    - window (tk.Tk): Ventana principal de la aplicación.
+    - filename (str): Ruta del archivo de datos seleccionado.
+    - var1 (tk.StringVar): Variable asociada a la variable X.
+    - var2 (tk.StringVar): Variable asociada a la variable Y.
+
+    Devuelve:
+    - Ninguno
+    """
     button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20,
                                  command=lambda: realizar_regresion_lineal(filename, var1.get(), var2.get(), auto=True))
     button_regresion.place(relx=0.01, rely=0.42)
     
 def cargar_modelo():
+    """
+    Abre una ventana para que el usuario seleccione un modelo guardado (.joblib) y carga la información del modelo.
+
+    Parámetros:
+    - Ninguno
+
+    Devuelve:
+    - Ninguno
+    """
     etiqueta_seleccionar = None
     etiqueta_variable_x = None
     etiqueta_variable_y = None
@@ -116,6 +196,17 @@ def cargar_modelo():
         show_error(f"Error al cargar el modelo: {str(e)}")
 
 def mostrar_info_modelo(file_path, loaded_model_info,text_data_display):
+    """
+    Muestra la información del modelo cargado en el área de visualización.
+
+    Parámetros:
+    - file_path (str): Ruta del archivo del modelo cargado.
+    - loaded_model_info (ModeloInfo): Información del modelo cargado.
+    - text_data_display (tk.scrolledtext.ScrolledText): Área de visualización de texto.
+
+    Devuelve:
+    - Ninguno
+    """
 
     if text_data_display is not None:
         text_data_display.delete(1.0, tk.END)  # Limpiar el contenido actual
@@ -129,6 +220,15 @@ def mostrar_info_modelo(file_path, loaded_model_info,text_data_display):
             text_data_display.insert(tk.END, f"Error cuadrático medio (MSE): {loaded_model_info.mse}\n")
 
 def introducir_valor_x():
+    """
+    Introduce el valor de x después de cargar un modelo y muestra el botón para realizar la predicción.
+
+    Parámetros:
+    - Ninguno
+
+    Devuelve:
+    - Ninguno
+    """
     global valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion
     try:
         #Crear la etiqueta para indicar la variable x
@@ -157,6 +257,15 @@ def introducir_valor_x():
         show_error(f"Error al introducir el valor de x: {str(e)}")
 
 def limpiar_interfaz(*widgets):
+    """
+    Limpia la interfaz de los widgets especificados.
+
+    Parámetros:
+    - *widgets: Lista variable de widgets a limpiar.
+
+    Devuelve:
+    - Ninguno
+    """
     try:
         for widget in widgets:
             if widget:
@@ -177,11 +286,30 @@ def limpiar_interfaz(*widgets):
         show_error(f"Error al limpiar la interfaz: {str(e)}")
 
 def destruir_radiobuttons(radiobutton_list):
+    """
+    Destruye los Radiobuttons en la lista especificada.
+
+    Parámetros:
+    - radiobutton_list (list): Lista de Radiobuttons a destruir.
+
+    Devuelve:
+    - Ninguno
+    """
     if radiobutton_list:
         for rad in radiobutton_list:
             rad.destroy()
 
 def show_data_popup(df,text_data_display):
+    """
+    Muestra los datos del DataFrame en el área de visualización de texto.
+
+    Parámetros:
+    - df (pd.DataFrame): DataFrame de datos.
+    - text_data_display (tk.scrolledtext.ScrolledText): Área de visualización de texto.
+
+    Devuelve:
+    - Ninguno
+    """
     # Limpiar el contenido actual
     text_data_display.delete(1.0, tk.END) 
 
@@ -203,10 +331,28 @@ def show_data_popup(df,text_data_display):
         text_data_display.insert(tk.END, row_text)
 
 def show_first_row(df):
+    """
+    Muestra la primera fila del DataFrame.
+
+    Parámetros:
+    - df (pd.DataFrame): DataFrame de datos.
+
+    Devuelve:
+    - Ninguno
+    """
     primera_fila = df.iloc[0]
     row_text = "     ".join(f"{columna}" for columna, valor in primera_fila.items())
 
 def show_error(message):
+    """
+    Muestra un mensaje de error en una ventana emergente.
+
+    Parámetros:
+    - message (str): Mensaje de error.
+
+    Devuelve:
+    - Ninguno
+    """
     top = tk.Toplevel()
     top.title("Error")
     text = tk.Text(top)
@@ -214,6 +360,15 @@ def show_error(message):
     text.pack()# Función para obtener el valor ingresado en el cuadro de texto
 
 def show_info(message):
+    """
+    Muestra un mensaje de información en una ventana emergente.
+
+    Parámetros:
+    - message (str): Mensaje de información.
+
+    Devuelve:
+    - Ninguno
+    """
     top = tk.Toplevel()
     top.title("Información")
     text = tk.Text(top)
@@ -221,16 +376,44 @@ def show_info(message):
     text.pack()# Función para obtener el valor ingresado en el cuadro de texto
 
 def Seleccionar():
+    """
+    Obtiene las variables seleccionadas por el usuario.
+
+    Parámetros:
+    - Ninguno
+
+    Devuelve:
+    - Tuple: Tupla con las variables seleccionadas (selected_variable_x, selected_variable_y).
+    """
     selected_variable_x = var1.get()
     selected_variable_y = var2.get()
     return selected_variable_x, selected_variable_y
 
 def obtener_valor_x(valor_x_entry,event=None):
+    """
+    Obtiene el valor ingresado en el cuadro de texto.
+
+    Parámetros:
+    - valor_x_entry (tk.Entry): Cuadro de texto para el valor de x.
+    - event (tk.Event, opcional): Evento asociado al cuadro de texto.
+
+    Devuelve:
+    - str: Valor ingresado en el cuadro de texto.
+    """
     valor_x = valor_x_entry.get()
     print(f"Valor de la variable x seleccionado: {valor_x}")
     return valor_x
 
 def realizar_prediccion():
+    """
+    Realiza una predicción utilizando el modelo cargado.
+
+    Parámetros:
+    - Ninguno
+
+    Devuelve:
+    - Ninguno
+    """
     global loaded_model_info, modelo_info, valor_x_entry, resultado_prediccion
     try:
         valor_x = obtener_valor_x(valor_x_entry,event=None)
@@ -251,6 +434,18 @@ def realizar_prediccion():
         show_error(f"Error al realizar la predicción: {str(e)}")
 
 def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
+    """
+    Realiza la regresión lineal utilizando el archivo de datos y las variables especificadas.
+
+    Parámetros:
+    - filename (str): Ruta del archivo de datos.
+    - variable_x (str): Nombre de la variable independiente (X).
+    - variable_y (str): Nombre de la variable dependiente (Y).
+    - auto (bool, opcional): Indica si se está utilizando el modo automático. Predeterminado es True.
+
+    Devuelve:
+    - Ninguno
+    """
     global modelo_info, loaded_model_info
     try:
         #Restablecer loaded_model_info a None si se está creando un nuevo modelo
@@ -293,6 +488,19 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
         show_error(f"Error al realizar la regresión lineal: {str(e)}")
 
 def crear_etiquetas_resultados(modelo, X, y, variable_x, variable_y):
+    """
+    Crea y muestra las etiquetas de resultados, incluida la ecuación de la recta y el error cuadrático medio.
+
+    Parámetros:
+    - modelo: Modelo de regresión lineal entrenado.
+    - X: Variables independientes.
+    - y: Variable dependiente.
+    - variable_x: Nombre de la variable X.
+    - variable_y: Nombre de la variable Y.
+
+    Devuelve:
+    - tuple: Etiquetas creadas para el error cuadrático medio y la ecuación de la recta.
+    """
     label_mse = tk.Label(window, text="")
     label_mse.place(relx=0.55, rely=0.42)
 
@@ -309,6 +517,15 @@ def crear_etiquetas_resultados(modelo, X, y, variable_x, variable_y):
     return label_mse, label_ecuacion_recta
 
 def integrar_figura_en_canvas(fig):
+    """
+    Integra una figura de Matplotlib en un widget Canvas de Tkinter.
+
+    Parámetros:
+    - fig: Figura de Matplotlib.
+
+    Devuelve:
+    - FigureCanvasTkAgg: Objeto Canvas que contiene la figura.
+    """
     graph_canvas = FigureCanvasTkAgg(fig, master=window)
     graph_canvas_widget = graph_canvas.get_tk_widget()
     graph_canvas_widget.place(relx=0.12, rely=0.42)
@@ -316,16 +533,41 @@ def integrar_figura_en_canvas(fig):
     return graph_canvas
 
 def crear_modelo_info(modelo, variable_x, variable_y, X, y):
+    """
+    Crea una instancia de la clase ModeloInfo que contiene información del modelo.
+
+    Parámetros:
+    - modelo: Modelo de regresión lineal entrenado.
+    - variable_x: Nombre de la variable X.
+    - variable_y: Nombre de la variable Y.
+    - X: Variables independientes.
+    - y: Variable dependiente.
+
+    Devuelve:
+    - ModeloInfo: Instancia de la clase ModeloInfo.
+    """
     ecuacion_recta = f"y = {float(modelo.intercept_)} + {float(modelo.coef_[0][0])} * {variable_x}"
     mse = mean_squared_error(y, modelo.predict(X))
     return ModeloInfo(variable_x, variable_y, modelo.intercept_, modelo.coef_, ecuacion_recta, mse)
 
 def crear_boton_guardar_modelo():
+    """
+    Crea un botón para guardar el modelo.
+
+    Devuelve:
+    - Button: Botón para guardar el modelo.
+    """
     button_guardar_modelo = tk.Button(window, text="Guardar Modelo", height=1, width=20, command=guardar_modelo)
     button_guardar_modelo.place(relx=0.01, rely=0.46)
     return button_guardar_modelo
 
 def guardar_modelo():
+    """
+    Guarda el modelo actual en un archivo .joblib.
+
+    Devuelve:
+    - None
+    """
     global modelo_info
     if modelo_info is None:
         show_error("Realiza la regresión lineal antes de intentar guardar el modelo.")
@@ -345,6 +587,19 @@ def guardar_modelo():
         show_error(f"Error al guardar el modelo: {str(e)}")
 
 def create_radiobuttons(window, variable, filename, y_position, command_callback):
+    """
+    Crea y muestra los botones de opción (radiobuttons) para seleccionar variables.
+
+    Parámetros:
+    - window: Ventana de Tkinter.
+    - variable: Variable de control para los radiobuttons.
+    - filename: Ruta del archivo de datos.
+    - y_position: Posición en el eje Y donde se colocarán los radiobuttons.
+    - command_callback: Función de retorno de llamada al seleccionar un radiobutton.
+
+    Devuelve:
+    - list: Lista de objetos Radiobutton creados.
+    """
     radiobuttons = []
 
     # Obtener la primera fila del DataFrame
@@ -362,6 +617,15 @@ def create_radiobuttons(window, variable, filename, y_position, command_callback
     return radiobuttons
 
 def get_first_row(filename):
+    """
+    Obtiene la primera fila del archivo de datos como un objeto de tipo pandas Series.
+
+    Parámetros:
+    - filename: Ruta del archivo de datos.
+
+    Devuelve:
+    - pandas.Series: Primera fila del archivo de datos.
+    """
     df = mostrar_archivos(filename)
     if df is not None:
         primera_fila = df.iloc[0]
@@ -370,15 +634,52 @@ def get_first_row(filename):
         return None
 
 def calculate_percentage(value, percentage):
+    """
+    Calcula el porcentaje de un valor.
+
+    Parámetros:
+    - value: Valor al que se aplicará el porcentaje.
+    - percentage: Porcentaje a aplicar.
+
+    Devuelve:
+    - int: Valor resultante después de aplicar el porcentaje.
+    """
     return int((value * percentage) / 100)
 
 def create_label(text, relx, rely, width_percentage, height_percentage):
+    """
+    Crea y muestra una etiqueta en la ventana.
+
+    Parámetros:
+    - text: Texto de la etiqueta.
+    - relx: Posición relativa en el eje X.
+    - rely: Posición relativa en el eje Y.
+    - width_percentage: Ancho de la etiqueta como porcentaje de la ventana.
+    - height_percentage: Altura de la etiqueta como porcentaje de la ventana.
+
+    Devuelve:
+    - Label: Objeto de etiqueta creado.
+    """
     label = tk.Label(window, text=text, width=calculate_percentage(window_width, width_percentage),
                      height=calculate_percentage(window_height, height_percentage))
     label.place(relx=relx, rely=rely)
     return label
 
 def create_button(text, command, relx, rely, width_percentage, height_percentage):
+    """
+    Crea y muestra un botón en la ventana.
+
+    Parámetros:
+    - text: Texto del botón.
+    - command: Función de retorno de llamada al hacer clic en el botón.
+    - relx: Posición relativa en el eje X.
+    - rely: Posición relativa en el eje Y.
+    - width_percentage: Ancho del botón como porcentaje de la ventana.
+    - height_percentage: Altura del botón como porcentaje de la ventana.
+
+    Devuelve:
+    - Button: Objeto de botón creado.
+    """
     button = tk.Button(window, text=text, command=command,
                        height=calculate_percentage(window_height, height_percentage),
                        width=calculate_percentage(window_width, width_percentage))
@@ -386,6 +687,18 @@ def create_button(text, command, relx, rely, width_percentage, height_percentage
     return button
 
 def create_scrolled_text(relx, rely, width_percentage, height_percentage):
+    """
+    Crea y muestra un widget de texto desplazable en la ventana.
+
+    Parámetros:
+    - relx: Posición relativa en el eje X.
+    - rely: Posición relativa en el eje Y.
+    - width_percentage: Ancho del widget como porcentaje de la ventana.
+    - height_percentage: Altura del widget como porcentaje de la ventana.
+
+    Devuelve:
+    - ScrolledText: Objeto de widget de texto desplazable creado.
+    """
     text_widget = scrolledtext.ScrolledText(window, wrap=tk.NONE,
                                             height=calculate_percentage(window_height, height_percentage),
                                             width=calculate_percentage(window_width, width_percentage),
