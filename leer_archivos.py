@@ -2,6 +2,16 @@ import sqlite3
 import pandas as pd
 
 def mostrar_archivos(archivo):
+    """
+    Carga datos desde diferentes tipos de archivos y retorna un DataFrame de pandas.
+
+    Parámetros:
+    - archivo (str): Ruta del archivo a cargar.
+
+    Devuelve:
+    - pd.DataFrame: DataFrame que contiene los datos cargados desde el archivo.
+    - None: Si hay un error al cargar el archivo.
+    """
     try:
         if archivo.endswith('.csv'):
             df = pd.read_csv(archivo)
