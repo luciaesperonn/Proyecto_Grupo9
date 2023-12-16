@@ -150,7 +150,7 @@ def limpiar_interfaz():
                           button_prediccion, resultado_prediccion]
     
     for widget in widgets_to_destroy:
-        if widget:
+        if widget is not None:
             widget.destroy()
 
    # Destruir los Radiobuttons y el Graph_canvas
