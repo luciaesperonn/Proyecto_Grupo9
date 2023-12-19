@@ -161,6 +161,7 @@ def cargar_modelo():
     Devuelve:
     - Ninguno
     """
+    # Define las variables que quieres limpiar
     etiqueta_seleccionar = None
     etiqueta_variable_x = None
     etiqueta_variable_y = None
@@ -190,7 +191,7 @@ def cargar_modelo():
                               radiobuttons_var1, radiobuttons_var2)
 
             # Introducir el valor de x después de cargar el modelo
-            introducir_valor_x()               
+            introducir_valor_x(graph_canvas, radiobuttons_var1, radiobuttons_var2)
 
     except Exception as e:
         show_error(f"Error al cargar el modelo: {str(e)}")
@@ -218,17 +219,20 @@ def mostrar_info_modelo(file_path, loaded_model_info,text_data_display):
         if isinstance(loaded_model_info, ModeloInfo):
             text_data_display.insert(tk.END, f"Ecuación del modelo: {loaded_model_info.ecuacion_recta}\n")
             text_data_display.insert(tk.END, f"Error cuadrático medio (MSE): {loaded_model_info.mse}\n")
-
-def introducir_valor_x():
+def introducir_valor_x(graph_canvas=None, radiobuttons_var1=None, radiobuttons_var2=None):
     """
-    Introduce el valor de x después de cargar un modelo y muestra el botón para realizar la predicción.
+    Introduce el valor de x en la interfaz.
 
     Parámetros:
-    - Ninguno
+    - graph_canvas: El canvas del gráfico.
+    - radiobuttons_var1: Radiobuttons para la variable 1.
+    - radiobuttons_var2: Radiobuttons para la variable 2.
 
     Devuelve:
     - Ninguno
     """
+
+
     global valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion
     try:
         #Crear la etiqueta para indicar la variable x
@@ -270,18 +274,7 @@ def limpiar_interfaz(*widgets):
         for widget in widgets:
             if widget:
                 widget.destroy()
-                
-        graph_canvas = None
-        radiobuttons_var1 = None
-        radiobuttons_var2 = None
-        # Destruir los Radiobuttons y el Graph_canvas
-        destruir_radiobuttons(radiobuttons_var1)
-        destruir_radiobuttons(radiobuttons_var2)
 
-        # Destruir el Graph_canvas si existe    
-        if graph_canvas:
-            graph_canvas.get_tk_widget().destroy()
-        
     except Exception as e:
         show_error(f"Error al limpiar la interfaz: {str(e)}")
 
