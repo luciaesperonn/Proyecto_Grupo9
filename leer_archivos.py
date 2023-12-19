@@ -37,5 +37,6 @@ def mostrar_archivos(archivo):
             raise ValueError("Formato de archivo no compatible")
         return df
     except Exception as e:
-        print(f"Se produjo un error al cargar el archivo: {str(e)}")
+        # Cambia esta línea para lanzar la excepción en lugar de imprimir el mensaje
+        raise ValueError(f"Se produjo un error al cargar el archivo: {str(e)}")
         return None

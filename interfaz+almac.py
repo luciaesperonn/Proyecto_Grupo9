@@ -48,8 +48,10 @@ resultado_prediccion = None
 def browse_files():
     global selected_variable_x, selected_variable_y, filename, button_regresion, radiobuttons_var1, radiobuttons_var2, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion
  
-    filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"), 
-                                                                                       ("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")))
+    filename = filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("CSV files", "*.csv"),
+                                                                                       ("Excel files", "*.xlsx"),
+                                                                                       ("SQLite databases", "*.db"),
+                                                                                       ("all files", "*.*")))
 
     if filename:  # Verificar si se seleccionó un archivo
         label_file_explorer.config(text=f"{filename}")
