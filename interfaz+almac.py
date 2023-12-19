@@ -113,7 +113,7 @@ def introducir_valor_x():
     global valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion
 
     etiqueta_valor_x = tk.Label(window, text="")
-    etiqueta_valor_x.place(relx=0.55, rely=0.8)
+    etiqueta_valor_x.place(relx=0.55, rely=0.6)
    
     if modelo_info is not None:
         etiqueta_valor_x.config(text=f"Seleccione el valor de {modelo_info.x}:")
@@ -122,16 +122,16 @@ def introducir_valor_x():
 
     # Crear el cuadro de entrada para el valor de x
     valor_x_entry = tk.Entry(window, width=int(window_width * 0.01))
-    valor_x_entry.place(relx=0.68, rely=0.8)
+    valor_x_entry.place(relx=0.72, rely=0.6)
     valor_x_entry.bind("<Return>", obtener_valor_x)
 
     # Botón "Realizar Predicción"
     button_prediccion = tk.Button(window, text="Realizar Predicción", height=1, width=20, command=realizar_prediccion)
-    button_prediccion.place(relx=0.55, rely=0.86)
+    button_prediccion.place(relx=0.55, rely=0.55)
 
     # Etiqueta para mostrar el resultado de la predicción
-    resultado_prediccion = tk.Label(window, text="", width=int(window_width * 0.03), height=int(window_height * 0.002))
-    resultado_prediccion.place(relx=0.68, rely=0.86)
+    resultado_prediccion = tk.Label(window, text="", width=int(window_width * 0.04), height=int(window_height * 0.002))
+    resultado_prediccion.place(relx=0.58, rely=0.49)
 
 
 def limpiar_interfaz():
