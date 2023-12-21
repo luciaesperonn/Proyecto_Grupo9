@@ -47,12 +47,6 @@ def crear_modelo_regresion_lineal(archivo, columna_predictora, columna_objetivo)
     y_pred = modelo.predict(X)
     mse = mean_squared_error(y, y_pred)
     r2 = r2_score(y, y_pred)
-   
-    print("Coeficientes del modelo:")
-    print(f"Pendiente (coeficiente): {modelo.coef_[0][0]}")
-    print(f"Intercepto: {modelo.intercept_}")
-    print(f"Error cuadrático medio (MSE): {mse}")
-    print(f"Bondad de ajuste (R²): {r2}")
 
     return modelo
 
@@ -79,7 +73,7 @@ def visualizar_modelo(modelo, X, y, etiqueta_x, etiqueta_y):
    
     # Convertir los coeficientes y el intercepto a tipos de datos numéricos
     intercepto = float(modelo.intercept_)
-    coeficiente = float(modelo.coef_[0][0])
+    coeficiente = float(modelo.coef_[0])
 
     ax.set_xlabel(etiqueta_x)  # Utiliza la etiqueta de la variable X
     ax.set_ylabel(etiqueta_y)  # Utiliza la etiqueta de la variable Y
