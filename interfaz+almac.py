@@ -37,7 +37,6 @@ radiobuttons_var2 = None
 button_regresion = None
 button_guardar_modelo = None
 modelo_regresion = None
-label_mse = None
 graph_canvas = None
 label_ecuacion_recta = None
 etiqueta_valor_x = None
@@ -46,17 +45,10 @@ button_prediccion = None
 resultado_prediccion = None
 descripcion_entry = None
 etiqueta_descripcion = None
+valor_x = None
  
 def browse_files():
-    """
-    Abre una ventana de explorador de archivos y permite al usuario seleccionar un archivo de datos.
-
-    Parámetros:
-    - Ninguno
-
-    Devuelve:
-    - str: Ruta del archivo seleccionado.
-    """
+    global radiobuttons_var1, radiobuttons_var2
     filename = get_selected_filename()
 
     if filename:
@@ -67,23 +59,14 @@ def browse_files():
 
         limpiar_interfaz()
 
-        create_and_display_radiobuttons(window, var1, filename, 0.355, Seleccionar)
-        create_and_display_radiobuttons(window, var2, filename, 0.38, Seleccionar)
+        radiobuttons_var1 = create_radiobuttons(window, var1, filename, 0.355, Seleccionar)
+        radiobuttons_var2 = create_radiobuttons(window, var2, filename, 0.38, Seleccionar)
 
         display_labels()
 
         create_regression_button(window, filename, var1, var2)
 
 def get_selected_filename():
-    """
-    Devuelve la ruta del archivo seleccionado por el usuario en el explorador de archivos.
-
-    Parámetros:
-    - Ninguno
-
-    Devuelve:
-    - str: Ruta del archivo seleccionado.
-    """
     return filedialog.askopenfilename(initialdir="/", title="Examinar", filetypes=(("Text files", "*.txt*"),
                                                                                    ("CSV files", "*.csv"),
                                                                                    ("Excel files", "*.xlsx"),
@@ -91,44 +74,10 @@ def get_selected_filename():
                                                                                    ("all files", "*.*")))
 
 def update_file_explorer_label(filename): 
-    """
-    Actualiza la etiqueta que muestra la ruta del archivo seleccionado en la interfaz.
-
-    Parámetros:
-    - filename (str): Ruta del archivo seleccionado.
-
-    Devuelve:
-    - Ninguno
-    """
     label_file_explorer.config(text=f"{filename}")
 
-def create_and_display_radiobuttons(window, var, filename, rel_position, command):
-    """
-    Crea y muestra los botones de opción (Radiobuttons) para las variables X y Y en la interfaz.
-
-    Parámetros:
-    - window (tk.Tk): Ventana principal de la aplicación.
-    - var (tk.StringVar): Variable de Tkinter asociada a los Radiobuttons.
-    - filename (str): Ruta del archivo de datos seleccionado.
-    - rel_position (float): Posición relativa en la interfaz.
-    - command (function): Función de retorno de llamada para los Radiobuttons.
-
-    Devuelve:
-    - list: Lista de Radiobuttons creados y mostrados.
-    """
-    radiobuttons = create_radiobuttons(window, var, filename, rel_position, command)
-    return radiobuttons
-
 def display_labels():
-    """
-    Muestra etiquetas informativas en la interfaz.
-
-    Parámetros:
-    - Ninguno
-
-    Devuelve:
-    - Ninguno
-    """
+    global etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y
     etiqueta_seleccionar = tk.Label(window, text="Selecciona una variable x y una variable y:")
     etiqueta_seleccionar.place(relx=0.01, rely=0.328)
 
@@ -139,18 +88,7 @@ def display_labels():
     etiqueta_variable_y.place(relx=0.01, rely=0.38)
 
 def create_regression_button(window, filename, var1, var2):
-    """
-    Crea y muestra el botón para realizar la regresión lineal en la interfaz.
-
-    Parámetros:
-    - window (tk.Tk): Ventana principal de la aplicación.
-    - filename (str): Ruta del archivo de datos seleccionado.
-    - var1 (tk.StringVar): Variable asociada a la variable X.
-    - var2 (tk.StringVar): Variable asociada a la variable Y.
-
-    Devuelve:
-    - Ninguno
-    """
+    global button_regresion
     button_regresion = tk.Button(window, text="Realizar Regresión Lineal", height=1, width=20,
                                  command=lambda: realizar_regresion_lineal(filename, var1.get(), var2.get(), auto=True))
     button_regresion.place(relx=0.01, rely=0.42)
@@ -174,6 +112,10 @@ def cargar_modelo():
  
             # Limpiar la interfaz antes de cargar el modelo
             limpiar_interfaz()
+
+            # Llamar a la función para destruir los Radiobuttons
+            destruir_radiobuttons(radiobuttons_var1)
+            destruir_radiobuttons(radiobuttons_var2)
 
             # Introducir el valor de x después de cargar el modelo
             introducir_valor_x()            
