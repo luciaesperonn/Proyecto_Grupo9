@@ -13,8 +13,8 @@ class ModeloInfo:
         - ecuacion_recta: Ecuación de la recta del modelo.
         - mse: Error cuadrático medio del modelo.
         """
-        self.x = x
-        self.y = y
+        self.variable_x = x
+        self.variable_y = y
         self.intercept = intercept
         self.slope = slope
         self.ecuacion_recta = ecuacion_recta

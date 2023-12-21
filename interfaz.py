@@ -312,9 +312,19 @@ def integrar_figura_en_canvas(fig):
     return graph_canvas
 
 def crear_modelo_info(modelo, variable_x, variable_y, X, y):
-    ecuacion_recta = f"y = {float(modelo.intercept_)} + {float(modelo.coef_[0][0])} * {variable_x}"
+    intercepto = float(modelo.intercept_)
+    if hasattr(modelo, 'coef_') and len(modelo.coef_) > 0:
+        pendiente = float(modelo.coef_[0])
+    else:
+        pendiente = None
+
+    ecuacion_recta = f"y = {intercepto}"
+    if pendiente is not None:
+        ecuacion_recta += f" + {pendiente} * {variable_x}"
+
     mse = mean_squared_error(y, modelo.predict(X))
-    return ModeloInfo(variable_x, variable_y, modelo.intercept_, modelo.coef_, ecuacion_recta, mse)
+    return ModeloInfo(variable_x, variable_y, intercepto, pendiente, ecuacion_recta, mse)
+
 
 def crear_boton_guardar_modelo():
     button_guardar_modelo = tk.Button(window, text="Guardar Modelo", height=1, width=20, command=guardar_modelo)
