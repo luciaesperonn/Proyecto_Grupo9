@@ -147,14 +147,15 @@ def introducir_valor_x():
  
 def introducir_descripcion():
     global descripcion_entry, etiqueta_descripcion
- 
+
     etiqueta_descripcion = tk.Label(window, text="Introduce la descripción del modelo:")
     etiqueta_descripcion.place(relx=0.55, rely=0.7)
- 
-    # Crear el cuadro de entrada para el valor de x
+
+    # Crear el cuadro de entrada para la descripción del modelo
     descripcion_entry = tk.Entry(window, width=int(window_width * 0.03))
     descripcion_entry.place(relx=0.72, rely=0.7)
     descripcion_entry.bind("<Return>", obtener_descripcion)
+
  
  
 def limpiar_interfaz():
@@ -359,23 +360,27 @@ def crear_boton_guardar_modelo():
  
 def guardar_modelo():
     global modelo_info
- 
+
     if modelo_info is None:
         show_error("Realiza la regresión lineal antes de intentar guardar el modelo.")
         return
- 
+
     try:
         # Obtener la ruta y nombre de archivo seleccionados por el usuario
         file_path = filedialog.asksaveasfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
- 
+
         if file_path:
+            # Obtener la descripción ingresada por el usuario
+            descripcion = obtener_descripcion()
+
             # Guardar la información del modelo en el archivo
-            modelo_info.guardar_modelo(file_path)
- 
+            modelo_info.guardar_modelo(file_path, descripcion)
+
             show_info(f"Modelo guardado en: {file_path}")
- 
+
     except Exception as e:
         show_error(f"Error al guardar el modelo: {str(e)}")
+
  
 def create_radiobuttons(window, variable, filename, y_position, command_callback):
     radiobuttons = []
