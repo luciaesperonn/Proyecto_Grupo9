@@ -300,7 +300,7 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
         label_mse, label_ecuacion_recta = crear_etiquetas_resultados(modelo, X, y, variable_x, variable_y)
  
         # Integrar la figura en un Canvas de Tkinter
-        graph_canvas = integrar_figura_en_canvas(fig)
+        graph_canvas = integrar_figura_en_canvas(fig, window)
  
         introducir_descripcion()
  
@@ -331,8 +331,8 @@ def crear_etiquetas_resultados(modelo, X, y, variable_x, variable_y):
  
     return label_mse, label_ecuacion_recta
  
-def integrar_figura_en_canvas(fig):
-    graph_canvas = FigureCanvasTkAgg(fig, master=window)
+def integrar_figura_en_canvas(fig, ventana):
+    graph_canvas = FigureCanvasTkAgg(fig, master=ventana)
     graph_canvas_widget = graph_canvas.get_tk_widget()
     graph_canvas_widget.place(relx=0.12, rely=0.42)
    
