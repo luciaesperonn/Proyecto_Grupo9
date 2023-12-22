@@ -270,7 +270,7 @@ def realizar_prediccion():
             valor_y = model_info.intercept + model_info.slope * float(valor_x)
  
             # Configurar el texto de la predicción
-            resultado_prediccion.config(text=f"{valor_y} = {model_info.intercept} + {model_info.slope} * {valor_x}")
+            resultado_prediccion.config(text=f"{model_info.y}={valor_y} = {model_info.intercept} + {model_info.slope} * {valor_x}")
         else:
             show_error("Primero realiza una regresión lineal o carga un modelo antes de realizar predicciones.")
  
