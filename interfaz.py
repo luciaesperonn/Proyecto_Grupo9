@@ -251,6 +251,9 @@ def obtener_valor_x(event=None):
 def obtener_descripcion(event=None):
     global descripcion_entry
     descripcion = descripcion_entry.get()
+
+    if not descripcion:
+        descripcion = ''
     return descripcion
  
 def realizar_prediccion():
