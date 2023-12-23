@@ -1,18 +1,9 @@
 import joblib
- 
+import json
+import os
+
 class ModeloInfo:
     def __init__(self, x, y, intercept, slope, ecuacion_recta, mse, descripcion):
-        """
-        Inicia una instancia de la clase ModeloInfo.
- 
-        Parámetros:
-        - x: Valor de la variable predictora.
-        - y: Valor de la variable objetivo.
-        - intercept: Intercepto del modelo de regresión lineal.
-        - slope: Pendiente del modelo de regresión lineal.
-        - ecuacion_recta: Ecuación de la recta del modelo.
-        - mse: Error cuadrático medio del modelo.
-        """
         self.x = x
         self.y = y
         self.intercept = intercept
@@ -20,32 +11,26 @@ class ModeloInfo:
         self.ecuacion_recta = ecuacion_recta
         self.mse = mse
         self.descripcion = descripcion
- 
+
     def guardar_modelo(self, file_path):
-        """
-        Guarda la instancia de la clase en un archivo utilizando joblib.
- 
-        Parámetros:
-        - file_path (str): Ruta del archivo donde se guardará la instancia.
-        """
-        # Utilizar joblib.dump para guardar la instancia de la clase
+        # Guardar la instancia de la clase utilizando joblib
         joblib.dump(self, file_path)
- 
-    def cargar_modelo(self, file_path):
-        """
-        Carga una instancia de la clase desde un archivo utilizando joblib.
- 
-        Parámetros:
-        - file_path (str): Ruta del archivo desde donde se cargará la instancia.
-        """
-        # Utilizar joblib.load para cargar la instancia de la clase desde el archivo
+        
+        # Guardar la descripción en un archivo JSON
+        descripcion_file_path = file_path + ".json"
+        with open(descripcion_file_path, 'w') as f:
+            json.dump({"descripcion": self.descripcion}, f)
+
+    @classmethod
+    def cargar_modelo(cls, file_path):
+        # Cargar la instancia de la clase utilizando joblib
         loaded_model = joblib.load(file_path)
- 
-        # Actualizar los atributos de la instancia actual con los cargados desde el archivo
-        self.x = loaded_model.x
-        self.y = loaded_model.y
-        self.intercept = loaded_model.intercept
-        self.slope = loaded_model.slope
-        self.ecuacion_recta = loaded_model.ecuacion_recta
-        self.mse = loaded_model.mse
-        self.descripcion = loaded_model.descripcion
+        
+        # Cargar la descripción desde el archivo JSON
+        descripcion_file_path = file_path + ".json"
+        with open(descripcion_file_path, 'r') as f:
+            data = json.load(f)
+            loaded_model.descripcion = data["descripcion"]
+
+        return loaded_model
+

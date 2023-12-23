@@ -1,4 +1,6 @@
 # Importación de librerías
+import os
+import json
 import sqlite3
 import joblib
 import pandas as pd
@@ -102,7 +104,7 @@ def handle_regression_process(filename, var1_value, var2_value):
     introducir_descripcion()
    
 def cargar_modelo():
-    global loaded_model_info, selected_variable_x, selected_variable_y, valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion, descripcion_entry 
+    global loaded_model_info, selected_variable_x, selected_variable_y, valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion, descripcion_entry
     
     try:
         # Preguntar al usuario por el archivo del modelo
@@ -113,33 +115,59 @@ def cargar_modelo():
             # Limpiar la interfaz y las variables relacionadas con el modelo anterior
             limpiar_interfaz_y_variables()
             
+            # Si existe un Entry anterior para descripción, destruirlo
+            if descripcion_entry:
+                descripciones_guardadas[file_path] = descripcion_entry.get()
+                descripcion_entry.destroy()
+                descripcion_entry = None
+            
             # Crear una nueva instancia de ModeloInfo y cargar el modelo
             loaded_model_info = ModeloInfo(None, None, None, None, None, None, None)
             loaded_model_info.cargar_modelo(file_path)
             
-            # Obtener y establecer la descripción del modelo
-            descripcion_obtenida = obtener_descripcion()
+            # Establecer la descripción en loaded_model_info usando el file_path para recuperar la descripción correcta
+            loaded_model_info.descripcion = descripciones_guardadas.get(file_path, "")
             
-            # Imprime la descripción obtenida para verificar
-            print(f"Descripción obtenida: {descripcion_obtenida}")
-            
-            loaded_model_info.descripcion = descripcion_obtenida
+            # Guardar las descripciones actualizadas en el archivo
+            guardar_descripcion(file_path, loaded_model_info.descripcion )
             
             # Mostrar detalles del modelo en la interfaz
             mostrar_info_modelo(file_path, loaded_model_info)
             
             # Introducir el valor de x para la predicción
             introducir_valor_x()
- 
+
     except Exception as e:
         show_error(f"Error al cargar el modelo: {str(e)}")
 
+# Ruta al archivo donde se almacenará la descripción
+DESCRIPCIONES_FILE = "descripciones.json"
+
+# Cargar las descripciones guardadas desde el archivo (si existe)
+descripciones_guardadas = {}
+if os.path.exists(DESCRIPCIONES_FILE):
+    with open(DESCRIPCIONES_FILE, "r") as f:
+        descripciones_guardadas = json.load(f)
+
+def guardar_descripcion(ruta_archivo, descripcion):
+    """
+    Guarda la descripción asociada con una ruta de archivo dada.
+    """
+    # Actualizar el diccionario con la nueva descripción
+    descripciones_guardadas[ruta_archivo] = descripcion
+    
+    # Guardar el diccionario actualizado en el archivo
+    guardar_diccionario_descripciones()
+
+def guardar_diccionario_descripciones():
+    """
+    Guarda el diccionario de descripciones en un archivo o en la ubicación deseada.
+    """
+    with open(DESCRIPCIONES_FILE, "w") as archivo:
+        json.dump(descripciones_guardadas, archivo)
 
 def limpiar_interfaz_y_variables():
-    """
-    Limpia y destruye todos los widgets y variables globales relacionados con el modelo anterior.
-    """
-    global loaded_model_info, selected_variable_x, selected_variable_y, valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion, descripcion_entry, graph_canvas, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_guardar_modelo, button_regresion, label_ecuacion_recta, label_mse,etiqueta_descripcion
+    global etiqueta_descripcion, loaded_model_info, selected_variable_x, selected_variable_y, valor_x_entry, resultado_prediccion, etiqueta_valor_x, button_prediccion, descripcion_entry, graph_canvas, etiqueta_seleccionar, etiqueta_variable_x, etiqueta_variable_y, button_guardar_modelo, button_regresion, label_ecuacion_recta, label_mse
     try:
         # Limpia los widgets y variables globales relacionados con el modelo anterior
         if loaded_model_info:
@@ -172,23 +200,18 @@ def limpiar_interfaz_y_variables():
         if label_mse:
             label_mse.destroy()
         if etiqueta_descripcion:
+            print("Destruyendo etiqueta_descripcion...")
             etiqueta_descripcion.destroy()
+            etiqueta_descripcion = None
+        else:
+            print("etiqueta_descripcion ya es None.")
 
         # Destruir los Radiobuttons
         destruir_radiobuttons(radiobuttons_var1)
         destruir_radiobuttons(radiobuttons_var2)
 
-        borrar_y_obtener_texto()
-
     except Exception as e:
         show_error(f"Error al limpiar la interfaz: {str(e)}")
-
-def borrar_y_obtener_texto():
-    global descripcion_entry
-    if descripcion_entry:
-        descripcion_entry.destroy()
-        descripcion_entry = None  # Actualizar la variable global a None
-        print("descripcion_entry destruido")  # Agrega esta línea para depuración
 
 def mostrar_info_modelo(file_path, loaded_model_info):
     global text_data_display, button_guardar_modelo
@@ -361,18 +384,25 @@ def obtener_valor_x(event=None):
         show_error("Por favor, ingrese un valor numérico para x.")
         return None
     
-def obtener_descripcion():
+def obtener_descripcion(event=None):
     """
-    Función para obtener la descripción del modelo sin destruir el Entry.
+    Función para obtener la descripción del modelo y destruir el Entry.
     """
-    global descripcion_entry
-
-    # Verificar si descripcion_entry existe antes de intentar obtener su valor
+    global descripcion_entry, etiqueta_descripcion
+    
+    # Verificar si descripcion_entry es None antes de intentar obtener su valor
+    if descripcion_entry is None:
+        return ""  # O cualquier otro valor predeterminado que desees retornar
+    
+    # Obtener el texto del Entry
+    descripcion = descripcion_entry.get()  
+    
+    # Destruir o eliminar el Entry
     if descripcion_entry:
-        descripcion = descripcion_entry.get()  # Obtener el texto del Entry
-        return descripcion  # Retornar el texto obtenido
-    else:
-        return ""  # Retornar una cadena vacía si descripcion_entry no existe
+        descripcion_entry.destroy()
+        descripcion_entry = None  # Actualizar la variable global a None o cualquier otro valor que desees
+    
+    return descripcion  # Retornar el texto obtenido
 
 def realizar_prediccion():
     global resultado_prediccion
