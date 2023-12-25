@@ -51,4 +51,4 @@ class ModeloInfo:
         self.coeficiente = loaded_model.coeficiente
         self.ecuacion_recta = loaded_model.ecuacion_recta
         self.mse = loaded_model.mse
-        self.descripcion = loaded_model.descripcion
+        self.descripcion = loaded_model.descripcion 
