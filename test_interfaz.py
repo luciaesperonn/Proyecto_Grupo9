@@ -1,6 +1,7 @@
 import unittest
 import pandas as pd
 import tkinter as tk
+import os
 from matplotlib.figure import Figure
 from interfaz import get_first_row, integrar_figura_en_canvas
 
@@ -23,7 +24,6 @@ class TestGetFirstRow(unittest.TestCase):
         self.assertTrue(first_row.equals(expected_first_row))
 
         # Eliminar el archivo temporal después de la prueba
-        import os
         os.remove(file_path)
 
 class TestIntegrarFiguraEnCanvas(unittest.TestCase):
@@ -45,10 +45,6 @@ class TestIntegrarFiguraEnCanvas(unittest.TestCase):
 
         # Verificar que la ventana se actualiza correctamente
         self.assertTrue(ventana.winfo_ismapped())
-
-
-if __name__ == '__main__':
-    unittest.main()
 
 
 if __name__ == '__main__':
