@@ -113,17 +113,17 @@ class RegresionLinealApp:
         return radiobuttons
 
     def cargar_archivos_csv(self, archivo):
-        df = cargar_archivo_csv(self,archivo)
+        df = cargar_archivo_csv(archivo)
         return df
         
 
     def cargar_archivos_excel(self, archivo):
-        df = cargar_archivo_excel(self,archivo)
+        df = cargar_archivo_excel(archivo)
         return df
         
         
     def cargar_archivos_db(self, archivo):
-        df = cargar_archivo_db(self,archivo)
+        df = cargar_archivo_db(archivo)
         return df
         
         
@@ -355,3 +355,7 @@ class RegresionLinealApp:
 
         else:
             print("No hay un modelo cargado para mostrar.")
+    
+
+
+
