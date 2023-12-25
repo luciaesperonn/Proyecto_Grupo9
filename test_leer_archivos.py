@@ -4,7 +4,7 @@ import tempfile
 import os
 import sqlite3
 import pandas as pd
-from leer_archivos import mostrar_archivos
+from file_operations import cargar_archivo_csv, cargar_archivo_excel, cargar_archivo_db
 
 class TestLeerArchivos(unittest.TestCase):
     def setUp(self):
@@ -33,8 +33,8 @@ class TestLeerArchivos(unittest.TestCase):
         self.csv_file.write(csv_content.encode())
         self.csv_file.flush()
 
-        # Probar cargar un archivo CSV
-        df = mostrar_archivos(self.csv_file.name)
+    # Probar cargar un archivo CSV
+        df = cargar_archivo_csv(self.csv_file.name)
         self.assertIsNotNone(df)
         self.assertEqual(df.shape, (2, 2))
 
@@ -45,7 +45,7 @@ class TestLeerArchivos(unittest.TestCase):
         df.to_excel(self.xlsx_file.name, index=False)
 
         # Probar cargar un archivo Excel
-        df_loaded = mostrar_archivos(self.xlsx_file.name)
+        df_loaded = cargar_archivo_excel(self.xlsx_file.name)
         pd.testing.assert_frame_equal(df, df_loaded)
 
     def test_cargar_db(self):
@@ -57,14 +57,9 @@ class TestLeerArchivos(unittest.TestCase):
         conn.close()
 
         # Probar cargar un archivo de base de datos
-        df_loaded = mostrar_archivos(self.db_file.name)
+        df_loaded = cargar_archivo_db(self.db_file.name)
         pd.testing.assert_frame_equal(df, df_loaded)
-
-    def test_formato_no_compatible(self):
-        with self.assertRaises(ValueError, msg="Formato de archivo no compatible"):
-            mostrar_archivos("archivo.txt")
 
 
 if __name__ == "__main__":
     unittest.main()
-

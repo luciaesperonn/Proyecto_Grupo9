@@ -382,25 +382,18 @@ def obtener_valor_x(event=None):
         return None
     
 def obtener_descripcion(event=None):
-    """
-    Función para obtener la descripción del modelo y destruir el Entry.
-    """
-    global descripcion_entry, etiqueta_descripcion
+    global descripcion_entry
     
-    # Verificar si descripcion_entry es None antes de intentar obtener su valor
-    if descripcion_entry is None:
-        return ""  # O cualquier otro valor predeterminado que desees retornar
-    
-    # Obtener el texto del Entry
-    descripcion = descripcion_entry.get()  
-    
-    # Destruir o eliminar el Entry
-    if descripcion_entry:
-        descripcion_entry.destroy()
-        descripcion_entry = None  # Actualizar la variable global a None o cualquier otro valor que desees
-    
-    return descripcion  # Retornar el texto obtenido
+    if descripcion_entry is not None:
+        descripcion = descripcion_entry.get()
+        if not descripcion:
+            descripcion = ''
+        return descripcion
+    else:
+        # Manejar el caso en el que descripcion_entry es None
+        return ''
 
+ 
 def realizar_prediccion():
     global resultado_prediccion
  
@@ -536,6 +529,7 @@ def guardar_modelo():
  
     except Exception as e:
         show_error(f"Error al guardar el modelo: {str(e)}")
+
  
 def create_radiobuttons(window, variable, filename, y_position, command_callback):
     radiobuttons = []
