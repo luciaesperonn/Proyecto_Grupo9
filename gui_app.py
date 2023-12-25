@@ -354,7 +354,3 @@ class RegresionLinealApp:
 
         else:
             print("No hay un modelo cargado para mostrar.")
-    
-
-
-
