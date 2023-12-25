@@ -3,7 +3,7 @@ import tempfile
 import os
 import shutil
 from unittest.mock import patch, mock_open
-from interfaz import cargar_modelo, show_error, introducir_valor_x, limpiar_interfaz, mostrar_info_modelo
+from gui_app import cargar_modelo, show_error, introducir_valor_x, limpiar_interfaz, mostrar_info_modelo
 
 class TestCargarModelo(unittest.TestCase):
 
