@@ -103,6 +103,7 @@ class RegresionLinealApp:
             radiobutton.destroy()
         self.radiobuttons_x = self.crear_radiobuttons(self.frame_variables, variables, self.variable_x, row=2, column=1)
         self.radiobuttons_y = self.crear_radiobuttons(self.frame_variables, variables, self.variable_y, row=3, column=1)
+   
     def crear_radiobuttons(self, frame, options, variable, row, column):
         radiobuttons = []
         for i, option in enumerate(options):

@@ -1,7 +1,8 @@
 # cargar_datos.py
 import pandas as pd
 import sqlite3
-def cargar_archivo_csv(self, archivo):
+
+def cargar_archivo_csv(archivo):
         try:
             df = pd.read_csv(archivo)
             return df
