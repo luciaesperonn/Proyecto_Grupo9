@@ -91,6 +91,8 @@ def cargar_modelo():
             loaded_model_info = ModeloInfo(None, None, None, None, None, None, None)
             loaded_model_info.cargar_modelo(file_path)
 
+            print("Descripción cargada:", loaded_model_info.descripcion)
+
             # Verificar que la descripción se haya cargado correctamente
             loaded_model_info.descripcion = obtener_descripcion()
            
@@ -118,6 +120,8 @@ def mostrar_info_modelo(file_path, loaded_model_info):
             text_data_display.insert(tk.END, f"Ecuación del modelo: {loaded_model_info.ecuacion_recta}\n")
             text_data_display.insert(tk.END, f"Error cuadrático medio (MSE): {loaded_model_info.mse}\n")
             text_data_display.insert(tk.END, f"Descripción: {loaded_model_info.descripcion}\n")
+        
+        print(f'Descripcion del modelo:{loaded_model_info.descripcion}')
  
  
 def introducir_valor_x():
@@ -250,11 +254,15 @@ def obtener_valor_x(event=None):
  
 def obtener_descripcion(event=None):
     global descripcion_entry
-    descripcion = descripcion_entry.get()
 
-    if not descripcion:
-        descripcion = ''
-    return descripcion
+    if descripcion_entry is not None:
+        descripcion = descripcion_entry.get()
+        if not descripcion:
+            descripcion=''
+        return descripcion 
+    else:
+        return ''
+    
  
 def realizar_prediccion():
     global resultado_prediccion
@@ -270,7 +278,7 @@ def realizar_prediccion():
             valor_y = model_info.intercept + model_info.slope * float(valor_x)
  
             # Configurar el texto de la predicción
-            resultado_prediccion.config(text=f"{valor_y} = {model_info.intercept} + {model_info.slope} * {valor_x}")
+            resultado_prediccion.config(text=f"{model_info.y}={valor_y} = {model_info.intercept} + {model_info.slope} * {valor_x}")
         else:
             show_error("Primero realiza una regresión lineal o carga un modelo antes de realizar predicciones.")
  
@@ -306,6 +314,7 @@ def realizar_regresion_lineal(filename, variable_x, variable_y, auto=True):
         graph_canvas = integrar_figura_en_canvas(fig)
  
         introducir_descripcion()
+        introducir_valor_x()
  
         # Crear una instancia de ModeloInfo
         modelo_info = crear_modelo_info(modelo, variable_x, variable_y, X, y)
