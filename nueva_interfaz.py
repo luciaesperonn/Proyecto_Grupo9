@@ -93,6 +93,7 @@ class RegresionLinealApp:
                 self.df = self.cargar_archivo_excel(file_path)
             elif file_path.endswith('.db'):
                 self.df = self.cargar_archivo_db(file_path)
+
             self.actualizar_etiqueta_ruta(file_path)
             self.mostrar_tabla(self.df)  # Agrega esta línea para mostrar la tabla
             self.mostrar_variables(self.df.columns)
@@ -151,6 +152,21 @@ class RegresionLinealApp:
             return df
         except sqlite3.Error as e:
             raise sqlite3.Error(f"Error al leer la base de datos: {str(e)}")
+        
+    def verificar_columnas_numericas(self, datos, columnas):
+        """
+        Verifica que las columnas especificadas en el DataFrame sean de tipo numérico.
+
+        Parámetros:
+        - datos (pd.DataFrame): DataFrame de pandas que contiene los datos.
+        - columnas (list): Lista de nombres de columnas a verificar.
+
+        Lanza:
+        - ValueError: Si alguna columna no es numérica.
+        """
+        for col in columnas:
+            if not pd.api.types.is_numeric_dtype(datos[col]):
+                raise ValueError(f"La columna '{col}' no es numérica.")
 
     def actualizar_etiqueta_ruta(self, ruta):
         self.etiqueta_ruta.config(text=f"RUTA: {ruta}")
@@ -203,6 +219,10 @@ class RegresionLinealApp:
             # Obtener las variables seleccionadas
             variable_x = self.variable_x.get()
             variable_y = self.variable_y.get()
+
+            # Añadir la verificación de columnas numéricas solo para variable_x y variable_y
+            columnas_a_verificar = [self.variable_x.get(), self.variable_y.get()]
+            self.verificar_columnas_numericas(self.df, columnas_a_verificar)
 
             # Antes de realizar la regresión lineal, elimina las filas con NaN en la variable de respuesta
             self.df.dropna(subset=[variable_x, variable_y], inplace=True)
@@ -318,7 +338,7 @@ class RegresionLinealApp:
 
                 # Mostrar la ecuación en una etiqueta
                 self.etiqueta_nueva_ecuacion = Label(self.frame_prediccion, text=(f"{self.info_modelo.variable_y} = {self.nueva_ecuacion}"))
-                self.etiqueta_nueva_ecuacion.grid(row=8, column=7, columnspan=4, padx=10, pady=5, sticky=tk.W)
+                self.etiqueta_nueva_ecuacion.grid(row=8, column=0, columnspan=4, padx=10, pady=5, sticky=tk.W)
 
             except ValueError as e:
                 self.show_error(f"Error al realizar la predicción: {str(e)}")
@@ -352,7 +372,9 @@ class RegresionLinealApp:
             self.eliminar_tabla()
             self.ocultar_elementos_interfaz()
             self.mostrar_datos_modelo_cargado()
+            self.etiqueta_nueva_ecuacion.grid_forget()
             self.elementos_prediccion()
+
 
     def show_error(self, message):
         top = tk.Toplevel()
