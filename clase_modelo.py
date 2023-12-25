@@ -30,6 +30,7 @@ class ModeloInfo:
         """
         # Utilizar joblib.dump para guardar la instancia de la clase
         joblib.dump(self, file_path)
+        print(f"Descripción guardada: {self.descripcion}")
  
     def cargar_modelo(self, file_path):
         """
@@ -39,8 +40,10 @@ class ModeloInfo:
         - file_path (str): Ruta del archivo desde donde se cargará la instancia.
         """
         # Utilizar joblib.load para cargar la instancia de la clase desde el archivo
+
         loaded_model = joblib.load(file_path)
- 
+        print(f"Descripción cargada: {loaded_model.descripcion}")
+
         # Actualizar los atributos de la instancia actual con los cargados desde el archivo
         self.x = loaded_model.x
         self.y = loaded_model.y
