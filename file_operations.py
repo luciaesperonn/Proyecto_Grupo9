@@ -1,7 +1,7 @@
+# cargar_datos.py
 import pandas as pd
 import sqlite3
-
-def cargar_archivo_csv(archivo):
+def cargar_archivo_csv(self, archivo):
         try:
             df = pd.read_csv(archivo)
             return df
@@ -43,3 +43,19 @@ def cargar_archivo_db(archivo):
         return df
     except sqlite3.Error as e:
         raise sqlite3.Error(f"Error al leer la base de datos: {str(e)}")
+    
+def verificar_columnas_numericas(datos, columnas):
+    """
+    Verifica que las columnas especificadas en el DataFrame sean de tipo numérico.
+
+    Parámetros:
+    - datos (pd.DataFrame): DataFrame de pandas que contiene los datos.
+    - columnas (list): Lista de nombres de columnas a verificar.
+
+    Lanza:
+    - ValueError: Si alguna columna no es numérica.
+    """
+    for col in columnas:
+        if not pd.api.types.is_numeric_dtype(datos[col]):
+            raise ValueError(f"La columna '{col}' no es numérica.")
+

@@ -1,32 +1,19 @@
-import pandas as pd
+# regresion_lineal.py
+
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
+from tkinter import StringVar, Radiobutton
+from gui_app import *
 
-class RegresionLineal:
-    def __init__(self):
-        self.modelo = None
-        self.df = None
-        self.ecuacion = None
-        self.mse = None
-        self.r2 = None
+def crear_radiobuttons(frame, options, variable, row, column):
+        radiobuttons = []
+        for i, option in enumerate(options):
+            radiobutton = Radiobutton(frame, text=option, variable=variable, value=option)
+            radiobutton.grid(row=row, column=column + i, padx=5, pady=5, sticky=tk.W)
+            radiobuttons.append(radiobutton)
+        return radiobuttons
 
-    def cargar_datos(self,filepath):
-        self.ocultar_elementos_interfaz()
-        file_path = filedialog.askopenfilename(initialdir="/", filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")])
-        if file_path:
-            if file_path.endswith('.csv'):
-                self.df = self.cargar_archivo_csv(file_path)
-            elif file_path.endswith('.xlsx'):
-                self.df = self.cargar_archivo_excel(file_path)
-            elif file_path.endswith('.db'):
-                self.df = self.cargar_archivo_db(file_path)
-
-            self.actualizar_etiqueta_ruta(file_path)
-            self.mostrar_tabla(self.df)  # Agrega esta línea para mostrar la tabla
-            self.mostrar_variables(self.df.columns)
-
-            print("Datos cargados exitosamente")
-    def realizar_regresion(self,variable_x, variable_y):
+def realizar_regresion(self):
         if self.variable_x.get() and self.variable_y.get():
             # Obtener las variables seleccionadas
             variable_x = self.variable_x.get()
@@ -114,48 +101,5 @@ class RegresionLineal:
 
         else:
             raise ValueError("Seleccione las variables x e y antes de hacer la regresión")
-    def realizar_prediccion(self,valor_x):
-        if hasattr(self, 'info_modelo') and self.info_modelo is not None:
-            try:
-                # Obtener el valor ingresado por el usuario
-                valor_x_str = self.texto_valor_x.get()
 
-                # Verificar si se ingresó un valor
-                if valor_x_str == '':
-                    raise ValueError("Ingrese un valor para la predicción.")
 
-                # Convertir el valor ingresado a un número
-                self.valor_x = float(valor_x_str)
-
-                # Calcular el valor de y usando el modelo
-                self.valor_y = self.modelo.predict([[self.valor_x]])[0]
-
-                # Mostrar la ecuación con el nuevo valor de x e y
-                self.nueva_ecuacion = f"{self.valor_y} = {self.info_modelo.intercepto} + {self.info_modelo.coeficiente} * {self.valor_x}"
-                print(self.info_modelo.variable_y, '=', self.nueva_ecuacion)
-
-                # Mostrar la ecuación en una etiqueta
-                self.etiqueta_nueva_ecuacion = Label(self.frame_prediccion, text=(f"{self.info_modelo.variable_y} = {self.nueva_ecuacion}"))
-                self.etiqueta_nueva_ecuacion.grid(row=8, column=0, columnspan=4, padx=10, pady=5, sticky=tk.W)
-
-            except ValueError as e:
-                self.show_error(f"Error al realizar la predicción: {str(e)}")
-            except Exception as e:
-                self.show_error(f"Error inesperado al realizar la predicción: {str(e)}")
-    def guardar_modelo(self,file_path):
-        if self.info_modelo is None:
-            self.show_error("Realiza la regresión lineal antes de intentar guardar el modelo.")
-            return None
-        self.info_modelo.descripcion = self.texto_descripcion.get()
-        try:
-            # Obtener la ruta y nombre de archivo seleccionados por el usuario
-            file_path = filedialog.asksaveasfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
-    
-            if file_path:
-                # Guardar la información del modelo en el archivo
-                self.info_modelo.guardar_modelo(file_path)
-    
-                self.show_info(f"Modelo guardado en: {file_path}")
-    
-        except Exception as e:
-            self.show_error(f"Error al guardar el modelo: {str(e)}")
