@@ -295,7 +295,7 @@ class RegresionLinealApp:
             self.boton_guardar_modelo = Button(self.frame_variables, text="Guardar modelo", command=self.guardar_modelo)
             self.boton_guardar_modelo.grid(row=5, column=0, padx=10, pady=5, sticky=tk.W)
             
-            self.info_modelo = ModeloInfo(self.variable_x.get(), self.variable_y.get(), self.modelo.intercept_, self.modelo.coef_, 
+            self.info_modelo = ModeloInfo(self.variable_x.get(), self.variable_y.get(), self.modelo, self.modelo.intercept_, self.modelo.coef_, 
                                           self.ecuacion, self.mse, self.texto_descripcion.get())
 
             self.elementos_prediccion()
@@ -315,6 +315,7 @@ class RegresionLinealApp:
 
         self.boton_realizar_prediccion = Button(self.frame_prediccion, text="Realizar predicción", command=self.realizar_prediccion)
         self.boton_realizar_prediccion.grid(row=0, column=3, padx=10, pady=5, sticky=tk.W)
+
 
     def realizar_prediccion(self):
         if hasattr(self, 'info_modelo') and self.info_modelo is not None:
@@ -372,8 +373,22 @@ class RegresionLinealApp:
             self.eliminar_tabla()
             self.ocultar_elementos_interfaz()
             self.mostrar_datos_modelo_cargado()
-            self.etiqueta_nueva_ecuacion.grid_forget()
+
+            # Agregar la siguiente línea para crear la etiqueta_nueva_ecuacion si no existe
+            if not hasattr(self, 'etiqueta_nueva_ecuacion') or not self.etiqueta_nueva_ecuacion:
+                self.etiqueta_nueva_ecuacion = Label(self.frame_prediccion, text="")
+                self.etiqueta_nueva_ecuacion.grid(row=8, column=0, columnspan=4, padx=10, pady=5, sticky=tk.W)
+            else:
+                self.etiqueta_nueva_ecuacion.grid_forget()
+
+            if (self.variable_x is None and hasattr(self.modelo_cargado, 'variable_x')) and (self.variable_y is None and hasattr(self.modelo_cargado, 'variable_y')):
+                self.variable_x = StringVar(value=self.modelo_cargado.variable_x)
+                self.variable_y = StringVar(value=self.modelo_cargado.variable_y)
+                self.modelo = self.modelo_cargado.modelo
+            
+            # Luego, llamar a elementos_prediccion para crear los elementos de predicción
             self.elementos_prediccion()
+
 
 
     def show_error(self, message):
@@ -404,6 +419,7 @@ class RegresionLinealApp:
             # Obtener información específica del modelo cargado
             variable_x_cargada = self.modelo_cargado.variable_x
             variable_y_cargada = self.modelo_cargado.variable_y
+            modelo_cargado = self.modelo_cargado.modelo
             intercepto_cargado = self.modelo_cargado.intercepto
             coeficiente_cargado = self.modelo_cargado.coeficiente
             ecuacion_cargada = self.modelo_cargado.ecuacion_recta
@@ -418,7 +434,7 @@ class RegresionLinealApp:
             label_descripcion = tk.Label(self.frame_variables, text=f"Descripción del modelo: {descripcion_cargada}")
             label_descripcion.grid(row=2, column=0, padx=10, pady=10, sticky=tk.W)
 
-            self.info_modelo = ModeloInfo(variable_x_cargada, variable_y_cargada, intercepto_cargado, coeficiente_cargado, ecuacion_cargada,
+            self.info_modelo = ModeloInfo(variable_x_cargada, variable_y_cargada, modelo_cargado, intercepto_cargado, coeficiente_cargado, ecuacion_cargada,
                                           error_cargado, descripcion_cargada)
 
         else:
