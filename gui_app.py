@@ -113,37 +113,19 @@ class RegresionLinealApp:
         return radiobuttons
 
     def cargar_archivos_csv(self, archivo):
-        try:
-            df = cargar_archivo_csv(self,archivo)
-            return df
-        except FileNotFoundError:
-            raise FileNotFoundError(f"No se encontró el archivo: {archivo}")
-        except pd.errors.EmptyDataError:
-            raise ValueError(f"El archivo CSV está vacío: {archivo}")
-        except pd.errors.ParserError:
-            raise ValueError(f"Error al leer el archivo CSV: {archivo}")
+        df = cargar_archivo_csv(self,archivo)
+        return df
+        
 
     def cargar_archivos_excel(self, archivo):
-        try:
-            df = cargar_archivo_excel(self,archivo)
-            return df
-        except FileNotFoundError:
-            raise FileNotFoundError(f"No se encontró el archivo: {archivo}")
-        except pd.errors.EmptyDataError:
-            raise ValueError(f"El archivo excel está vacío: {archivo}")
-        except pd.errors.ParserError:
-            raise ValueError(f"Error al leer el archivo excel: {archivo}")
+        df = cargar_archivo_excel(self,archivo)
+        return df
+        
         
     def cargar_archivos_db(self, archivo):
-        try:
-            df = cargar_archivo_db(self,archivo)
-            return df
-        except FileNotFoundError:
-            raise FileNotFoundError(f"No se encontró el archivo: {archivo}")
-        except pd.errors.EmptyDataError:
-            raise ValueError(f"El archivo db está vacío: {archivo}")
-        except pd.errors.ParserError:
-            raise ValueError(f"Error al leer el archivo db: {archivo}")
+        df = cargar_archivo_db(self,archivo)
+        return df
+        
         
     def verificar_columnas_numericas(self, datos, columnas):
         for col in columnas:
@@ -373,7 +355,3 @@ class RegresionLinealApp:
 
         else:
             print("No hay un modelo cargado para mostrar.")
-    
-
-
-
