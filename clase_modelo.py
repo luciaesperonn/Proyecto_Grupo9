@@ -29,9 +29,8 @@ class ModeloInfo:
         - file_path (str): Ruta del archivo donde se guardará la instancia.
         """
         # Utilizar joblib.dump para guardar la instancia de la clase
-        print(f"Descripción guardada: {self.descripcion}")
-
         joblib.dump(self, file_path)
+        print(f"Descripción guardada: {self.descripcion}")
  
     def cargar_modelo(self, file_path):
         """
