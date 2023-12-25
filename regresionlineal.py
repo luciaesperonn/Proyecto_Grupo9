@@ -4,6 +4,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error, r2_score
 import tkinter as tk
 from tkinter import StringVar, Radiobutton
+from clase_modelo import *
 from gui_app import *
 
 def crear_radiobuttons(frame, options, variable, row, column):
