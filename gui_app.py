@@ -75,7 +75,7 @@ class RegresionLinealApp:
         self.valor_y = None
         self.nueva_ecuacion = None
         self.etiqueta_nueva_ecuacion = None
-
+    
     def cargar_datos(self):
         self.ocultar_elementos_interfaz()
         file_path = filedialog.askopenfilename(initialdir="/", filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")])
@@ -103,7 +103,13 @@ class RegresionLinealApp:
             radiobutton.destroy()
         self.radiobuttons_x = self.crear_radiobuttons(self.frame_variables, variables, self.variable_x, row=2, column=1)
         self.radiobuttons_y = self.crear_radiobuttons(self.frame_variables, variables, self.variable_y, row=3, column=1)
-
+    def crear_radiobuttons(self, frame, options, variable, row, column):
+        radiobuttons = []
+        for i, option in enumerate(options):
+            radiobutton = tk.Radiobutton(frame, text=option, variable=variable, value=option)
+            radiobutton.grid(row=row, column=column + i, padx=5, pady=5, sticky=tk.W)
+            radiobuttons.append(radiobutton)
+        return radiobuttons
 
     def cargar_archivos_csv(self, archivo):
         try:
