@@ -10,9 +10,10 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from sklearn.metrics import mean_squared_error, r2_score
 from clase_modelo import ModeloInfo
 import joblib
-from file_operations import cargar_archivo_csv, cargar_archivo_excel, cargar_archivo_db, verificar_columnas_numericas
+from file_operations import cargar_archivo_csv, cargar_archivo_excel, cargar_archivo_db,verificar_columnas_numericas
 
-from regresionlineal import *
+
+
 class RegresionLinealApp:
     def __init__(self, master):
         self.master = master
@@ -103,7 +104,7 @@ class RegresionLinealApp:
             radiobutton.destroy()
         self.radiobuttons_x = self.crear_radiobuttons(self.frame_variables, variables, self.variable_x, row=2, column=1)
         self.radiobuttons_y = self.crear_radiobuttons(self.frame_variables, variables, self.variable_y, row=3, column=1)
-   
+    
     def crear_radiobuttons(self, frame, options, variable, row, column):
         radiobuttons = []
         for i, option in enumerate(options):
@@ -179,37 +180,50 @@ class RegresionLinealApp:
         self.boton_realizar_regresion.grid(row=4, column=0, padx=10, pady=5, sticky=tk.W)
 
     def realizar_regresion(self):
-        try:
-            # Llama a la función realizar_regresion_lineal del módulo regresion_lineal
-            realizar_regresion(self)
+        if self.variable_x.get() and self.variable_y.get():
+            variable_x = self.variable_x.get()
+            variable_y = self.variable_y.get()
 
-            # Resto del código de tu implementación original
+            # Asumiendo que estas funciones están definidas en otros módulos
+            columnas_a_verificar = [variable_x, variable_y]
+            verificar_columnas_numericas(self.df, columnas_a_verificar)
+
+            self.df.dropna(subset=[variable_x, variable_y], inplace=True)
+
+            X = self.df[[variable_x]]
+            y = self.df[variable_y]
+
+            self.modelo = LinearRegression()
+            self.modelo.fit(X, y)
+
+            y_pred = self.modelo.predict(X)
+
+            self.mse = mean_squared_error(y, y_pred)
+            self.r2 = r2_score(y, y_pred)
+
             if self.canvas:
                 self.canvas.get_tk_widget().destroy()
 
             self.figure = Figure(figsize=(6, 4))
             ax = self.figure.add_subplot(111)
-            ax.scatter(self.df[self.variable_x.get()], self.df[self.variable_y.get()], color='lightblue', label='Datos reales')
-            ax.plot(self.df[self.variable_x.get()], self.modelo.predict(self.df[[self.variable_x.get()]]), color='purple', linewidth=2, label='Ajuste del modelo')
+            ax.scatter(X, y, color='lightblue', label='Datos reales')
+            ax.plot(X, y_pred, color='purple', linewidth=2, label='Ajuste del modelo')
 
-            # Convertir los coeficientes y el intercepto a tipos de datos numéricos
-            intercepto = float(self.modelo.intercept_)
-            coeficiente = float(self.modelo.coef_[0])
+            self.modelo.intercept_ = float(self.modelo.intercept_)
+            self.modelo.coef_[0] = float(self.modelo.coef_[0])
 
-            self.etiqueta_x = self.variable_x.get()
-            self.etiqueta_y = self.variable_y.get()
+            self.etiqueta_x = variable_x
+            self.etiqueta_y = variable_y
 
             ax.set_xlabel(self.etiqueta_x)
             ax.set_ylabel(self.etiqueta_y)
             ax.legend()
             ax.set_title('Modelo de Regresión Lineal')
 
-            # Crear el área de dibujo (canvas)
             self.canvas = FigureCanvasTkAgg(self.figure, master=self.frame_variables)
             self.canvas.draw()
             self.canvas.get_tk_widget().grid(row=4, rowspan=20, column=2, columnspan=5, padx=10, pady=5, sticky=tk.W)
 
-            # Agregar etiquetas de texto a la derecha del gráfico
             self.etiqueta_ecuacion = Label(self.frame_variables, text=f"La ecuación de la recta es: {self.ecuacion}")
             self.etiqueta_ecuacion.grid(row=4, column=7, columnspan=4, padx=10, pady=5, sticky=tk.W)
             self.etiqueta_datos = Label(self.frame_variables, text=f"El error cuadrático medio es: {self.mse:.4f} y la bondad de ajuste es: {self.r2:.4f}")
@@ -221,20 +235,18 @@ class RegresionLinealApp:
             self.entrada_descripcion = tk.Entry(self.frame_variables, width=50, textvariable=self.texto_descripcion)
             self.entrada_descripcion.grid(row=6, column=9, columnspan=2, padx=10, pady=5, sticky=tk.W)
 
-            # Nueva línea: Crear botón para guardar el modelo
             self.boton_guardar_modelo = Button(self.frame_variables, text="Guardar modelo", command=self.guardar_modelo)
             self.boton_guardar_modelo.grid(row=5, column=0, padx=10, pady=5, sticky=tk.W)
-
-            self.info_modelo = ModeloInfo(self.variable_x.get(), self.variable_y.get(), intercepto, coeficiente,
+            
+            self.info_modelo = ModeloInfo(self.variable_x.get(), self.variable_y.get(), self.modelo.intercept_, self.modelo.coef_, 
                                           self.ecuacion, self.mse, self.texto_descripcion.get())
 
             self.elementos_prediccion()
 
-        except ValueError as e:
-            self.show_error(f"Error al realizar la regresión: {str(e)}")
-        except Exception as e:
-            self
-        
+        else:
+            raise ValueError("Seleccione las variables x e y antes de hacer la regresión")
+
+
     def elementos_prediccion(self):
         self.frame_prediccion.grid(row=7, column=7, columnspan=4, padx=10, pady=5, sticky=tk.W)
 
@@ -276,7 +288,6 @@ class RegresionLinealApp:
                 self.show_error(f"Error al realizar la predicción: {str(e)}")
             except Exception as e:
                 self.show_error(f"Error inesperado al realizar la predicción: {str(e)}")
-
     def guardar_modelo(self):
         if self.info_modelo is None:
             self.show_error("Realiza la regresión lineal antes de intentar guardar el modelo.")
@@ -355,7 +366,3 @@ class RegresionLinealApp:
 
         else:
             print("No hay un modelo cargado para mostrar.")
-    
-
-
-
