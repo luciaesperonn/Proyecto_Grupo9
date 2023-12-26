@@ -4,7 +4,7 @@ import tempfile
 import os
 import sqlite3
 import pandas as pd
-from file_operations import cargar_archivo_csv, cargar_archivo_excel, cargar_archivo_db
+from file_operations import cargar_archivo_csv, cargar_archivo_excel, cargar_archivo_db, verificar_columnas_numericas
 
 class TestLeerArchivos(unittest.TestCase):
     def setUp(self):
@@ -60,6 +60,59 @@ class TestLeerArchivos(unittest.TestCase):
         df_loaded = cargar_archivo_db(self.db_file.name)
         pd.testing.assert_frame_equal(df, df_loaded)
 
+class TestVerificarColumnasNumericas(unittest.TestCase):
+
+    def test_columnas_numericas(self):
+        # Crear un DataFrame de ejemplo
+        data = {
+            'A': [1, 2, 3],
+            'B': [1.1, 2.2, 3.3],
+            'C': ['a', 'b', 'c']
+        }
+        df = pd.DataFrame(data)
+
+        # Llamar a la función con columnas numéricas
+        columnas_numericas = ['A', 'B']
+        verificar_columnas_numericas(df, columnas_numericas)
+
+        # Si la función no arroja un ValueError, entonces la prueba pasa
+        self.assertTrue(True)
+
+    def test_columnas_no_numericas(self):
+        # Crear un DataFrame de ejemplo
+        data = {
+            'A': [1, 2, 3],
+            'B': ['a', 'b', 'c'],
+            'C': ['x', 'y', 'z']
+        }
+        df = pd.DataFrame(data)
+
+        # Llamar a la función con columnas no numéricas
+        columnas_no_numericas = ['A', 'B']
+        
+        with self.assertRaises(ValueError) as context:
+            verificar_columnas_numericas(df, columnas_no_numericas)
+        
+        # Verificar el mensaje de error
+        self.assertEqual(str(context.exception), "La columna 'B' no es numérica.")
+
+    def test_columnas_inexistentes(self):
+        # Crear un DataFrame de ejemplo
+        data = {
+            'A': [1, 2, 3],
+            'B': [1.1, 2.2, 3.3],
+            'C': ['a', 'b', 'c']
+        }
+        df = pd.DataFrame(data)
+
+        # Llamar a la función con una columna inexistente
+        columnas_inexistentes = ['A', 'D']
+        
+        with self.assertRaises(KeyError) as context:
+            verificar_columnas_numericas(df, columnas_inexistentes)
+        
+        # Verificar el mensaje de error
+        self.assertEqual(str(context.exception), "'D'")
 
 if __name__ == "__main__":
     unittest.main()
