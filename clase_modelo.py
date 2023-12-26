@@ -1,7 +1,8 @@
+#modulo clase_modelo.py
 import joblib
  
 class ModeloInfo:
-    def __init__(self, x, y, modelo, intercepto, coeficiente, ecuacion_recta, mse, descripcion):
+    def __init__(self, x, y, intercepto, coeficiente, ecuacion_recta, mse, descripcion):
         """
         Inicia una instancia de la clase ModeloInfo.
  
@@ -15,7 +16,6 @@ class ModeloInfo:
         """
         self.variable_x = x
         self.variable_y = y
-        self.modelo = modelo
         self.intercepto = intercepto
         self.coeficiente = coeficiente
         self.ecuacion_recta = ecuacion_recta
@@ -46,11 +46,10 @@ class ModeloInfo:
         print(f"Descripción cargada: {loaded_model.descripcion}")
 
         # Actualizar los atributos de la instancia actual con los cargados desde el archivo
-        self.x = loaded_model.x
-        self.y = loaded_model.y
-        self.modelo = loaded_model.modelo
+        self.variable_x = loaded_model.variable_x
+        self.variable_y = loaded_model.variable_y
         self.intercepto = loaded_model.intercepto
         self.coeficiente = loaded_model.coeficiente
         self.ecuacion_recta = loaded_model.ecuacion_recta
         self.mse = loaded_model.mse
-        self.descripcion = loaded_model.descripcion 
+        self.descripcion = loaded_model.descripcion
