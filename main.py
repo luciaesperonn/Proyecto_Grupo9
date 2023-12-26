@@ -1,5 +1,5 @@
 from tkinter import Tk 
-from gui_app import *
+from InterfazNueva import *
 
 if __name__ == "__main__":
     root = Tk()

@@ -7,6 +7,7 @@ from tkinter import StringVar, Radiobutton
 from clase_modelo import *
 from gui_app import *
 
+
 def crear_radiobuttons(frame, options, variable, row, column):
         radiobuttons = []
         for i, option in enumerate(options):
