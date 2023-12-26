@@ -1,5 +1,5 @@
 from tkinter import Tk 
-from gui_app import *
+from nueva_interfaz import RegresionLinealApp
 
 if __name__ == "__main__":
     root = Tk()
