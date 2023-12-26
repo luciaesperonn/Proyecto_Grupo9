@@ -326,7 +326,11 @@ class RegresionLinealApp:
             
             self.info_modelo = ModeloInfo(self.variable_x.get(), self.variable_y.get(), self.modelo, self.modelo.intercept_, self.modelo.coef_, 
                                           self.ecuacion, self.mse, self.texto_descripcion.get())
-
+            
+            # Mostrar la ecuación en una etiqueta
+            if self.etiqueta_nueva_ecuacion is not None:
+                self.etiqueta_nueva_ecuacion.config(text='')
+                self.etiqueta_nueva_ecuacion.grid_forget()
             self.elementos_prediccion()
 
         else:
@@ -383,10 +387,10 @@ class RegresionLinealApp:
                 self.nueva_ecuacion = f"{self.valor_y} = {self.info_modelo.intercepto} + {self.info_modelo.coeficiente} * {self.valor_x}"
                 print(self.info_modelo.variable_y, '=', self.nueva_ecuacion)
 
-                # Mostrar la ecuación en una etiqueta
+
                 self.etiqueta_nueva_ecuacion = Label(self.frame_prediccion, text=(f"{self.info_modelo.variable_y} = {self.nueva_ecuacion}"))
                 self.etiqueta_nueva_ecuacion.grid(row=8, column=0, columnspan=4, padx=10, pady=5, sticky=tk.W)
-
+            
             except ValueError as e:
                 self.show_error(f"Error al realizar la predicción: {str(e)}")
             except Exception as e:
@@ -405,7 +409,6 @@ class RegresionLinealApp:
         if self.info_modelo is None:
             self.show_error("Realiza la regresión lineal antes de intentar guardar el modelo.")
             return None
-        self.info_modelo.descripcion = self.texto_descripcion.get()
         try:
             # Obtener la ruta y nombre de archivo seleccionados por el usuario
             file_path = filedialog.asksaveasfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
