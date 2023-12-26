@@ -1,4 +1,4 @@
-#modulo clase_modelo.py
+
 import joblib
  
 class ModeloInfo:
