@@ -6,7 +6,9 @@ import tkinter as tk
 from tkinter import StringVar, Radiobutton
 from clase_modelo import *
 from gui_app import *
-
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from tkinter import Tk, Label, Button, filedialog, Frame, ttk, Radiobutton, Scrollbar, StringVar
 
 def crear_radiobuttons(frame, options, variable, row, column):
         radiobuttons = []
