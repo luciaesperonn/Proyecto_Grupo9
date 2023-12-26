@@ -83,6 +83,7 @@ def cargar_archivo_db(archivo):
     except sqlite3.Error as e:
         raise sqlite3.Error(f"Error al leer la base de datos: {str(e)}")
 
+
 def verificar_columnas_numericas(datos, columnas):
     """
     Verifica que las columnas especificadas en el DataFrame sean de tipo numérico.
