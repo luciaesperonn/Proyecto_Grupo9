@@ -46,8 +46,9 @@ class ModeloInfo:
         print(f"Descripción cargada: {loaded_model.descripcion}")
 
         # Actualizar los atributos de la instancia actual con los cargados desde el archivo
-        self.variable_x = loaded_model.variable_x
-        self.variable_y = loaded_model.variable_y
+        self.x = loaded_model.x
+        self.y = loaded_model.y
+        self.modelo = loaded_model.modelo
         self.intercepto = loaded_model.intercepto
         self.coeficiente = loaded_model.coeficiente
         self.ecuacion_recta = loaded_model.ecuacion_recta

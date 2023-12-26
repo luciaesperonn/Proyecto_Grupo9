@@ -306,6 +306,7 @@ class RegresionLinealApp:
         except Exception as e:
             self.show_error(f"Error al guardar el modelo: {str(e)}")
 
+    
     def cargar_modelo(self):
         file_path = filedialog.askopenfilename(filetypes=[("Archivos joblib", "*.joblib")])
         if file_path:
@@ -315,7 +316,20 @@ class RegresionLinealApp:
             self.eliminar_tabla()
             self.ocultar_elementos_interfaz()
             self.mostrar_datos_modelo_cargado()
-            self.etiqueta_nueva_ecuacion.grid_forget()
+
+            # Agregar la siguiente línea para crear la etiqueta_nueva_ecuacion si no existe
+            if not hasattr(self, 'etiqueta_nueva_ecuacion') or not self.etiqueta_nueva_ecuacion:
+                self.etiqueta_nueva_ecuacion = Label(self.frame_prediccion, text="")
+                self.etiqueta_nueva_ecuacion.grid(row=8, column=0, columnspan=4, padx=10, pady=5, sticky=tk.W)
+            else:
+                self.etiqueta_nueva_ecuacion.grid_forget()
+
+            if (self.variable_x is None and hasattr(self.modelo_cargado, 'variable_x')) and (self.variable_y is None and hasattr(self.modelo_cargado, 'variable_y')):
+                self.variable_x = StringVar(value=self.modelo_cargado.variable_x)
+                self.variable_y = StringVar(value=self.modelo_cargado.variable_y)
+                self.modelo = self.modelo_cargado.modelo
+            
+            # Luego, llamar a elementos_prediccion para crear los elementos de predicción
             self.elementos_prediccion()
 
 
