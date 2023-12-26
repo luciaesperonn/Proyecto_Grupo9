@@ -10,8 +10,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from sklearn.metrics import mean_squared_error, r2_score
 from clase_modelo import ModeloInfo
 import joblib
-from file_operations import cargar_archivo_csv, cargar_archivo_excel, cargar_archivo_db, verificar_columnas_numericas
-from regresionlineal import *
+
 class RegresionLinealApp:
     def __init__(self, master):
         self.master = master
@@ -74,18 +73,26 @@ class RegresionLinealApp:
         self.valor_y = None
         self.nueva_ecuacion = None
         self.etiqueta_nueva_ecuacion = None
-    
+
+    def crear_radiobuttons(self, frame, options, variable, row, column):
+        radiobuttons = []
+        for i, option in enumerate(options):
+            radiobutton = Radiobutton(frame, text=option, variable=variable, value=option)
+            radiobutton.grid(row=row, column=column + i, padx=5, pady=5, sticky=tk.W)
+            radiobuttons.append(radiobutton)
+        return radiobuttons
+
+
     def cargar_datos(self):
         self.ocultar_elementos_interfaz()
         file_path = filedialog.askopenfilename(initialdir="/", filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")])
         if file_path:
             if file_path.endswith('.csv'):
-                self.df = self.cargar_archivos_csv(file_path)
+                self.df = self.cargar_archivo_csv(file_path)
             elif file_path.endswith('.xlsx'):
-                self.df = self.cargar_archivos_excel(file_path)
+                self.df = self.cargar_archivo_excel(file_path)
             elif file_path.endswith('.db'):
-                self.df = self.cargar_archivos_db(file_path)
-
+                self.df = self.cargar_archivo_db(file_path)
 
             self.actualizar_etiqueta_ruta(file_path)
             self.mostrar_tabla(self.df)  # Agrega esta línea para mostrar la tabla
@@ -102,31 +109,61 @@ class RegresionLinealApp:
             radiobutton.destroy()
         self.radiobuttons_x = self.crear_radiobuttons(self.frame_variables, variables, self.variable_x, row=2, column=1)
         self.radiobuttons_y = self.crear_radiobuttons(self.frame_variables, variables, self.variable_y, row=3, column=1)
-    
-    def crear_radiobuttons(self, frame, options, variable, row, column):
-        radiobuttons = []
-        for i, option in enumerate(options):
-            radiobutton = tk.Radiobutton(frame, text=option, variable=variable, value=option)
-            radiobutton.grid(row=row, column=column + i, padx=5, pady=5, sticky=tk.W)
-            radiobuttons.append(radiobutton)
-        return radiobuttons
 
-    def cargar_archivos_csv(self, archivo):
-        df = cargar_archivo_csv(self,archivo)
-        return df
-        
+    def cargar_archivo_csv(self, archivo):
+        try:
+            df = pd.read_csv(archivo)
+            return df
+        except FileNotFoundError:
+            raise FileNotFoundError(f"No se encontró el archivo: {archivo}")
+        except pd.errors.EmptyDataError:
+            raise ValueError(f"El archivo CSV está vacío: {archivo}")
+        except pd.errors.ParserError:
+            raise ValueError(f"Error al leer el archivo CSV: {archivo}")
 
-    def cargar_archivos_excel(self, archivo):
-        df = cargar_archivo_excel(self,archivo)
-        return df
-        
-        
-    def cargar_archivos_db(self, archivo):
-        df = cargar_archivo_db(self,archivo)
-        return df
-        
+    def cargar_archivo_excel(self, archivo):
+        try:
+            df = pd.read_excel(archivo)
+            return df
+        except FileNotFoundError:
+            raise FileNotFoundError(f"No se encontró el archivo: {archivo}")
+        except pd.errors.EmptyDataError:
+            raise ValueError(f"El archivo Excel está vacío: {archivo}")
+        except pd.errors.ParserError:
+            raise ValueError(f"Error al leer el archivo Excel: {archivo}")
+
+    def cargar_archivo_db(self, archivo):
+        try:
+            conn = sqlite3.connect(archivo)
+
+            # Obtener la lista de tablas en la base de datos
+            cursor = conn.cursor()
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+            tables = cursor.fetchall()
+
+            if len(tables) != 1:
+                raise ValueError("La base de datos contiene más de una tabla o está vacía.")
+
+            tabla = tables[0][0]
+            consulta = f"SELECT * FROM {tabla}"
+
+            df = pd.read_sql_query(consulta, conn)
+            conn.close()
+            return df
+        except sqlite3.Error as e:
+            raise sqlite3.Error(f"Error al leer la base de datos: {str(e)}")
         
     def verificar_columnas_numericas(self, datos, columnas):
+        """
+        Verifica que las columnas especificadas en el DataFrame sean de tipo numérico.
+
+        Parámetros:
+        - datos (pd.DataFrame): DataFrame de pandas que contiene los datos.
+        - columnas (list): Lista de nombres de columnas a verificar.
+
+        Lanza:
+        - ValueError: Si alguna columna no es numérica.
+        """
         for col in columnas:
             if not pd.api.types.is_numeric_dtype(datos[col]):
                 raise ValueError(f"La columna '{col}' no es numérica.")
@@ -178,28 +215,62 @@ class RegresionLinealApp:
         self.boton_realizar_regresion.grid(row=4, column=0, padx=10, pady=5, sticky=tk.W)
 
     def realizar_regresion(self):
-        try:
-            # Llama a la función realizar_regresion_lineal del módulo regresion_lineal
-            realizar_regresion(self)
+        if self.variable_x.get() and self.variable_y.get():
+            # Obtener las variables seleccionadas
+            variable_x = self.variable_x.get()
+            variable_y = self.variable_y.get()
 
-            # Resto del código de tu implementación original
+            # Añadir la verificación de columnas numéricas solo para variable_x y variable_y
+            columnas_a_verificar = [self.variable_x.get(), self.variable_y.get()]
+            self.verificar_columnas_numericas(self.df, columnas_a_verificar)
+
+            # Antes de realizar la regresión lineal, elimina las filas con NaN en la variable de respuesta
+            self.df.dropna(subset=[variable_x, variable_y], inplace=True)
+
+            # Seleccionar las columnas correspondientes
+            X = self.df[[variable_x]]
+            y = self.df[variable_y]
+
+            # Inicializar el modelo de regresión lineal
+            self.modelo = LinearRegression()
+
+            # Ajustar el modelo a los datos
+            self.modelo.fit(X, y)
+
+            # Hacer predicciones
+            y_pred = self.modelo.predict(X)
+
+            # Calcular el error cuadrático medio
+            self.mse = mean_squared_error(y, y_pred)
+
+            # Calcular la bondad de ajuste (R^2)
+            self.r2 = r2_score(y, y_pred)
+
+            # Imprimir la ecuación de la recta
+            self.ecuacion = f"{variable_y} = {self.modelo.intercept_:.4f} + {self.modelo.coef_[0]:.4f} * {variable_x}"
+            print("Ecuación de la recta:", self.ecuacion)
+
+            # Imprimir el error cuadrático medio y la bondad de ajuste
+            print("Error Cuadrático Medio:", self.mse)
+            print("Bondad de Ajuste (R^2):", self.r2)
+
             if self.canvas:
                 self.canvas.get_tk_widget().destroy()
 
             self.figure = Figure(figsize=(6, 4))
             ax = self.figure.add_subplot(111)
-            ax.scatter(self.df[self.variable_x.get()], self.df[self.variable_y.get()], color='lightblue', label='Datos reales')
-            ax.plot(self.df[self.variable_x.get()], self.modelo.predict(self.df[[self.variable_x.get()]]), color='purple', linewidth=2, label='Ajuste del modelo')
+            ax.scatter(X, y, color='lightblue', label='Datos reales')
+            ax.plot(X, y_pred, color='purple', linewidth=2, label='Ajuste del modelo')
 
             # Convertir los coeficientes y el intercepto a tipos de datos numéricos
-            intercepto = float(self.modelo.intercept_)
-            coeficiente = float(self.modelo.coef_[0])
+            self.modelo.intercept_ = float(self.modelo.intercept_)
+            self.modelo.coef_[0] = float(self.modelo.coef_[0])
 
-            self.etiqueta_x = self.variable_x.get()
-            self.etiqueta_y = self.variable_y.get()
+            self.etiqueta_x = variable_x
+            self.etiqueta_y = variable_y
 
-            ax.set_xlabel(self.etiqueta_x)
-            ax.set_ylabel(self.etiqueta_y)
+            ax.set_xlabel(self.etiqueta_x)  # Utiliza la etiqueta de la variable X
+            ax.set_ylabel(self.etiqueta_y)  # Utiliza la etiqueta de la variable Y
             ax.legend()
             ax.set_title('Modelo de Regresión Lineal')
 
@@ -223,17 +294,15 @@ class RegresionLinealApp:
             # Nueva línea: Crear botón para guardar el modelo
             self.boton_guardar_modelo = Button(self.frame_variables, text="Guardar modelo", command=self.guardar_modelo)
             self.boton_guardar_modelo.grid(row=5, column=0, padx=10, pady=5, sticky=tk.W)
-
-            self.info_modelo = ModeloInfo(self.variable_x.get(), self.variable_y.get(), intercepto, coeficiente,
+            
+            self.info_modelo = ModeloInfo(self.variable_x.get(), self.variable_y.get(), self.modelo, self.modelo.intercept_, self.modelo.coef_, 
                                           self.ecuacion, self.mse, self.texto_descripcion.get())
 
             self.elementos_prediccion()
 
-        except ValueError as e:
-            self.show_error(f"Error al realizar la regresión: {str(e)}")
-        except Exception as e:
-            self
-        
+        else:
+            raise ValueError("Seleccione las variables x e y antes de hacer la regresión")
+
     def elementos_prediccion(self):
         self.frame_prediccion.grid(row=7, column=7, columnspan=4, padx=10, pady=5, sticky=tk.W)
 
@@ -246,6 +315,7 @@ class RegresionLinealApp:
 
         self.boton_realizar_prediccion = Button(self.frame_prediccion, text="Realizar predicción", command=self.realizar_prediccion)
         self.boton_realizar_prediccion.grid(row=0, column=3, padx=10, pady=5, sticky=tk.W)
+
 
     def realizar_prediccion(self):
         if hasattr(self, 'info_modelo') and self.info_modelo is not None:
@@ -303,8 +373,22 @@ class RegresionLinealApp:
             self.eliminar_tabla()
             self.ocultar_elementos_interfaz()
             self.mostrar_datos_modelo_cargado()
-            self.etiqueta_nueva_ecuacion.grid_forget()
+
+            # Agregar la siguiente línea para crear la etiqueta_nueva_ecuacion si no existe
+            if not hasattr(self, 'etiqueta_nueva_ecuacion') or not self.etiqueta_nueva_ecuacion:
+                self.etiqueta_nueva_ecuacion = Label(self.frame_prediccion, text="")
+                self.etiqueta_nueva_ecuacion.grid(row=8, column=0, columnspan=4, padx=10, pady=5, sticky=tk.W)
+            else:
+                self.etiqueta_nueva_ecuacion.grid_forget()
+
+            if (self.variable_x is None and hasattr(self.modelo_cargado, 'variable_x')) and (self.variable_y is None and hasattr(self.modelo_cargado, 'variable_y')):
+                self.variable_x = StringVar(value=self.modelo_cargado.variable_x)
+                self.variable_y = StringVar(value=self.modelo_cargado.variable_y)
+                self.modelo = self.modelo_cargado.modelo
+            
+            # Luego, llamar a elementos_prediccion para crear los elementos de predicción
             self.elementos_prediccion()
+
 
 
     def show_error(self, message):
@@ -335,6 +419,7 @@ class RegresionLinealApp:
             # Obtener información específica del modelo cargado
             variable_x_cargada = self.modelo_cargado.variable_x
             variable_y_cargada = self.modelo_cargado.variable_y
+            modelo_cargado = self.modelo_cargado.modelo
             intercepto_cargado = self.modelo_cargado.intercepto
             coeficiente_cargado = self.modelo_cargado.coeficiente
             ecuacion_cargada = self.modelo_cargado.ecuacion_recta
@@ -349,8 +434,10 @@ class RegresionLinealApp:
             label_descripcion = tk.Label(self.frame_variables, text=f"Descripción del modelo: {descripcion_cargada}")
             label_descripcion.grid(row=2, column=0, padx=10, pady=10, sticky=tk.W)
 
-            self.info_modelo = ModeloInfo(variable_x_cargada, variable_y_cargada, intercepto_cargado, coeficiente_cargado, ecuacion_cargada,
+            self.info_modelo = ModeloInfo(variable_x_cargada, variable_y_cargada, modelo_cargado, intercepto_cargado, coeficiente_cargado, ecuacion_cargada,
                                           error_cargado, descripcion_cargada)
 
         else:
             print("No hay un modelo cargado para mostrar.")
+    
+
