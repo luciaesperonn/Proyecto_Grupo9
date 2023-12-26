@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from sklearn.metrics import mean_squared_error, r2_score
-from clase_modelo import ModeloInfo
+from ClaseModeloInfo import ModeloInfo
 import joblib
 
 class RegresionLinealApp:
