@@ -11,7 +11,6 @@ from sklearn.metrics import mean_squared_error, r2_score
 from clase_modelo import ModeloInfo
 import joblib
 from file_operations import cargar_archivo_csv, cargar_archivo_excel, cargar_archivo_db, verificar_columnas_numericas
-
 from regresionlineal import *
 class RegresionLinealApp:
     def __init__(self, master):
@@ -103,7 +102,7 @@ class RegresionLinealApp:
             radiobutton.destroy()
         self.radiobuttons_x = self.crear_radiobuttons(self.frame_variables, variables, self.variable_x, row=2, column=1)
         self.radiobuttons_y = self.crear_radiobuttons(self.frame_variables, variables, self.variable_y, row=3, column=1)
-   
+    
     def crear_radiobuttons(self, frame, options, variable, row, column):
         radiobuttons = []
         for i, option in enumerate(options):
@@ -113,17 +112,17 @@ class RegresionLinealApp:
         return radiobuttons
 
     def cargar_archivos_csv(self, archivo):
-        df = cargar_archivo_csv(archivo)
+        df = cargar_archivo_csv(self,archivo)
         return df
         
 
     def cargar_archivos_excel(self, archivo):
-        df = cargar_archivo_excel(archivo)
+        df = cargar_archivo_excel(self,archivo)
         return df
         
         
     def cargar_archivos_db(self, archivo):
-        df = cargar_archivo_db(archivo)
+        df = cargar_archivo_db(self,archivo)
         return df
         
         
@@ -355,7 +354,3 @@ class RegresionLinealApp:
 
         else:
             print("No hay un modelo cargado para mostrar.")
-    
-
-
-
