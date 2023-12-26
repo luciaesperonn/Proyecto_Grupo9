@@ -16,6 +16,12 @@ from file_operations import cargar_archivo_csv, cargar_archivo_excel, cargar_arc
 
 class RegresionLinealApp:
     def __init__(self, master):
+        """
+        Inicializa la aplicación de Regresión Lineal.
+
+        Parámetros:
+        - master: Ventana principal de la aplicación.
+        """
         self.master = master
         master.title("Aplicación de Regresión Lineal")
 
@@ -78,6 +84,12 @@ class RegresionLinealApp:
         self.etiqueta_nueva_ecuacion = None
     
     def cargar_datos(self):
+        """
+        Carga los datos desde un archivo seleccionado por el usuario.
+
+        Lanza:
+        - ValueError: Si no se selecciona un archivo o hay un problema al cargar los datos.
+        """
         self.ocultar_elementos_interfaz()
         file_path = filedialog.askopenfilename(initialdir="/", filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")])
         if file_path:
@@ -96,6 +108,15 @@ class RegresionLinealApp:
             print("Datos cargados exitosamente")
 
     def mostrar_variables(self, variables):
+        """
+        Muestra las variables disponibles en el DataFrame.
+
+        Parámetros:
+        - variables (list): Lista de nombres de las variables.
+
+        Lanza:
+        - ValueError: Si hay un problema al mostrar las variables.
+        """
         self.variable_x = StringVar(value=" ")
         self.variable_y = StringVar(value=" ")
         for radiobutton in self.radiobuttons_x:
@@ -106,6 +127,19 @@ class RegresionLinealApp:
         self.radiobuttons_y = self.crear_radiobuttons(self.frame_variables, variables, self.variable_y, row=3, column=1)
     
     def crear_radiobuttons(self, frame, options, variable, row, column):
+        """
+        Carga un archivo CSV y devuelve un DataFrame de pandas.
+
+        Parámetros:
+        - archivo (str): Ruta del archivo CSV.
+
+        Return:
+        - pd.DataFrame: DataFrame con los datos del archivo CSV.
+
+        Lanza:
+        - FileNotFoundError: Si el archivo no se encuentra.
+        - ValueError: Si el archivo CSV está vacío o hay un error al leerlo.
+        """
         radiobuttons = []
         for i, option in enumerate(options):
             radiobutton = tk.Radiobutton(frame, text=option, variable=variable, value=option)
@@ -114,29 +148,77 @@ class RegresionLinealApp:
         return radiobuttons
 
     def cargar_archivos_csv(self, archivo):
+        """
+        Carga un archivo Excel y devuelve un DataFrame de pandas.
+
+        Parámetros:
+        - archivo (str): Ruta del archivo Excel.
+
+        Returna:
+        - pd.DataFrame: DataFrame con los datos del archivo Excel.
+        """
         df = cargar_archivo_csv(archivo)
         return df
         
 
     def cargar_archivos_excel(self, archivo):
+        """
+        Carga datos desde una base de datos SQLite y devuelve un DataFrame de pandas.
+
+        Parámetros:
+        - archivo (str): Ruta del archivo de base de datos SQLite.
+
+        Return:
+        - pd.DataFrame: DataFrame con los datos de la tabla de la base de datos.
+        """
         df = cargar_archivo_excel(archivo)
         return df
         
-        
     def cargar_archivos_db(self, archivo):
+        """
+        Carga datos desde una base de datos SQLite y devuelve un DataFrame de pandas.
+
+        Parámetros:
+        - archivo (str): Ruta del archivo de base de datos SQLite.
+
+        Return:
+        - pd.DataFrame: DataFrame con los datos de la tabla de la base de datos.
+        """
         df = cargar_archivo_db(archivo)
         return df
         
         
     def verificar_columnas_numericas(self, datos, columnas):
+        """
+        Verifica que las columnas especificadas en el DataFrame sean de tipo numérico.
+
+        Parámetros:
+        - datos (pd.DataFrame): DataFrame de pandas que contiene los datos.
+        - columnas (list): Lista de nombres de columnas a verificar.
+
+        Lanza:
+        - ValueError: Si alguna columna no es numérica.
+        """
         for col in columnas:
             if not pd.api.types.is_numeric_dtype(datos[col]):
                 raise ValueError(f"La columna '{col}' no es numérica.")
 
     def actualizar_etiqueta_ruta(self, ruta):
+        """
+        Actualiza la etiqueta de la ruta en la interfaz gráfica.
+
+        Parameters:
+        - ruta (str): La nueva ruta que se mostrará en la etiqueta.
+        """
         self.etiqueta_ruta.config(text=f"RUTA: {ruta}")
 
     def mostrar_tabla(self, df):
+        """
+        Muestra un DataFrame en un Treeview en la interfaz gráfica.
+
+        Parameters:
+        - df (pd.DataFrame): El DataFrame que se mostrará en la tabla.
+        """
         # Limpiar el contenido actual del Frame
         for widget in self.tabla_frame.winfo_children():
             widget.destroy()
@@ -180,6 +262,10 @@ class RegresionLinealApp:
         self.boton_realizar_regresion.grid(row=4, column=0, padx=10, pady=5, sticky=tk.W)
 
     def realizar_regresion(self):
+        """
+        Realiza una regresión lineal usando las variables x e y seleccionadas.
+        Muestra el modelo ajustado en la interfaz gráfica.
+        """
         if self.variable_x.get() and self.variable_y.get():
             variable_x = self.variable_x.get()
             variable_y = self.variable_y.get()
@@ -248,6 +334,9 @@ class RegresionLinealApp:
 
 
     def elementos_prediccion(self):
+        """
+        Configura los elementos de la interfaz gráfica para la predicción.
+        """
         self.frame_prediccion.grid(row=7, column=7, columnspan=4, padx=10, pady=5, sticky=tk.W)
 
         self.etiqueta_introducir_valor = Label(self.frame_prediccion, text=f"Introduzca un valor para {self.variable_x.get()}:")
@@ -261,6 +350,10 @@ class RegresionLinealApp:
         self.boton_realizar_prediccion.grid(row=0, column=3, padx=10, pady=5, sticky=tk.W)
 
     def realizar_prediccion(self):
+        """
+        Realiza una predicción utilizando el modelo de regresión lineal.
+        Muestra la ecuación de la recta con el nuevo valor de x e y.
+        """
         if hasattr(self, 'info_modelo') and self.info_modelo is not None:
             try:
                 # Obtener el valor ingresado por el usuario
@@ -288,7 +381,12 @@ class RegresionLinealApp:
                 self.show_error(f"Error al realizar la predicción: {str(e)}")
             except Exception as e:
                 self.show_error(f"Error inesperado al realizar la predicción: {str(e)}")
+    
     def guardar_modelo(self):
+        """
+        Guarda el modelo de regresión lineal en un archivo joblib.
+        Muestra mensajes de error o éxito en la interfaz gráfica.
+        """
         if self.info_modelo is None:
             self.show_error("Realiza la regresión lineal antes de intentar guardar el modelo.")
             return None
@@ -308,6 +406,10 @@ class RegresionLinealApp:
 
     
     def cargar_modelo(self):
+        """
+        Carga un modelo de regresión lineal desde un archivo joblib.
+        Actualiza la interfaz gráfica con la información del modelo cargado.
+        """
         file_path = filedialog.askopenfilename(filetypes=[("Archivos joblib", "*.joblib")])
         if file_path:
             self.actualizar_etiqueta_ruta(file_path)
@@ -334,6 +436,12 @@ class RegresionLinealApp:
 
 
     def show_error(self, message):
+        """
+        Muestra una ventana emergente de error con el mensaje proporcionado.
+
+        Parameters:
+        - message (str): Mensaje de error a mostrar.
+        """
         top = tk.Toplevel()
         top.title("Error")
         text = tk.Text(top)
@@ -341,6 +449,12 @@ class RegresionLinealApp:
         text.pack()# Función para obtener el valor ingresado en el cuadro de texto
 
     def show_info(self, message):
+        """
+        Muestra una ventana emergente de información con el mensaje proporcionado.
+
+        Parameters:
+        - message (str): Mensaje de información a mostrar.
+        """
         top = tk.Toplevel()
         top.title("Información")
         text = tk.Text(top)
@@ -348,15 +462,23 @@ class RegresionLinealApp:
         text.pack()# Función para obtener el valor ingresado en el cuadro de texto
 
     def eliminar_tabla(self):
+         """
+        Elimina la tabla (Treeview) de la interfaz gráfica.
+        """
          if self.tabla_frame.winfo_ismapped():
                 self.tabla_frame.grid_forget()
     
     def ocultar_elementos_interfaz(self):
-        # Oculta los elementos de la interfaz, excepto el frame_contenedor_ruta
+        """
+        Oculta los elementos de la interfaz, excepto el frame_contenedor_ruta.
+        """
         for elemento in self.frame_variables.winfo_children():
             elemento.grid_forget()
 
     def mostrar_datos_modelo_cargado(self):
+        """
+        Muestra información específica del modelo cargado en la interfaz gráfica.
+        """
         if self.modelo_cargado is not None:
             # Obtener información específica del modelo cargado
             variable_x_cargada = self.modelo_cargado.variable_x
