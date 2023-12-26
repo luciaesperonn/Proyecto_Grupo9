@@ -2,7 +2,7 @@
 import joblib
  
 class ModeloInfo:
-    def __init__(self, x, y, intercepto, coeficiente, ecuacion_recta, mse, descripcion):
+    def __init__(self, x, y, modelo, intercepto, coeficiente, ecuacion_recta, mse, descripcion=None):
         """
         Inicia una instancia de la clase ModeloInfo.
  
@@ -16,6 +16,7 @@ class ModeloInfo:
         """
         self.variable_x = x
         self.variable_y = y
+        self.modelo = modelo
         self.intercepto = intercepto
         self.coeficiente = coeficiente
         self.ecuacion_recta = ecuacion_recta
