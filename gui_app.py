@@ -125,80 +125,24 @@ class RegresionLinealApp:
     
     def crear_radiobuttons(self, frame, options, variable, row, column):
         """
-        Carga un archivo CSV y devuelve un DataFrame de pandas.
+        Crea y muestra radiobuttons en un frame.
 
         Parámetros:
-        - archivo (str): Ruta del archivo CSV.
+            - frame (tk.Frame): El frame en el que se colocarán los radiobuttons.
+            - options (list): Lista de opciones para los radiobuttons.
+            - variable (tk.StringVar): Variable que se asociará a los radiobuttons.
+            - row (int): Número de fila en el que se ubicarán los radiobuttons.
+            - column (int): Número de columna inicial en el que se ubicarán los radiobuttons.
 
-        Return:
-        - pd.DataFrame: DataFrame con los datos del archivo CSV.
-
-        Lanza:
-        - FileNotFoundError: Si el archivo no se encuentra.
-        - ValueError: Si el archivo CSV está vacío o hay un error al leerlo.
+        Devuelve:
+            list: Lista de objetos tk.Radiobutton creados.
         """
         radiobuttons = []
         for i, option in enumerate(options):
             radiobutton = tk.Radiobutton(frame, text=option, variable=variable, value=option)
             radiobutton.grid(row=row, column=column + i, padx=5, pady=5, sticky=tk.W)
             radiobuttons.append(radiobutton)
-        return radiobuttons
-
-    def cargar_archivos_csv(self, archivo):
-        """
-        Carga un archivo Excel y devuelve un DataFrame de pandas.
-
-        Parámetros:
-        - archivo (str): Ruta del archivo Excel.
-
-        Returna:
-        - pd.DataFrame: DataFrame con los datos del archivo Excel.
-        """
-        df = cargar_archivo_csv(archivo)
-        return df
-        
-
-    def cargar_archivos_excel(self, archivo):
-        """
-        Carga datos desde una base de datos SQLite y devuelve un DataFrame de pandas.
-
-        Parámetros:
-        - archivo (str): Ruta del archivo de base de datos SQLite.
-
-        Return:
-        - pd.DataFrame: DataFrame con los datos de la tabla de la base de datos.
-        """
-        df = cargar_archivo_excel(archivo)
-        return df
-        
-    def cargar_archivos_db(self, archivo):
-        """
-        Carga datos desde una base de datos SQLite y devuelve un DataFrame de pandas.
-
-        Parámetros:
-        - archivo (str): Ruta del archivo de base de datos SQLite.
-
-        Return:
-        - pd.DataFrame: DataFrame con los datos de la tabla de la base de datos.
-        """
-        df = cargar_archivo_db(archivo)
-        return df
-        
-        
-    def verificar_columnas_numericas(self, datos, columnas):
-        """
-        Verifica que las columnas especificadas en el DataFrame sean de tipo numérico.
-
-        Parámetros:
-        - datos (pd.DataFrame): DataFrame de pandas que contiene los datos.
-        - columnas (list): Lista de nombres de columnas a verificar.
-
-        Lanza:
-        - ValueError: Si alguna columna no es numérica.
-        """
-        for col in columnas:
-            if not pd.api.types.is_numeric_dtype(datos[col]):
-                raise ValueError(f"La columna '{col}' no es numérica.")
+        return radiobuttons    
 
     def actualizar_etiqueta_ruta(self, ruta):
         """
@@ -270,7 +214,7 @@ class RegresionLinealApp:
 
             # Añadir la verificación de columnas numéricas solo para variable_x y variable_y
             columnas_a_verificar = [self.variable_x.get(), self.variable_y.get()]
-            self.verificar_columnas_numericas(self.df, columnas_a_verificar)
+            verificar_columnas_numericas(self.df, columnas_a_verificar)
 
             # Antes de realizar la regresión lineal, elimina las filas con NaN en la variable de respuesta
             self.df.dropna(subset=[variable_x, variable_y], inplace=True)
@@ -349,6 +293,7 @@ class RegresionLinealApp:
             self.elementos_prediccion()
 
         else:
+            self.show_error("Seleccione las variables x e y antes de hacer la regresión")
             raise ValueError("Seleccione las variables x e y antes de hacer la regresión")
 
 
@@ -424,7 +369,6 @@ class RegresionLinealApp:
     
         except Exception as e:
             self.show_error(f"Error al guardar el modelo: {str(e)}")
-
     
     def cargar_modelo(self):
         """
@@ -454,7 +398,6 @@ class RegresionLinealApp:
             
             # Luego, llamar a elementos_prediccion para crear los elementos de predicción
             self.elementos_prediccion()
-
 
     def show_error(self, message):
         """
@@ -525,4 +468,4 @@ class RegresionLinealApp:
                                         error_cargado, descripcion_cargada)
 
         else:
-            print("No hay un modelo cargado para mostrar.")
+            self.show_error("No hay un modelo cargado para mostrar.")

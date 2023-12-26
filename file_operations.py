@@ -3,18 +3,18 @@ import sqlite3
 
 def cargar_archivo_csv(archivo):
     """
-    Carga un archivo CSV en un DataFrame de pandas.
+    Carga un archivo CSV y devuelve un DataFrame de pandas.
 
     Parámetros:
     - archivo (str): Ruta del archivo CSV.
 
-    Retorna:
+    Return:
     - pd.DataFrame: DataFrame con los datos del archivo CSV.
 
     Lanza:
     - FileNotFoundError: Si el archivo no se encuentra.
     - ValueError: Si el archivo CSV está vacío o hay un error al leerlo.
-    """
+    """    
     try:
         df = pd.read_csv(archivo)
         return df
@@ -27,12 +27,12 @@ def cargar_archivo_csv(archivo):
 
 def cargar_archivo_excel(archivo):
     """
-    Carga un archivo Excel en un DataFrame de pandas.
+    Carga un archivo Excel y devuelve un DataFrame de pandas.
 
     Parámetros:
     - archivo (str): Ruta del archivo Excel.
 
-    Retorna:
+    Devuelve:
     - pd.DataFrame: DataFrame con los datos del archivo Excel.
 
     Lanza:
@@ -51,17 +51,17 @@ def cargar_archivo_excel(archivo):
 
 def cargar_archivo_db(archivo):
     """
-    Carga datos desde una base de datos SQLite en un DataFrame de pandas.
+    Carga datos desde una base de datos SQLite y devuelve un DataFrame de pandas.
 
     Parámetros:
     - archivo (str): Ruta del archivo de base de datos SQLite.
 
-    Retorna:
+    Devuelve:
     - pd.DataFrame: DataFrame con los datos de la tabla de la base de datos.
 
     Lanza:
-    - sqlite3.Error: Si hay un error al leer la base de datos.
-    - ValueError: Si la base de datos contiene más de una tabla o está vacía.
+    -ValueError: si la base de datos contiene más de una tabla o está vacía.
+    -sqlite.Error: si se produce un error al leer la base de datos
     """
     try:
         conn = sqlite3.connect(archivo)
