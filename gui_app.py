@@ -409,6 +409,7 @@ class RegresionLinealApp:
         if self.info_modelo is None:
             self.show_error("Realiza la regresión lineal antes de intentar guardar el modelo.")
             return None
+        self.info_modelo.descripcion = self.texto_descripcion.get()
         try:
             # Obtener la ruta y nombre de archivo seleccionados por el usuario
             file_path = filedialog.asksaveasfilename(defaultextension=".joblib", filetypes=[("Archivos joblib", "*.joblib")])
