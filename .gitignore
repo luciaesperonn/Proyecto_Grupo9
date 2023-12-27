@@ -159,6 +159,3 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
-test_cargar_modelo.py 
-test_interfaz.py 
-test_regresion_lineal.py
