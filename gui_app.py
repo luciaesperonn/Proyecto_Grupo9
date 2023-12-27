@@ -78,8 +78,12 @@ class RegresionLinealApp:
 
         self.valor_x = None
         self.valor_y = None
+        self.etiqueta_introducir_valor = None
+        self.texto_valor_x = None
         self.nueva_ecuacion = None
         self.etiqueta_nueva_ecuacion = None
+        self.entrada_valor_x = None
+        self.boton_realizar_prediccion = None
     
     def cargar_datos(self):
         """
@@ -397,10 +401,12 @@ class RegresionLinealApp:
             else:
                 self.etiqueta_nueva_ecuacion.grid_forget()
 
-            if (self.variable_x is None and hasattr(self.modelo_cargado, 'variable_x')) and (self.variable_y is None and hasattr(self.modelo_cargado, 'variable_y')):
-                self.variable_x = StringVar(value=self.modelo_cargado.variable_x)
-                self.variable_y = StringVar(value=self.modelo_cargado.variable_y)
-                self.modelo = self.modelo_cargado.modelo
+            self.variable_x = StringVar(value=self.modelo_cargado.variable_x)
+            self.variable_y = StringVar(value=self.modelo_cargado.variable_y)
+            self.modelo = self.modelo_cargado.modelo
+
+            if self.etiqueta_introducir_valor is not None:
+                self.etiqueta_introducir_valor.config(text='')
             
             # Luego, llamar a elementos_prediccion para crear los elementos de predicción
             self.elementos_prediccion()
