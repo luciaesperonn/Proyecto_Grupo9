@@ -81,8 +81,8 @@ class TestCargarModelo(unittest.TestCase):
         self.modelo.cargar_modelo(file_path)
 
         # Verifica si los atributos cargados coinciden con los originales
-        self.assertEqual(self.modelo.x, 0.5)
-        self.assertEqual(self.modelo.y, 1.0)
+        self.assertEqual(self.modelo.variable_x, 0.5)
+        self.assertEqual(self.modelo.variable_y, 1.0)
         self.assertEqual(self.modelo.modelo, "RegresionLineal")
         self.assertEqual(self.modelo.intercepto, 0.2)
         self.assertEqual(self.modelo.coeficiente, 0.3)
@@ -91,8 +91,8 @@ class TestCargarModelo(unittest.TestCase):
         self.assertEqual(self.modelo.descripcion, "Esta es una descripción de prueba")
 
         # Además, verifica el tipo de datos de algunos atributos
-        self.assertIsInstance(self.modelo.x, float)
-        self.assertIsInstance(self.modelo.y, float)
+        self.assertIsInstance(self.modelo.variable_x, float)
+        self.assertIsInstance(self.modelo.variable_y, float)
         self.assertIsInstance(self.modelo.intercepto, float)
         self.assertIsInstance(self.modelo.coeficiente, float)
         self.assertIsInstance(self.modelo.ecuacion_recta, str)
