@@ -20,12 +20,6 @@ class RegresionLinealApp:
         Parámetros:
         - master: Ventana principal de la aplicación.
         """
-        """
-        Inicializa la aplicación de Regresión Lineal.
-
-        Parámetros:
-        - master: Ventana principal de la aplicación.
-        """
         self.master = master
         master.title("Aplicación de Regresión Lineal")
 
@@ -94,12 +88,6 @@ class RegresionLinealApp:
         Lanza:
         - ValueError: Si no se selecciona un archivo o hay un problema al cargar los datos.
         """
-        """
-        Carga los datos desde un archivo seleccionado por el usuario.
-
-        Lanza:
-        - ValueError: Si no se selecciona un archivo o hay un problema al cargar los datos.
-        """
         self.ocultar_elementos_interfaz()
         file_path = filedialog.askopenfilename(initialdir="/", filetypes=[("CSV files", "*.csv"), ("Excel files", "*.xlsx"), ("SQLite databases", "*.db"), ("all files", "*.*")])
         if file_path:
@@ -117,15 +105,6 @@ class RegresionLinealApp:
             print("Datos cargados exitosamente")
 
     def mostrar_variables(self, variables):
-        """
-        Muestra las variables disponibles en el DataFrame.
-
-        Parámetros:
-        - variables (list): Lista de nombres de las variables.
-
-        Lanza:
-        - ValueError: Si hay un problema al mostrar las variables.
-        """
         """
         Muestra las variables disponibles en el DataFrame.
 
@@ -172,21 +151,9 @@ class RegresionLinealApp:
         Parameters:
         - ruta (str): La nueva ruta que se mostrará en la etiqueta.
         """
-        """
-        Actualiza la etiqueta de la ruta en la interfaz gráfica.
-
-        Parameters:
-        - ruta (str): La nueva ruta que se mostrará en la etiqueta.
-        """
         self.etiqueta_ruta.config(text=f"RUTA: {ruta}")
 
     def mostrar_tabla(self, df):
-        """
-        Muestra un DataFrame en un Treeview en la interfaz gráfica.
-
-        Parameters:
-        - df (pd.DataFrame): El DataFrame que se mostrará en la tabla.
-        """
         """
         Muestra un DataFrame en un Treeview en la interfaz gráfica.
 
@@ -236,10 +203,6 @@ class RegresionLinealApp:
         self.boton_realizar_regresion.grid(row=4, column=0, padx=10, pady=5, sticky=tk.W)
 
     def realizar_regresion(self):
-        """
-        Realiza una regresión lineal usando las variables x e y seleccionadas.
-        Muestra el modelo ajustado en la interfaz gráfica.
-        """
         """
         Realiza una regresión lineal usando las variables x e y seleccionadas.
         Muestra el modelo ajustado en la interfaz gráfica.
@@ -342,9 +305,7 @@ class RegresionLinealApp:
         """
         Configura los elementos de la interfaz gráfica para la predicción.
         """
-        """
-        Configura los elementos de la interfaz gráfica para la predicción.
-        """
+
         self.frame_prediccion.grid(row=7, column=7, columnspan=4, padx=10, pady=5, sticky=tk.W)
 
         self.etiqueta_introducir_valor = Label(self.frame_prediccion, text=f"Introduzca un valor para {self.variable_x.get()}:")
@@ -359,10 +320,6 @@ class RegresionLinealApp:
 
 
     def realizar_prediccion(self):
-        """
-        Realiza una predicción utilizando el modelo de regresión lineal.
-        Muestra la ecuación de la recta con el nuevo valor de x e y.
-        """
         """
         Realiza una predicción utilizando el modelo de regresión lineal.
         Muestra la ecuación de la recta con el nuevo valor de x e y.
@@ -402,10 +359,6 @@ class RegresionLinealApp:
         Guarda el modelo de regresión lineal en un archivo joblib.
         Muestra mensajes de error o éxito en la interfaz gráfica.
         """
-        """
-        Guarda el modelo de regresión lineal en un archivo joblib.
-        Muestra mensajes de error o éxito en la interfaz gráfica.
-        """
         if self.info_modelo is None:
             self.show_error("Realiza la regresión lineal antes de intentar guardar el modelo.")
             return None
@@ -424,10 +377,6 @@ class RegresionLinealApp:
             self.show_error(f"Error al guardar el modelo: {str(e)}")
     
     def cargar_modelo(self):
-        """
-        Carga un modelo de regresión lineal desde un archivo joblib.
-        Actualiza la interfaz gráfica con la información del modelo cargado.
-        """
         """
         Carga un modelo de regresión lineal desde un archivo joblib.
         Actualiza la interfaz gráfica con la información del modelo cargado.
@@ -463,12 +412,6 @@ class RegresionLinealApp:
         Parameters:
         - message (str): Mensaje de error a mostrar.
         """
-        """
-        Muestra una ventana emergente de error con el mensaje proporcionado.
-
-        Parameters:
-        - message (str): Mensaje de error a mostrar.
-        """
         top = tk.Toplevel()
         top.title("Error")
         text = tk.Text(top)
@@ -476,12 +419,6 @@ class RegresionLinealApp:
         text.pack()# Función para obtener el valor ingresado en el cuadro de texto
 
     def show_info(self, message):
-        """
-        Muestra una ventana emergente de información con el mensaje proporcionado.
-
-        Parameters:
-        - message (str): Mensaje de información a mostrar.
-        """
         """
         Muestra una ventana emergente de información con el mensaje proporcionado.
 
@@ -509,9 +446,6 @@ class RegresionLinealApp:
             elemento.grid_forget()
 
     def mostrar_datos_modelo_cargado(self):
-        """
-        Muestra información específica del modelo cargado en la interfaz gráfica.
-        """
         """
         Muestra información específica del modelo cargado en la interfaz gráfica.
         """
