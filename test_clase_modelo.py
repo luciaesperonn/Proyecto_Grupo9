@@ -3,6 +3,7 @@ import os
 import joblib
 from clase_modelo import ModeloInfo
 
+
 class TestGuardarModelo(unittest.TestCase):
 
     def setUp(self):
@@ -31,23 +32,34 @@ class TestGuardarModelo(unittest.TestCase):
         self.modelo.guardar_modelo(file_path)
 
         # Verifica si el archivo se ha creado
-        self.assertTrue(os.path.exists(file_path), "El archivo no se creó correctamente")
+        self.assertTrue(os.path.exists(file_path),
+                        "El archivo no se creó correctamente")
 
         # Verifica si el archivo no está vacío
-        self.assertGreater(os.path.getsize(file_path), 0, "El archivo está vacío")
+        self.assertGreater(os.path.getsize(file_path),
+                           0, "El archivo está vacío")
 
         # Carga el modelo desde el archivo
         modelo_cargado = joblib.load(file_path)
 
         # Verifica si la descripción cargada coincide con la descripción original
-        self.assertEqual(self.modelo.descripcion, modelo_cargado.descripcion, "La descripción cargada no coincide")
-        self.assertEqual(self.modelo.variable_x, modelo_cargado.variable_x, "El valor de x no coincide")
-        self.assertEqual(self.modelo.variable_y, modelo_cargado.variable_y, "El valor de y no coincide")
-        self.assertEqual(self.modelo.modelo, modelo_cargado.modelo, "El modelo no coincide")
-        self.assertEqual(self.modelo.intercepto, modelo_cargado.intercepto, "El intercepto no coincide")
-        self.assertEqual(self.modelo.coeficiente, modelo_cargado.coeficiente, "El coeficiente no coincide")
-        self.assertEqual(self.modelo.ecuacion_recta, modelo_cargado.ecuacion_recta, "La ecuación de la recta no coincide")
-        self.assertEqual(self.modelo.mse, modelo_cargado.mse, "El MSE no coincide")
+        self.assertEqual(self.modelo.descripcion, modelo_cargado.descripcion,
+                         "La descripción cargada no coincide")
+        self.assertEqual(self.modelo.variable_x,
+                         modelo_cargado.variable_x, "El valor de x no coincide")
+        self.assertEqual(self.modelo.variable_y,
+                         modelo_cargado.variable_y, "El valor de y no coincide")
+        self.assertEqual(self.modelo.modelo,
+                         modelo_cargado.modelo, "El modelo no coincide")
+        self.assertEqual(self.modelo.intercepto,
+                         modelo_cargado.intercepto, "El intercepto no coincide")
+        self.assertEqual(self.modelo.coeficiente,
+                         modelo_cargado.coeficiente, "El coeficiente no coincide")
+        self.assertEqual(self.modelo.ecuacion_recta,
+                         modelo_cargado.ecuacion_recta, "La ecuación de la recta no coincide")
+        self.assertEqual(self.modelo.mse, modelo_cargado.mse,
+                         "El MSE no coincide")
+
 
 class TestCargarModelo(unittest.TestCase):
 
@@ -75,7 +87,8 @@ class TestCargarModelo(unittest.TestCase):
         self.modelo.guardar_modelo(file_path)
 
         # Asegúrate de que el archivo exista antes de cargarlo
-        self.assertTrue(os.path.exists(file_path), "El archivo no se creó correctamente")
+        self.assertTrue(os.path.exists(file_path),
+                        "El archivo no se creó correctamente")
 
         # Llama al método cargar_modelo para cargar el modelo
         self.modelo.cargar_modelo(file_path)
@@ -88,7 +101,8 @@ class TestCargarModelo(unittest.TestCase):
         self.assertEqual(self.modelo.coeficiente, 0.3)
         self.assertEqual(self.modelo.ecuacion_recta, "y = 0.3x + 0.2")
         self.assertEqual(self.modelo.mse, 0.05)
-        self.assertEqual(self.modelo.descripcion, "Esta es una descripción de prueba")
+        self.assertEqual(self.modelo.descripcion,
+                         "Esta es una descripción de prueba")
 
         # Además, verifica el tipo de datos de algunos atributos
         self.assertIsInstance(self.modelo.variable_x, float)
@@ -98,6 +112,7 @@ class TestCargarModelo(unittest.TestCase):
         self.assertIsInstance(self.modelo.ecuacion_recta, str)
         self.assertIsInstance(self.modelo.mse, float)
         self.assertIsInstance(self.modelo.descripcion, str)
+
 
 if __name__ == '__main__':
     unittest.main()

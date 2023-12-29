@@ -4,6 +4,7 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from tkinter import Scrollbar
 from matplotlib.figure import Figure
 
+
 class WidgetFactory:
     """
     Clase WidgetFactory que proporciona métodos estáticos para crear diferentes widgets y componentes 
@@ -48,7 +49,7 @@ class WidgetFactory:
 
         Retorna:
         - Widget: Una instancia del widget especificado.
-        
+
         Lanza:
         - ValueError: Si el tipo de widget no es válido.
         """

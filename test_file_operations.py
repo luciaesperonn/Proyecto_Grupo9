@@ -6,16 +6,20 @@ import sqlite3
 import pandas as pd
 from file_operations import cargar_archivo_csv, cargar_archivo_excel, cargar_archivo_db, verificar_columnas_numericas
 
+
 class TestLeerArchivos(unittest.TestCase):
     def setUp(self):
         # Crear archivos temporales para las pruebas
-        self.csv_file = tempfile.NamedTemporaryFile(suffix=".csv", delete=False)
-        self.xlsx_file = tempfile.NamedTemporaryFile(suffix=".xlsx", delete=False)
+        self.csv_file = tempfile.NamedTemporaryFile(
+            suffix=".csv", delete=False)
+        self.xlsx_file = tempfile.NamedTemporaryFile(
+            suffix=".xlsx", delete=False)
         self.db_file = tempfile.NamedTemporaryFile(suffix=".db", delete=False)
-        self.txt_file = tempfile.NamedTemporaryFile(suffix=".txt", delete=False)
+        self.txt_file = tempfile.NamedTemporaryFile(
+            suffix=".txt", delete=False)
 
     def tearDown(self):
-        #Cerrar los archivos antes de eliminarlos
+        # Cerrar los archivos antes de eliminarlos
         self.csv_file.close()
         self.xlsx_file.close()
         self.db_file.close()
@@ -60,6 +64,7 @@ class TestLeerArchivos(unittest.TestCase):
         df_loaded = cargar_archivo_db(self.db_file.name)
         pd.testing.assert_frame_equal(df, df_loaded)
 
+
 class TestVerificarColumnasNumericas(unittest.TestCase):
 
     def test_columnas_numericas(self):
@@ -89,12 +94,13 @@ class TestVerificarColumnasNumericas(unittest.TestCase):
 
         # Llamar a la función con columnas no numéricas
         columnas_no_numericas = ['A', 'B']
-        
+
         with self.assertRaises(ValueError) as context:
             verificar_columnas_numericas(df, columnas_no_numericas)
-        
+
         # Verificar el mensaje de error
-        self.assertEqual(str(context.exception), "La columna 'B' no es numérica.")
+        self.assertEqual(str(context.exception),
+                         "La columna 'B' no es numérica.")
 
     def test_columnas_inexistentes(self):
         # Crear un DataFrame de ejemplo
@@ -107,12 +113,13 @@ class TestVerificarColumnasNumericas(unittest.TestCase):
 
         # Llamar a la función con una columna inexistente
         columnas_inexistentes = ['A', 'D']
-        
+
         with self.assertRaises(KeyError) as context:
             verificar_columnas_numericas(df, columnas_inexistentes)
-        
+
         # Verificar el mensaje de error
         self.assertEqual(str(context.exception), "'D'")
+
 
 if __name__ == "__main__":
     unittest.main()

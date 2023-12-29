@@ -1,5 +1,6 @@
 import tkinter as Tk
 
+
 class SingletonTk:
     """
     Clase SingletonTk que garantiza que solo exista una instancia de la ventana principal de Tkinter.
@@ -22,6 +23,6 @@ class SingletonTk:
         - Tk.Tk: Instancia única de la ventana principal de Tkinter.
         """
         if cls._instance is None:
-            cls._instance = Tk.Tk()  
+            cls._instance = Tk.Tk()
             cls._instance.state('zoomed')
         return cls._instance

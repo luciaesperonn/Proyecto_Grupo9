@@ -3,6 +3,7 @@ from unittest.mock import patch, MagicMock
 from tkinter import Tk
 from gui_app import RegresionLinealApp
 
+
 class TestCargarModelo(unittest.TestCase):
     def setUp(self):
         # Crear una instancia de la aplicación
@@ -28,7 +29,8 @@ class TestCargarModelo(unittest.TestCase):
         self.app.cargar_modelo()
 
         # Verificar que la etiqueta de la ruta se actualiza
-        self.assertEqual(self.app.etiqueta_ruta.cget("text"), "RUTA: modelo.joblib")
+        self.assertEqual(self.app.etiqueta_ruta.cget(
+            "text"), "RUTA: modelo.joblib")
 
         # Verificar que se carga el modelo correctamente
         self.assertIsNotNone(self.app.modelo_cargado)
@@ -38,7 +40,9 @@ class TestCargarModelo(unittest.TestCase):
         self.assertEqual(self.app.modelo_cargado.coeficiente, 2.0)
         self.assertEqual(self.app.modelo_cargado.ecuacion_recta, "y = 2x + 1")
         self.assertEqual(self.app.modelo_cargado.mse, 0.5)
-        self.assertEqual(self.app.modelo_cargado.descripcion, "Modelo de prueba")
+        self.assertEqual(self.app.modelo_cargado.descripcion,
+                         "Modelo de prueba")
+
 
 if __name__ == '__main__':
     unittest.main()

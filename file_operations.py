@@ -1,6 +1,7 @@
 import pandas as pd
 import sqlite3
 
+
 def cargar_archivo_csv(archivo):
     """
     Carga un archivo CSV y devuelve un DataFrame de pandas.
@@ -14,7 +15,7 @@ def cargar_archivo_csv(archivo):
     Lanza:
     - FileNotFoundError: Si el archivo no se encuentra.
     - ValueError: Si el archivo CSV está vacío o hay un error al leerlo.
-    """    
+    """
     try:
         df = pd.read_csv(archivo)
         return df
@@ -24,6 +25,7 @@ def cargar_archivo_csv(archivo):
         raise ValueError(f"El archivo CSV está vacío: {archivo}")
     except pd.errors.ParserError:
         raise ValueError(f"Error al leer el archivo CSV: {archivo}")
+
 
 def cargar_archivo_excel(archivo):
     """
@@ -49,6 +51,7 @@ def cargar_archivo_excel(archivo):
     except pd.errors.ParserError:
         raise ValueError(f"Error al leer el archivo Excel: {archivo}")
 
+
 def cargar_archivo_db(archivo):
     """
     Carga datos desde una base de datos SQLite y devuelve un DataFrame de pandas.
@@ -72,7 +75,8 @@ def cargar_archivo_db(archivo):
         tables = cursor.fetchall()
 
         if len(tables) != 1:
-            raise ValueError("La base de datos contiene más de una tabla o está vacía.")
+            raise ValueError(
+                "La base de datos contiene más de una tabla o está vacía.")
 
         tabla = tables[0][0]
         consulta = f"SELECT * FROM {tabla}"
