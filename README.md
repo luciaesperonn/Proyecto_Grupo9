@@ -4,7 +4,7 @@ Este proyecto consiste en el desarrollo de una aplicación que facilita la creac
 para trabajar con datos almacenados en archivos CSV, Excel y bases de datos. Además, destaca por su capacidad de cargar modelos previos y llevar a cabo predicciones de 
 manera eficaz. 
 
-## Instrucciones de instalación 
+## Instrucciones de Instalación 
 1. **Abrir el terminal:**
    - En Windows, puedes utilizar el cmd.
 
@@ -25,6 +25,15 @@ manera eficaz.
      python elnombredeltest.py
      ```
 
+## Librerías Necesarias
+Antes de ejecutar la aplicación, asegúrate de tener instaladas las siguientes librerías de Python. Puedes instalarlas ejecutando los siguientes comandos en tu terminal:
 
-
+```bash
+pip install pandas
+pip install sqlite3  # (Generalmente viene con Python por defecto, no es necesario instalarlo por separado)
+pip install scikit-learn
+pip install joblib
+pip install matplotlib
+pip install tkinter  # (Verifica si ya está instalado con tu distribución de Python)
+pip install unnitest
 
