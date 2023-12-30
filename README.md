@@ -37,3 +37,11 @@ pip install matplotlib
 pip install tkinter  # (Verifica si ya está instalado con tu distribución de Python)
 pip install unnitest
 
+
+
+
+
+
+
+
+
