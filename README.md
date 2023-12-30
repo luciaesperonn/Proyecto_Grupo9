@@ -36,6 +36,44 @@ pip install joblib
 pip install matplotlib
 pip install tkinter  # (Verifica si ya está instalado con tu distribución de Python)
 pip install unnitest
+```
+
+
+## Manual de Usuario
+
+1. **Cargar Datos:**
+   - Haz clic en el botón "Examinar".
+   - Selecciona un archivo CSV, Excel o SQLite con tus datos.
+   - Los datos se cargarán automáticamente y se mostrarán en una tabla.
+
+2. **Seleccionar Variables y Realizar Regresión:**
+   - Selecciona las variables X e Y utilizando los radiobuttons.
+   - Haz clic en "Realizar regresión" para ajustar el modelo lineal.
+   - La ecuación de la recta, el error cuadrático medio y la bondad de ajuste se mostrarán en la interfaz.
+
+3. **Guardar el Modelo:**
+   - Después de realizar la regresión, puedes guardar el modelo haciendo clic en "Guardar modelo".
+   - Selecciona la ubicación y el nombre del archivo joblib para guardar el modelo.
+
+4. **Cargar Modelo Existente:**
+   - Haz clic en "Cargar Modelo".
+   - Selecciona el archivo joblib del modelo previamente guardado.
+   - La información del modelo cargado se mostrará en la interfaz.
+
+5. **Realizar Predicciones:**
+   - Después de cargar un modelo, puedes introducir un valor para la variable X.
+   - Haz clic en "Realizar predicción" para obtener el valor predicho de la variable Y.
+   - La ecuación actualizada con el nuevo valor se mostrará en la interfaz.
+
+6. **Descripción del Modelo (Opcional):**
+   - Puedes agregar una descripción del modelo durante o después de realizar la regresión.
+   - La descripción se mostrará junto con la información del modelo.
+
+7. **Notas Adicionales:**
+   - La tabla se actualizará automáticamente al cargar nuevos datos.
+   - Asegúrate de introducir un valor válido para las predicciones.
+
+
 
 
 
